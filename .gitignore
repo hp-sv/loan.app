@@ -16,3 +16,5 @@ loan.api.projects.v2
 net6.0
 obj
 bin
+appsettings.Development.json
+/server/.vs/Loan.Api/v17/TestStore/0/*.testlog
