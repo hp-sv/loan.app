@@ -1,0 +1,90 @@
+
+using Loan.Api.Filters;
+using Loan.Api.Service;
+using Loan.Data.Context;
+using Loan.Domain;
+using Loan.Domain.Services;
+using Loan.Interface.Constants;
+using Loan.Interface.Domain;
+using Loan.Interface.Repositories;
+using Loan.Interface.Services;
+using Loan.Repository;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllers(options => {
+    options.ReturnHttpNotAcceptable = true;
+    options.Filters.Add<HttpResponseExceptionFilter>();
+}).AddNewtonsoftJson()
+.AddXmlDataContractSerializerFormatters();
+
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddDbContext<LoanDbContext>(
+    dbContextOptions =>    
+        dbContextOptions.UseSqlServer(builder.Configuration["ConnectionStrings:Loan.Database"], sqlServerOptionsAction : options => options.EnableRetryOnFailure() )
+        .EnableSensitiveDataLogging()
+);
+
+builder.Services.AddScoped<IDateService, DateService>();
+builder.Services.AddScoped<IChangeTransactionScope, LoanTransactionScope>();
+builder.Services.AddScoped<IChangeTransactionService, ChangeTransactionService>();
+
+builder.Services.AddScoped<IClientValidationService, ClientValidationService>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IClientDomain, ClientDomain>();
+
+builder.Services.AddScoped<ILookupSetRepository, LookupSetRepository>();
+builder.Services.AddScoped<ILookupSetDomain, LookupSetDomain>();
+
+builder.Services.AddScoped<IAccountValidationService, AccountValidationService>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IAccountDomain, AccountDomain>();    
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer( options => 
+    {
+        options.TokenValidationParameters = new(){
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,
+            ValidIssuer = builder.Configuration[ConfigurationKey.AuthenticationIssuer],
+            ValidAudience = builder.Configuration[ConfigurationKey.AuthenticationAudience],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration[ConfigurationKey.AuthenticationSecretForKey]))
+        };
+    });
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseRouting();
+app.UseAuthentication();   
+app.UseAuthorization();
+
+app.UseEndpoints(enpoints =>
+{
+    enpoints.MapControllers();
+});
+
+app.Run();
