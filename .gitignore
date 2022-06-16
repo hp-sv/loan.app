@@ -16,3 +16,4 @@ loan.api.projects.v2
 net6.0
 obj
 bin
+*.testlog

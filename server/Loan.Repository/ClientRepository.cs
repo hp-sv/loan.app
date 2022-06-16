@@ -26,7 +26,7 @@ namespace Loan.Repository
         {
             var client = await context.Clients.FirstAsync(a => a.Id == id);
             client.RecordStatusId = LookupIds.RecordStatus.Deleted;
-        }   
+        }
 
         public async void Update(Client client)
         {

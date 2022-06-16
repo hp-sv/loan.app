@@ -3,6 +3,7 @@ using Loan.Data.Configuration;
 using Loan.Data.Context;
 using Loan.Domain.Services;
 using Loan.Entity;
+using Loan.Interface.Constants;
 using Loan.Interface.Services;
 using Loan.Model.Client;
 using Microsoft.EntityFrameworkCore;
@@ -33,11 +34,11 @@ namespace Loan.Test
         {
             DateService = new TestDateService(new DateTime(2022, 06, 01, 08, 0, 0));
 
-
             ChangeTransactionScope = GetChangeTransactionScope();
 
             var options = new DbContextOptionsBuilder<LoanDbContext>()
                .UseInMemoryDatabase(databaseName: "Loan")
+               .EnableSensitiveDataLogging()
                .Options;
 
             DbContext = new LoanDbContext(options, ChangeTransactionScope);
@@ -45,8 +46,11 @@ namespace Loan.Test
             var taskLookup = configureLookup();
             taskLookup.Wait();
 
-            var taskClient = SeedClient();
+            var taskClient = seedClient();
             taskClient.Wait();
+
+            var taskAccount = seedAccount();
+            taskAccount.Wait();
 
             var config = new MapperConfiguration(opts => opts.AddMaps(AppDomain.CurrentDomain.GetAssemblies()));
             Mapper = config.CreateMapper();
@@ -77,7 +81,7 @@ namespace Loan.Test
             await DbContext.SaveChangesAsync();
         }
 
-        private async Task SeedClient()
+        private async Task seedClient()
         {
             var seedClients = new List<Client>
             {
@@ -127,6 +131,23 @@ namespace Loan.Test
             await DbContext.SaveChangesAsync();
         }
 
+        private async Task seedAccount()
+        { 
+            var client = await DbContext.Clients.FirstAsync();
+            
+            var account = new Account { 
+            ClientId = client.Id,
+            Duration = 26,
+            DurationTypeId = LookupIds.DurationType.Weekly,
+            Rate = 0.010m,
+            RepaymentTypeId = LookupIds.RepaymentSchedule.Weekly,
+            StatusId = LookupIds.AccountStatuses.Active,
+            TotalAmount = 50000
+            };
+
+            DbContext.Accounts.Add(account);
+            await DbContext.SaveChangesAsync();
+        }
 
         public CreateClientDto JohnDough
         {

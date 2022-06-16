@@ -11,6 +11,10 @@ using AutoMapper;
 using Loan.Interface.Constants;
 using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
+using Loan.Data.Context;
+using Loan.Interface.Exceptions;
+using Loan.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Loan.Test
 {    
@@ -23,6 +27,7 @@ namespace Loan.Test
         private readonly ClientController _controller;
         private readonly IMapper _mapper;
         private readonly TestDateService _testDateService;
+        private readonly LoanDbContext _loanDbContext;
 
         private readonly LoanSeedDataFixture _fixture;
 
@@ -30,9 +35,10 @@ namespace Loan.Test
         {
             _fixture = fixture;
             _mapper = fixture.Mapper;
+            _loanDbContext = fixture.DbContext;
             _testDateService = fixture.DateService;
-            _repository = new ClientRepository(_fixture.DbContext, _mapper);
-            _accountRepository = new AccountRepository(_fixture.DbContext, _mapper);
+            _repository = new ClientRepository(_loanDbContext, _mapper);
+            _accountRepository = new AccountRepository(_loanDbContext, _mapper);
             _validationService = new ClientValidationService(_repository, _accountRepository, _testDateService);
             _domain = new ClientDomain(_repository, _fixture.ChangeTransactionService, _validationService, _mapper);
             _controller = new ClientController(_domain, _fixture.Mapper);
@@ -79,8 +85,8 @@ namespace Loan.Test
 
         [Fact]
         public async Task Can_Delete_Client()
-        {
-            var deleteClient = _fixture.DbContext.Clients.First();
+        {            
+            var deleteClient = _loanDbContext.Clients.Include(c=>c.Accounts).Where(c=> !c.Accounts.Any(a=>a.StatusId == LookupIds.AccountStatuses.Active)).First();
             var deleteResult = await _controller.DeleteAsync(deleteClient.Id);
 
             Assert.IsType<NoContentResult>(deleteResult);
@@ -94,7 +100,7 @@ namespace Loan.Test
         public async void Can_Patch_Client()
         {   
             var patchDoc = new JsonPatchDocument<UpdateClientDto>();
-            var client = _fixture.DbContext.Clients.First();
+            var client = _loanDbContext.Clients.First();
 
             patchDoc.Replace(e => e.FirstName, "Taylor");
             patchDoc.Replace(e => e.LastName, "Hill");
@@ -107,7 +113,7 @@ namespace Loan.Test
         public async void Can_Get_Client_All_Clients()
         {
             var getResult = await _controller.GetClientsAsync();
-            var expected = _fixture.DbContext.Clients.Where(c => c.RecordStatusId == LookupIds.RecordStatus.Active).Count();
+            var expected = _loanDbContext.Clients.Where(c => c.RecordStatusId == LookupIds.RecordStatus.Active).Count();
 
             Assert.IsType<ActionResult<IEnumerable<ClientDto>>>(getResult);
             Assert.IsType<OkObjectResult>(getResult.Result);
@@ -119,22 +125,57 @@ namespace Loan.Test
         }
 
 
-        [Fact]
-        public async void Can_Not_Delete_Client_With_Active_Account()
+        [Fact]        
+        public async Task Can_Not_Delete_Client_With_Active_Account()
         {
-            Assert.True(false);
+            var deleteClient = _loanDbContext.Clients.First(c => c.Accounts.Any(a => a.StatusId == LookupIds.AccountStatuses.Active));            
+            var deleteException = await Assert.ThrowsAsync<HttpResponseException>(() => _controller.DeleteAsync(deleteClient.Id));
+
+            Assert.NotNull(deleteException.Value);
+
+            var errors = deleteException.Value as List<ValidationError>;
+
+            Assert.True(errors?.Count == 1);
+
+            var error = errors?.First();
+            Assert.True(error?.ErrorCode == ClientValidationErrorCodes.CLIENT_HAS_AN_ACTIVE_ACCOUNT);            
+
         }
 
         [Fact]
-        public async void Client_Dob_Must_Be_On_Or_After_1960()
+        public async void Client_Dob_Must_Be_On_Or_After_1950()
         {
-            Assert.True(false);
+            var dob = new DateTime(1949, 01, 01);
+            var client = _fixture.JohnDough;
+            client.Dob = dob;
+            var createException = await Assert.ThrowsAsync<HttpResponseException>(() => _controller.CreateAsync(client));
+
+            Assert.NotNull(createException.Value);
+
+            var errors = createException.Value as List<ValidationError>;
+
+            Assert.True(errors?.Count == 1);
+
+            var error = errors?.First();
+            Assert.True(error?.ErrorCode == ClientValidationErrorCodes.CLIENT_DATE_OF_BIRTH_ERROR);
         }
 
         [Fact]
         public async void Client_Must_Be_At_Least_18_Year_Old()
         {
-            Assert.True(false);
+            var dob = _testDateService.CurrentDate.AddYears(-17);
+            var client = _fixture.JohnDough;
+            client.Dob = dob;
+            var createException = await Assert.ThrowsAsync<HttpResponseException>(() => _controller.CreateAsync(client));
+
+            Assert.NotNull(createException.Value);
+
+            var errors = createException.Value as List<ValidationError>;
+
+            Assert.True(errors?.Count == 1);
+
+            var error = errors?.First();
+            Assert.True(error?.ErrorCode == ClientValidationErrorCodes.CLIENT_IS_UNDER_AGE);
         }
 
 

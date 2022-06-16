@@ -29,11 +29,16 @@ namespace Loan.Data.Context
 
         public LoanDbContext(DbContextOptions<LoanDbContext> options, IChangeTransactionScope transactionScope) : base(options)
         {
+            ChangeTracker.CascadeDeleteTiming = CascadeTiming.Never;
+            ChangeTracker.DeleteOrphansTiming = CascadeTiming.Never;
+
             _transactionScope = transactionScope ?? throw new ArgumentNullException(nameof(transactionScope));               
         }        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {            
+        {
+            
+
             // Set to singular table name
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())            
                 modelBuilder.Entity(entityType.ClrType).ToTable(entityType.ClrType.Name);            

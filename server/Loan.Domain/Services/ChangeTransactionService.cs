@@ -1,6 +1,7 @@
 ﻿
 using Loan.Data.Context;
 using Loan.Interface.Services;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Loan.Domain.Services
 {
