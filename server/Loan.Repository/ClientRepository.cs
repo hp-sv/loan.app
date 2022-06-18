@@ -30,7 +30,7 @@ namespace Loan.Repository
 
         public async void Update(Client client)
         {
-            var clientToUpdate = await context.Clients.FirstOrDefaultAsync(c => c.Id == client.Id);
+            var clientToUpdate = await context.Clients.FirstAsync(c => c.Id == client.Id);
             _mapper.Map(client, clientToUpdate);
         }
 

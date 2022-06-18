@@ -67,10 +67,10 @@ namespace Loan.Api.Controllers
         public async Task<ActionResult> PatchAsync(int id, JsonPatchDocument<UpdateClientDto> patchDoucment)
         {
             var client = await _domain.GetByIdAsync(id);
-                        
+            
             UpdateClientDto clientDto= new UpdateClientDto();
-            _mapper.Map(client, clientDto);
 
+            _mapper.Map(client, clientDto);
 
             patchDoucment.ApplyTo(clientDto, ModelState);
 

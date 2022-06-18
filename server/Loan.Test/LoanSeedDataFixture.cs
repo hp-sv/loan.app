@@ -167,6 +167,23 @@ namespace Loan.Test
                 };
             }
         }
+        
+        public async void CreateAccount(int clientId)
+        {
+            var account = new Account
+            {
+                ClientId = clientId,
+                Duration = 26,
+                DurationTypeId = LookupIds.DurationType.Weekly,
+                Rate = 0.010m,
+                RepaymentTypeId = LookupIds.RepaymentSchedule.Weekly,
+                StatusId = LookupIds.AccountStatuses.Active,
+                TotalAmount = 50000
+            };
+
+            DbContext.Accounts.Add(account);
+            await DbContext.SaveChangesAsync();
+        }
 
     }
 }

@@ -86,7 +86,7 @@ namespace Loan.Test
         [Fact]
         public async Task Can_Delete_Client()
         {            
-            var deleteClient = _loanDbContext.Clients.Include(c=>c.Accounts).Where(c=> !c.Accounts.Any(a=>a.StatusId == LookupIds.AccountStatuses.Active)).First();
+            var deleteClient = _loanDbContext.Clients.Where(c=> !c.Accounts.Any(a=>a.StatusId == LookupIds.AccountStatuses.Active)).First();
             var deleteResult = await _controller.DeleteAsync(deleteClient.Id);
 
             Assert.IsType<NoContentResult>(deleteResult);
@@ -128,9 +128,10 @@ namespace Loan.Test
         [Fact]        
         public async Task Can_Not_Delete_Client_With_Active_Account()
         {
-            var deleteClient = _loanDbContext.Clients.First(c => c.Accounts.Any(a => a.StatusId == LookupIds.AccountStatuses.Active));            
-            var deleteException = await Assert.ThrowsAsync<HttpResponseException>(() => _controller.DeleteAsync(deleteClient.Id));
+            var deleteClient = _loanDbContext.Clients.First();
+            _fixture.CreateAccount(deleteClient.Id);
 
+            var deleteException = await Assert.ThrowsAsync<HttpResponseException>(() => _controller.DeleteAsync(deleteClient.Id));
             Assert.NotNull(deleteException.Value);
 
             var errors = deleteException.Value as List<ValidationError>;
