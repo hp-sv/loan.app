@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Loan.Api.Controllers
 {
     [Route(ClientRoutes.ROUTE)]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class ClientController : ControllerBase
     {
