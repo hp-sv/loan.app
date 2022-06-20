@@ -28,28 +28,25 @@ namespace Loan.Data.Context
         private readonly IChangeTransactionScope _transactionScope;
 
         public LoanDbContext(DbContextOptions<LoanDbContext> options, IChangeTransactionScope transactionScope) : base(options)
-        {
+        {            
             _transactionScope = transactionScope ?? throw new ArgumentNullException(nameof(transactionScope));               
         }        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {            
+        {
+            
             // Set to singular table name
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())            
-                modelBuilder.Entity(entityType.ClrType).ToTable(entityType.ClrType.Name);            
+                modelBuilder.Entity(entityType.ClrType).ToTable(entityType.ClrType.Name);
 
-            // Disable cascade on delete
-            foreach (var relationship in modelBuilder.Model.GetEntityTypes().Where(e => !e.IsOwned()).SelectMany(e => e.GetForeignKeys()))            
-                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            //Disable cascade on delete
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().Where(e => !e.IsOwned()).SelectMany(e => e.GetForeignKeys()))
+                relationship.DeleteBehavior = DeleteBehavior.ClientCascade;
 
             // Soft delete query filter 
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {                
-                if (typeof(ILoanEntity).IsAssignableFrom(entityType.ClrType))
-                {
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())                            
+                if (typeof(ILoanEntity).IsAssignableFrom(entityType.ClrType))                
                     entityType.AddActiveRecordOnlyQueryFilter();
-                }
-            }
 
             base.OnModelCreating(modelBuilder);
 

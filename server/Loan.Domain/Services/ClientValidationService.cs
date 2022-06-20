@@ -63,7 +63,7 @@ namespace Loan.Domain.Services
             var clientAccounts = await _accountRepository.GetAccountByClientAsync(client.Id);
 
             if (clientAccounts != null)
-                if (clientAccounts.Count(ca => ca.StatusId == LookupIds.AccountStatuses.Active) > 0)
+                if (clientAccounts.Any(ca => ca.StatusId == LookupIds.AccountStatuses.Active))
                     _Erorrs.Add(new ValidationError { ErrorCode = ClientValidationErrorCodes.CLIENT_HAS_AN_ACTIVE_ACCOUNT, ErrorMessage = "Client has an active account." });
         }
 

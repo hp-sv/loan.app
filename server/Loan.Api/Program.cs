@@ -15,6 +15,21 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+const string ALLOWED_CORS_POLICY = "CORS_ALLOWED_ORIGIN_POLICY";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy( name: ALLOWED_CORS_POLICY,
+                    policy =>
+                      {
+                          policy.WithOrigins("http://localhost:3000")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader()
+                          .AllowCredentials();
+                      });
+});
+
+
 // Add services to the container.
 builder.Services.AddControllers(options => {
     options.ReturnHttpNotAcceptable = true;
@@ -54,9 +69,10 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
 builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer( options => 
+    .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new(){
+        options.TokenValidationParameters = new()
+        {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateIssuerSigningKey = true,
@@ -79,8 +95,13 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseCors(ALLOWED_CORS_POLICY);
+
 app.UseAuthentication();   
 app.UseAuthorization();
+
+
 
 app.UseEndpoints(enpoints =>
 {

@@ -9,6 +9,9 @@ namespace Loan.Model.Client
 
         public ClientDto EmergencyContact { get; set; } = EmptyClientDto.Instance;
 
+        public decimal Principal { get; set; }
+        public decimal Balance { get; set; }
+
         public UpdateClientDto CreateUpdateDto()
         {
             return new UpdateClientDto { 

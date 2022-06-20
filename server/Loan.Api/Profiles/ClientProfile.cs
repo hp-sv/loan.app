@@ -7,8 +7,10 @@ namespace Loan.Api.Profiles
     {
         public ClientProfile()
         {
-            CreateMap<Client, Model.Client.ClientDto>();
-            
+            CreateMap<Client, Model.Client.ClientDto>()
+                .ForMember(dest => dest.Principal, act => act.Ignore())
+                .ForMember(dest => dest.Balance, act => act.Ignore());
+
             CreateMap<Client, Model.Client.UpdateClientDto>();
 
             CreateMap<Model.Client.ClientDto, Client>();
@@ -16,6 +18,7 @@ namespace Loan.Api.Profiles
             CreateMap<Model.Client.CreateClientDto, Client>();
 
             CreateMap<Model.Client.UpdateClientDto, Client>();
+
         }
 
     }

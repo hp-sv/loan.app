@@ -17,4 +17,5 @@ net6.0
 obj
 bin
 appsettings.Development.json
+*.testlog
 /server/.vs/Loan.Api/v17/TestStore/0/*.testlog
