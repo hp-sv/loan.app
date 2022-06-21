@@ -11,7 +11,7 @@ const ClientForm = ({
 }) => {
   return (
     <form onSubmit={onSave}>
-      <h2>{client.id ? "Edit" : "Add"} Client</h2>
+      <h6>{client.id ? "Edit" : "Add"} Client</h6>
       {errors.onSave && (
         <div className="alert alert-dange" role="alert">
           {errors.onSave}

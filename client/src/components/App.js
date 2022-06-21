@@ -10,9 +10,9 @@ import ManageClientPage from "./client/ManageClientPage";
 
 function App() {
   return (
-    <Router>
-      <div className="container">
-        <Header title="Home" />
+    <div className="container">
+      <Header title="Home" />
+      <Router>
         <Routes>
           <Route exact path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
@@ -21,8 +21,8 @@ function App() {
           <Route path="/client" element={<ManageClientPage />} />
           <Route element={PageNotFound} />
         </Routes>
-      </div>
-    </Router>
+      </Router>
+    </div>
   );
 }
 

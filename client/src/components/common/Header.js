@@ -21,9 +21,7 @@ function Header() {
         <div className="col-md-6">
           <h5>{currentPageTitle}</h5>
         </div>
-        <div className="col-md-6">
-          <h5>{currentPageUser}</h5>
-        </div>
+        <div className="col-md-6">{currentPageUser}</div>
       </div>
     </header>
   );
