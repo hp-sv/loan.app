@@ -38,10 +38,10 @@ namespace Loan.Domain.Services
 
         private void validateDob(Client client)
         {
-            var invalidDate = new DateTime(1950, 01, 01);
+            var invalidDate = new DateTime(1900, 01, 01);
             
             if(client.Dob < invalidDate)
-                _Erorrs.Add(new ValidationError { ErrorCode = ClientValidationErrorCodes.CLIENT_DATE_OF_BIRTH_ERROR, ErrorMessage = "Client must be born on or after first of January 1950" });
+                _Erorrs.Add(new ValidationError { ErrorCode = ClientValidationErrorCodes.CLIENT_DATE_OF_BIRTH_ERROR, ErrorMessage = "Client must be born on or after first of January 1900" });
         }
 
         public override async Task ValidateForUpdate(Client client)

@@ -1,9 +1,9 @@
 const newClient = {
   id: null,
-  fistName: "",
+  firstName: "",
   middleName: "",
   lastName: "",
-  dob: "1961-01-01",
+  dob: "1900-01-01",
   emailAddress: "",
   mobileNumber: "",
   addressLine1: "",
