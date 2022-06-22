@@ -17,21 +17,24 @@ namespace Loan.Repository
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public void Create(Client client)
+        public Task CreateAsync(Client client)
         {
-            context.Clients.Add(client);            
+            context.Clients.Add(client);
+            return Task.CompletedTask;
         }
 
-        public async void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             var client = await context.Clients.FirstAsync(a => a.Id == id);
             client.RecordStatusId = LookupIds.RecordStatus.Deleted;
+            return;
         }
 
-        public async void Update(Client client)
+        public async Task UpdateAsync(Client client)
         {
             var clientToUpdate = await context.Clients.FirstAsync(c => c.Id == client.Id);
             _mapper.Map(client, clientToUpdate);
+            return;
         }
 
         public async Task<IEnumerable<Client>> GetAllAsync()

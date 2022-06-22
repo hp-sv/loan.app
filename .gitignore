@@ -1,13 +1,8 @@
 .dtbcache.v2
-10c30c38-4719-4daa-8588-5678a2f90efe.vsidx
-35ea9252-78c9-4846-8514-570cb7f96e37.vsidx
-92e9a125-5ae6-466b-9ae4-138e662a6454.vsidx
-be6d1b10-e997-4af1-9913-52599bfb992c.vsidx
 read.lock
 applicationhost.config
 .futdcache.v1
 .suo
-004.testlog
 testlog.manifest
 loan.api.metadata.v2
 loan.api.projects.v2
@@ -18,4 +13,3 @@ obj
 bin
 appsettings.Development.json
 *.testlog
-/server/.vs/Loan.Api/v17/TestStore/0/*.testlog

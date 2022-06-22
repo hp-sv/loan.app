@@ -8,12 +8,12 @@ namespace Loan.Repository
     public class LookupSetRepository : LoanRepositoryBase<LookupSet>, ILookupSetRepository
     {
         public LookupSetRepository(LoanDbContext dbcontext ) : base(dbcontext) { }
-        public void Create(LookupSet entity)
+        public Task CreateAsync(LookupSet entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(int id)
+        public Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -28,7 +28,7 @@ namespace Loan.Repository
             return await context.LookupSets.Include(ls => ls.Lookups).FirstOrDefaultAsync(ls => ls.Id == id);
         }
 
-        public void Update(LookupSet entity)
+        public Task UpdateAsync(LookupSet entity)
         {
             throw new NotImplementedException();
         }

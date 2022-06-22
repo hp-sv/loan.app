@@ -56,7 +56,7 @@ namespace Loan.Data.Context
         }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            OnBeforeSaveChanges();
+            await OnBeforeSaveChangesAsync();
             int result = await base.SaveChangesAsync(cancellationToken);
             await OnAfterSaveChanges();
             return result;
@@ -89,7 +89,7 @@ namespace Loan.Data.Context
                             if (changeEntity != null)
                             {
                                 changeEntity.PrimaryKey = newPrimaryKeyValue;
-                                hasAddedEntity = true;                                
+                                hasAddedEntity = true;
                             }
                         }
                     }
@@ -102,7 +102,7 @@ namespace Loan.Data.Context
         }
         
 
-        private void OnBeforeSaveChanges()
+        private Task OnBeforeSaveChangesAsync()
         {
             var changeEntities = new List<ChangeEntity>();
 
@@ -190,7 +190,7 @@ namespace Loan.Data.Context
                             }
                             break;
                     }
-                }
+                }                
             }
 
             var changeTransaction = new ChangeTransaction
@@ -203,8 +203,8 @@ namespace Loan.Data.Context
 
             };
             ChangeTransactions.Add(changeTransaction);
-        }
-        
 
+            return Task.CompletedTask;
+        }
     }
 }

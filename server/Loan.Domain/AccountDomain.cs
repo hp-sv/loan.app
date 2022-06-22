@@ -32,7 +32,7 @@ namespace Loan.Domain
             if (_validationService.HasError)            
                 throw _validationService.GetException();
 
-            _repository.Create(account);
+            await _repository.CreateAsync(account);
             return (await _transactionService.SaveChangesAsync() >= 0);
         }
 
@@ -83,7 +83,7 @@ namespace Loan.Domain
             if (_validationService.HasError)
                 throw _validationService.GetException();
 
-            _repository.Update(account);
+            await _repository.UpdateAsync(account);
 
             return (await _transactionService.SaveChangesAsync() >= 0);
 

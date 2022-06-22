@@ -15,15 +15,17 @@ namespace Loan.Repository
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public void Create(Account account)
+        public Task CreateAsync(Account account)
         {
             context.Accounts.Add(account);
+            return Task.CompletedTask;
         }
 
-        public async void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             var account = await context.Accounts.FirstAsync(a => a.Id == id);
-            account.RecordStatusId = LookupIds.RecordStatus.Deleted;            
+            account.RecordStatusId = LookupIds.RecordStatus.Deleted;
+            return;
         }
 
         public async Task<IEnumerable<Account>?> GetAccountByClientAsync(int clientId)
@@ -54,11 +56,13 @@ namespace Loan.Repository
             return await context.Accounts.AnyAsync(a => a.Id == id);
         }
 
-        public async void Update(Account account)
+        public async Task UpdateAsync(Account account)
         {
             var accountToUpdate = await context.Accounts.FirstOrDefaultAsync(a => a.Id == account.Id);
 
             _mapper.Map(account, accountToUpdate);
+
+            return;
 
         }
     }
