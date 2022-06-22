@@ -12,7 +12,7 @@ function ManageClientPage({
   loadClients,
   setCurrentPageTitle,
   saveClient,
-  history,
+  navigate,
   ...props
 }) {
   const [client, setClient] = useState({ ...props.client });
@@ -31,17 +31,19 @@ function ManageClientPage({
   }, [props.client]);
 
   function handleChange(event) {
-    const { name, value } = event.target;
-    setClient((prevClient) => ({
-      ...prevClient,
-      [name]: name === "id" ? parseInt(value, 0) : value,
-    }));
+    const { name, value } = event.target;    
+    setClient((prevClient) => 
+      ({
+        ...prevClient,
+        [name]: (name === "id" ? parseInt(value, 0) : value),
+      })  
+    );
   }
 
   function handleSave(event) {
-    event.preventDefault();
+    event.preventDefault();    
     saveClient(client).then(() => {
-      history.push("/clients");
+      navigate("/clients");
     });
   }
 
@@ -63,7 +65,7 @@ ManageClientPage.propTypes = {
   clients: PropTypes.array.isRequired,
   loadClients: PropTypes.func.isRequired,
   setCurrentPageTitle: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
+  navigate: PropTypes.object.isRequired,
 };
 
 function getClientById(clients, id) {

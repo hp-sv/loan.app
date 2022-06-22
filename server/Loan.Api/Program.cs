@@ -34,8 +34,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers(options => {
     options.ReturnHttpNotAcceptable = true;
     options.Filters.Add<HttpResponseExceptionFilter>();
-}).AddNewtonsoftJson()
-.AddXmlDataContractSerializerFormatters();
+}).AddXmlDataContractSerializerFormatters();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

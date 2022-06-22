@@ -1,15 +1,14 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Loan.Model.Client;
 using Loan.Entity;
 using Loan.Interface.Constants;
 using Loan.Interface.Domain;
+using Loan.Model.Client;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Loan.Api.Controllers
 {
-    [Route(ClientRoutes.ROUTE)]
+	[Route(ClientRoutes.ROUTE)]
     //[Authorize]
     [ApiController]
     public class ClientController : ControllerBase
@@ -44,22 +43,27 @@ namespace Loan.Api.Controllers
             await _domain.CreateAsync(newClient);
 
             var createdClient = _mapper.Map<ClientDto>(newClient);
-            return CreatedAtRoute(ClientRoutes.GET_CLIENT_ROUTE_NAME, new { id = newClient.Id }, createdClient);            
+            return CreatedAtRoute(ClientRoutes.GET_CLIENT_ROUTE_NAME, new { id = newClient.Id }, createdClient);
         }
 
         [HttpPut(ClientRoutes.ID)]
-        public async Task<ActionResult> UpdateAsync(int id, UpdateClientDto client)            
+        public async Task<ActionResult<ClientDto>> UpdateAsync(int id, UpdateClientDto client)            
         {
             var clientToUpdate = new Client("","");
             _mapper.Map(client, clientToUpdate);
             clientToUpdate.Id = id;
 
             var result = await _domain.UpdateAsync(clientToUpdate);
+
+            if (result)
+            {
+                return Ok(_mapper.Map<ClientDto>(clientToUpdate));
+            }                
+            else
+            {
+                return BadRequest();
+            }
             
-            if(result)
-                return NoContent();
-            else 
-                return BadRequest();                        
 
         }
 

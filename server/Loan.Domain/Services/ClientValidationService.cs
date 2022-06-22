@@ -30,7 +30,7 @@ namespace Loan.Domain.Services
 
         private void validateAge(Client client)
         {            
-            var age =(_dateService.CurrentDate.Subtract(client.Dob)).TotalDays / 365;
+            var age =(_dateService.CurrentDate.Subtract(client.Dob).TotalDays / 365);
 
             if (age < 18)
                 _Erorrs.Add(new ValidationError { ErrorCode = ClientValidationErrorCodes.CLIENT_IS_UNDER_AGE, ErrorMessage = "Client must be 18 years old or above." });                        
