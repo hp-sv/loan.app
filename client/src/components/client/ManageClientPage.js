@@ -12,7 +12,7 @@ function ManageClientPage({
   loadClients,
   setCurrentPageTitle,
   saveClient,
-  history,
+  navigate,
   ...props
 }) {
   const [client, setClient] = useState({ ...props.client });
@@ -41,7 +41,7 @@ function ManageClientPage({
   function handleSave(event) {
     event.preventDefault();
     saveClient(client).then(() => {
-      history.push("/clients");
+      navigate("/clients");
     });
   }
 
@@ -63,7 +63,7 @@ ManageClientPage.propTypes = {
   clients: PropTypes.array.isRequired,
   loadClients: PropTypes.func.isRequired,
   setCurrentPageTitle: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
+  navigate: PropTypes.object.isRequired,
 };
 
 function getClientById(clients, id) {

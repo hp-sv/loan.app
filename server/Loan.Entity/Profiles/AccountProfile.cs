@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using Loan.Entity;
 
-namespace Loan.Repository.Profiles
+namespace Loan.Entity.Profiles
 {
     public class AccountProfile : Profile 
     {

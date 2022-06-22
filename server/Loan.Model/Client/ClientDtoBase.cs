@@ -22,7 +22,6 @@ namespace Loan.Model.Client
 
         public DateTime Dob { get; set; } = new DateTime(1900, 1, 1);
 
-
         [MinLength(8, ErrorMessage = "Mobile number must be at least eight characters.")]
         [MaxLength(20, ErrorMessage = "Mobile number can be up to 255 characters only.")]
         [DefaultValue("")]

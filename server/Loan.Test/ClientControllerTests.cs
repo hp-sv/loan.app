@@ -80,7 +80,7 @@ namespace Loan.Test
 
            var updateResult = await _controller.UpdateAsync(createdClient.Id, updateClient);
 
-           Assert.IsType<NoContentResult>(updateResult);
+            Assert.IsType<ActionResult<ClientDto>>(updateResult);
         }
 
         [Fact]
@@ -146,7 +146,7 @@ namespace Loan.Test
         [Fact]
         public async void Client_Dob_Must_Be_On_Or_After_1950()
         {
-            var dob = new DateTime(1949, 01, 01);
+            var dob = new DateTime(1899, 12, 31);
             var client = _fixture.JohnDough;
             client.Dob = dob;
             var createException = await Assert.ThrowsAsync<HttpResponseException>(() => _controller.CreateAsync(client));

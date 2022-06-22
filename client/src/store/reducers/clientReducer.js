@@ -6,9 +6,11 @@ export default function clientReducer(state = initialState.clients, action) {
     case types.LOAD_CLIENTS_SUCCESS:
       return action.clients;
     case types.CREATE_CLIENT_SUCCESS:
-      return action.client;
+      return [...state, { ...action.client }];
     case types.UPDATE_CLIENT_SUCCESS:
-      return action.client;
+      return state.map((client) =>
+        client.id === action.client.id ? action.client : client
+      );
     default:
       return state;
   }
