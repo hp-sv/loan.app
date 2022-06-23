@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using Loan.Model.Converter;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Loan.Model.Client
 {
@@ -19,7 +21,9 @@ namespace Loan.Model.Client
         [MaxLength(255, ErrorMessage = "Last name can be up to 255 characters only.")]
         [DefaultValue("")]
         public string LastName { get; set; } = String.Empty;
-                
+        
+        
+        [JsonConverter(typeof(DateTimeJsonConverter))]
         public DateTime Dob { get; set; } = new DateTime(1900, 1, 1);
 
         [MinLength(8, ErrorMessage = "Mobile number must be at least eight characters.")]

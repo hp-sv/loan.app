@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import HomePage from "./home/HomePage";
 import AboutPage from "./about/AboutPage";
 import Header from "./common/Header";
@@ -11,8 +12,8 @@ import ManageClientPage from "./client/ManageClientPage";
 function App() {
   return (
     <div className="container">
-      <Header title="Home" />
       <Router>
+        <Header title="Home" />
         <Routes>
           <Route exact path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
