@@ -1,12 +1,7 @@
-import * as types from "./pageActionTypes";
-
-export function setPageTitle(title) {
-  const pageTitle = { title };
-  return { type: types.SET_APP_PAGE_TITLE, pageTitle };
-}
+import * as types from "./actionTypes";
 
 export function setCurrentPageTitleSuccess(pageTitle) {
-  return { type: types.SET_APP_PAGE_TITLE_SUCCESS, pageTitle };
+  return { type: types.SET_APP_PAGE_TITLE_COMPLETED, pageTitle };
 }
 
 export function setCurrentPageTitle(title) {

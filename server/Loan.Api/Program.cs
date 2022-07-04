@@ -12,6 +12,7 @@ using Loan.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,10 +32,16 @@ builder.Services.AddCors(options =>
 
 
 // Add services to the container.
-builder.Services.AddControllers(options => {
+builder.Services.AddControllers(options => {    
     options.ReturnHttpNotAcceptable = true;
-    options.Filters.Add<HttpResponseExceptionFilter>();
-}).AddXmlDataContractSerializerFormatters();
+    options.Filters.Add<HttpResponseExceptionFilter>();        
+}).AddJsonOptions(options=>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+
+    })
+  .AddXmlDataContractSerializerFormatters();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

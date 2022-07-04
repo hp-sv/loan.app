@@ -32,7 +32,14 @@ namespace Loan.Domain.Services
             if (!HasError)
                 throw new Exception("No error to report");
 
-            return new HttpResponseException((int)HttpStatusCode.BadRequest, _Erorrs);
+            var validationErrors = new BusinessValidationError
+            { 
+                    Type = "Domain",
+                    Title = "One or more business validation error(s) occured.",
+                   ValidationErrors = _Erorrs
+            };
+
+            return new HttpResponseException((int)HttpStatusCode.BadRequest, validationErrors);
             
         }
 
@@ -41,7 +48,7 @@ namespace Loan.Domain.Services
             return new HttpResponseException(
                     (int)HttpStatusCode.BadRequest, 
                     new[] { 
-                        new ValidationError { ErrorCode = errorCode, ErrorMessage=errorMessage} 
+                        new ValidationError { Code = errorCode, Message=errorMessage} 
                     });
         }
 

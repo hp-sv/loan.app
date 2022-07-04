@@ -2,58 +2,34 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 function NavigationLink() {
-  
-  const activeStyle = { color: "blue" };
-
   return (
-    <>
+    <div className="row bg-light">
       <div className="col-md-1">
-        <NavLink exact to="/" activeStyle={activeStyle} className="bi bi-house">
+        <NavLink to="/" className="bi bi-house text-muted">
           Home
         </NavLink>
       </div>
       <div className="col-md-1">
-        <NavLink
-          exact
-          to="/clients"
-          activeStyle={activeStyle}
-          className="bi bi-person"
-        >
+        <NavLink to="/clients" className="bi bi-people text-muted">
           Clients
         </NavLink>
       </div>
       <div className="col-md-1">
-        <NavLink
-          exact
-          to="/accounts"
-          activeStyle={activeStyle}
-          className="bi bi-credit-card"
-        >
+        <NavLink to="/accounts" className="bi bi-credit-card text-muted">
           Accounts
         </NavLink>
       </div>
       <div className="col-md-1">
-        <NavLink
-          exact
-          to="/admin"
-          activeStyle={activeStyle}
-          className="bi bi-gear"
-        >
+        <NavLink to="/admin" className="bi bi-gear text-muted">
           Admin
         </NavLink>
       </div>
       <div className="col-md-1">
-        <NavLink
-          exact
-          to="/about"
-          activeStyle={activeStyle}
-          className="bi bi-info-circle"
-        >
+        <NavLink to="/about" className="bi bi-info-circle text-muted">
           About
         </NavLink>
       </div>
-      <div className="col-md-7"></div>
-    </>
+    </div>
   );
 }
 

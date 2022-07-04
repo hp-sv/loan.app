@@ -59,5 +59,15 @@ namespace Loan.Repository
         {
             return await context.Clients.AnyAsync(c => c.Id == id);
         }
+
+        public async Task<IEnumerable<Client>?> SearchAsyc(string filter)
+        {
+            filter = filter.ToLower();
+            return await context.Clients.Where(
+                    c => c.FirstName.ToLower().StartsWith(filter) 
+                    || c.MiddleName.ToLower().StartsWith(filter)
+                    || c.LastName.ToLower().StartsWith(filter)
+                    ).ToListAsync();
+        }
     }
 }

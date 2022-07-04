@@ -8,6 +8,8 @@ import Header from "./common/Header";
 import PageNotFound from "./PageNotFound";
 import ClientPage from "./client/ClientPage";
 import ManageClientPage from "./client/ManageClientPage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
           <Route element={PageNotFound} />
         </Routes>
       </Router>
+      <ToastContainer autoClose={1000} />
     </div>
   );
 }

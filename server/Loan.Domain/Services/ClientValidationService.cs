@@ -33,7 +33,7 @@ namespace Loan.Domain.Services
             var age =(_dateService.CurrentDate.Subtract(client.Dob).TotalDays / 365);
 
             if (age < 18)
-                _Erorrs.Add(new ValidationError { ErrorCode = ClientValidationErrorCodes.CLIENT_IS_UNDER_AGE, ErrorMessage = "Client must be 18 years old or above." });                        
+                _Erorrs.Add(new ValidationError { Code = ClientValidationErrorCodes.CLIENT_IS_UNDER_AGE, Message = "Client must be 18 years old or above." });                        
         }
 
         private void validateDob(Client client)
@@ -41,7 +41,7 @@ namespace Loan.Domain.Services
             var invalidDate = new DateTime(1900, 01, 01);
             
             if(client.Dob < invalidDate)
-                _Erorrs.Add(new ValidationError { ErrorCode = ClientValidationErrorCodes.CLIENT_DATE_OF_BIRTH_ERROR, ErrorMessage = "Client must be born on or after first of January 1900" });
+                _Erorrs.Add(new ValidationError { Code = ClientValidationErrorCodes.CLIENT_DATE_OF_BIRTH_ERROR, Message = "Client must be born on or after first of January 1900" });
         }
 
         public override async Task ValidateForUpdate(Client client)
@@ -64,7 +64,7 @@ namespace Loan.Domain.Services
 
             if (clientAccounts != null)
                 if (clientAccounts.Any(ca => ca.StatusId == LookupIds.AccountStatuses.Active))
-                    _Erorrs.Add(new ValidationError { ErrorCode = ClientValidationErrorCodes.CLIENT_HAS_AN_ACTIVE_ACCOUNT, ErrorMessage = "Client has an active account." });
+                    _Erorrs.Add(new ValidationError { Code = ClientValidationErrorCodes.CLIENT_HAS_AN_ACTIVE_ACCOUNT, Message = "Client has an active account." });
         }
 
         private async Task IsClientExists(Client client)
@@ -72,7 +72,7 @@ namespace Loan.Domain.Services
             var isClientExist = await _clientRepository.IsClientExistsAsync(client.Id);
 
             if (!isClientExist)
-                _Erorrs.Add(new ValidationError { ErrorCode = ClientValidationErrorCodes.CLIENT_DO_NOT_EXISTS, ErrorMessage = "Client does not exists." });
+                _Erorrs.Add(new ValidationError { Code = ClientValidationErrorCodes.CLIENT_DO_NOT_EXISTS, Message = "Client does not exists." });
         }
     }
 }

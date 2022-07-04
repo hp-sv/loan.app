@@ -33,6 +33,11 @@ namespace Loan.Domain
             return await _lookupSetRepository.GetByIdAsync(id);
         }
 
+        public Task<IEnumerable<LookupSet>?> SearchAsync(string filter)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<bool> UpdateAsync(LookupSet entity)
         {
             throw new NotImplementedException();

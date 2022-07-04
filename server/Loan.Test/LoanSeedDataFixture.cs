@@ -125,6 +125,27 @@ namespace Loan.Test
                     AddressLine2 = "",
                     AddressLine3 = "Southbank Vic 3006"
                 }
+                ,
+                new Client("Henry", "James")
+                {
+                    MiddleName = "",
+                    Dob = new DateTime(1961, 02, 01),
+                    EmailAddress = "henry.james@gmail.com",
+                    MobileNumber = "125425212",
+                    AddressLine1 = "76 Nguyen st",
+                    AddressLine2 = "",
+                    AddressLine3 = "Southbank Vic 3006"
+                },
+                new Client("Samuel", "Jackson")
+                {
+                    MiddleName = "James",
+                    Dob = new DateTime(1961, 02, 01),
+                    EmailAddress = "henry.james@gmail.com",
+                    MobileNumber = "125425212",
+                    AddressLine1 = "76 Nguyen st",
+                    AddressLine2 = "",
+                    AddressLine3 = "Southbank Vic 3006"
+                }
             };
 
             DbContext.Clients.AddRange(seedClients);

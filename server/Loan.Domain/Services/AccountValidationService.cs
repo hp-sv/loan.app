@@ -36,7 +36,7 @@ namespace Loan.Domain.Services
             var isClientExist = await _clientRepository.IsClientExistsAsync(account.ClientId);
 
             if (!isClientExist)
-                _Erorrs.Add(new ValidationError {ErrorCode = AccountValidationErrorCodes.IVALID_CLIENT, ErrorMessage="Client does not exists."});
+                _Erorrs.Add(new ValidationError {Code = AccountValidationErrorCodes.IVALID_CLIENT, Message="Client does not exists."});
         
         }
       
@@ -46,12 +46,12 @@ namespace Loan.Domain.Services
 
             if (lookupSet == null)
             {
-                _Erorrs.Add(new ValidationError { ErrorCode = CommonErrorCodes.SYSTEM_CONFIGURATION_ERROR, ErrorMessage = $"System configuration errorf - {lookupSetName} is not defined." });
+                _Erorrs.Add(new ValidationError { Code = CommonErrorCodes.SYSTEM_CONFIGURATION_ERROR, Message = $"System configuration errorf - {lookupSetName} is not defined." });
                 return;
             }
 
             if (!(lookupSet.Lookups.Any(l => l.Id == lookupId)))
-                _Erorrs.Add(new ValidationError { ErrorCode = errorCode, ErrorMessage = $"Invalid {lookupSetName}."});
+                _Erorrs.Add(new ValidationError { Code = errorCode, Message = $"Invalid {lookupSetName}."});
         }
 
         public override async Task ValidateForUpdate(Account account)
@@ -64,7 +64,7 @@ namespace Loan.Domain.Services
             var isClientExist = await _accountRepository.IsAccountExistsAsync(account.Id);
 
             if (!isClientExist)
-                _Erorrs.Add(new ValidationError { ErrorCode = AccountValidationErrorCodes.ACCOUNT_DOES_NOT_EXISTS, ErrorMessage = "Account does not exists." });
+                _Erorrs.Add(new ValidationError { Code = AccountValidationErrorCodes.ACCOUNT_DOES_NOT_EXISTS, Message = "Account does not exists." });
         }
 
         public override async Task ValidateForDelete(Account account)

@@ -10,7 +10,7 @@ const TextInput = ({
   type,
   error,
 }) => {
-  let wrapperClass = "form-group";
+  let wrapperClass = "form-group input-group-sm";
   if (error && error.length > 0) {
     wrapperClass += " has-error";
   }

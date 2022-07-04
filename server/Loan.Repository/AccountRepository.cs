@@ -56,6 +56,11 @@ namespace Loan.Repository
             return await context.Accounts.AnyAsync(a => a.Id == id);
         }
 
+        public Task<IEnumerable<Account>?> SearchAsyc(string filter)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task UpdateAsync(Account account)
         {
             var accountToUpdate = await context.Accounts.FirstOrDefaultAsync(a => a.Id == account.Id);

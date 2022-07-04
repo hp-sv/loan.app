@@ -5,7 +5,7 @@
         public const string ROUTE = "api/client";
         public const string ID = "{id}";
         public const string GET_CLIENT_ROUTE_NAME = "GetClientRoute";
-        
+        public const string SEARCH = "search";
     }
 
     public static class AccountRoutes

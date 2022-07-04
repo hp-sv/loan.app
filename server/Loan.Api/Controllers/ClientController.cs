@@ -102,7 +102,18 @@ namespace Loan.Api.Controllers
             
             return NoContent();
 
-        }        
+        }
+
+        [HttpGet(ClientRoutes.SEARCH)]
+        public async Task<ActionResult<IEnumerable<ClientDto>>> SearchAsync(string filter)
+        {
+            var clients = await _domain.SearchAsync(filter);
+
+            if (clients == null)
+                return BadRequest($"Filter client by {filter} returned no result.");
+
+            return Ok(_mapper.Map<IEnumerable<ClientDto>>(clients));
+        }
 
     }
 }

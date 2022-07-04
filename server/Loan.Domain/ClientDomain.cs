@@ -75,6 +75,11 @@ namespace Loan.Domain
             return await _repository.IsClientExistsAsync(id);
         }
 
+        public async Task<IEnumerable<Client>?> SearchAsync(string filter)
+        {
+            return await _repository.SearchAsyc(filter);
+        }
+
         public async Task<bool> UpdateAsync(Client client)
         {
             await _validationService.ValidateForUpdate(client);

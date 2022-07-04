@@ -28,6 +28,11 @@ namespace Loan.Repository
             return await context.LookupSets.Include(ls => ls.Lookups).FirstOrDefaultAsync(ls => ls.Id == id);
         }
 
+        public Task<IEnumerable<LookupSet>?> SearchAsyc(string filter)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task UpdateAsync(LookupSet entity)
         {
             throw new NotImplementedException();

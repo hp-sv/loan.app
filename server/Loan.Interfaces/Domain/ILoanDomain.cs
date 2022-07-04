@@ -9,5 +9,7 @@ namespace Loan.Interface.Domain
         public Task<bool> UpdateAsync(T entity);
         public Task<bool> DeleteAsync(int id);
 
+        public Task<IEnumerable<T>?> SearchAsync(string filter);
+
     }
 }

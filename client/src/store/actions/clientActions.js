@@ -1,8 +1,13 @@
-import * as types from "./clientActionTypes";
+import * as types from "./actionTypes";
 import * as clientApi from "../../api/clientApi";
+import { beginApiCall, apiCallError } from "./apiStatusActions";
 
-export function loadClientSuccess(clients) {
-  return { type: types.LOAD_CLIENTS_SUCCESS, clients };
+export function searchClientSuccess(clients) {
+  return { type: types.SEARCH_CLIENT_SUCCESS, clients };
+}
+
+export function getClientSuccess(client) {
+  return { type: types.GET_CLIENT_SUCCESS, client };
 }
 
 export function updateClientSuccess(client) {
@@ -13,14 +18,32 @@ export function createClientSuccess(client) {
   return { type: types.CREATE_CLIENT_SUCCESS, client };
 }
 
-export function loadClients() {
+export function searchClients(filter) {
   return function (dispatch) {
+    dispatch(beginApiCall());
     return clientApi
-      .getClients()
+      .searchClients(filter)
       .then((clients) => {
-        dispatch(loadClientSuccess(clients));
+        dispatch(searchClientSuccess(clients));
       })
       .catch((error) => {
+        dispatch(apiCallError(error));
+        throw error;
+      });
+  };
+}
+
+export function getClientById(id) {
+  return function (dispatch) {
+    dispatch(beginApiCall());
+    
+    return clientApi
+      .getClientById(id)
+      .then((client) => {
+        dispatch(getClientSuccess(client));
+      })
+      .catch((error) => {
+        dispatch(apiCallError(error));
         throw error;
       });
   };
@@ -29,6 +52,7 @@ export function loadClients() {
 export function saveClient(client) {
   //eslint-disable-next-line no-unused-vars
   return function (dispatch, getState) {
+    dispatch(beginApiCall());
     return clientApi
       .saveClient(client)
       .then((savedClient) => {
@@ -37,6 +61,7 @@ export function saveClient(client) {
           : dispatch(createClientSuccess(savedClient));
       })
       .catch((error) => {
+        dispatch(apiCallError(error));
         throw error;
       });
   };

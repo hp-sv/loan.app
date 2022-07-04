@@ -5,6 +5,7 @@ import TextInput from "../common/TextInput";
 const ClientForm = ({
   client,
   onSave,
+  onCancel,
   onChange,
   saving = false,
   errors = {},
@@ -13,11 +14,19 @@ const ClientForm = ({
     <form onSubmit={onSave}>
       <h6>{client.id ? "Edit" : "Add"} Client</h6>
       {errors.onSave && (
-        <div className="alert alert-dange" role="alert">
+        <div className="alert alert-danger" role="alert">
           {errors.onSave}
+          <br />
+          {errors.validationErrors &&
+            errors.validationErrors.map((error) => {
+              return (
+                <li
+                  key={`__validationError${error.code}`}
+                >{`[Code]: ${error.code}: [Message]: ${error.message}`}</li>
+              );
+            })}
         </div>
       )}
-
       <TextInput
         name="firstName"
         label="First Name"
@@ -26,7 +35,6 @@ const ClientForm = ({
         error={errors.firstName}
         type="text"
       />
-
       <TextInput
         name="middleName"
         label="Middle Name"
@@ -35,7 +43,6 @@ const ClientForm = ({
         error={errors.middleName}
         type="text"
       />
-
       <TextInput
         name="lastName"
         label="Last Name"
@@ -44,7 +51,6 @@ const ClientForm = ({
         error={errors.lastName}
         type="text"
       />
-
       <TextInput
         name="dob"
         label="Birth date"
@@ -53,7 +59,6 @@ const ClientForm = ({
         error={errors.dob}
         type="date"
       />
-
       <TextInput
         name="mobileNumber"
         label="Mobile Number"
@@ -62,7 +67,6 @@ const ClientForm = ({
         error={errors.mobileNumber}
         type="text"
       />
-
       <TextInput
         name="emailAddress"
         label="Email"
@@ -71,7 +75,6 @@ const ClientForm = ({
         error={errors.emailAddress}
         type="email"
       />
-
       <TextInput
         name="addressLine1"
         label="Address Line 1"
@@ -80,7 +83,6 @@ const ClientForm = ({
         error={errors.addressLine1}
         type="text"
       />
-
       <TextInput
         name="addressLine2"
         label="Address Line 2"
@@ -97,11 +99,21 @@ const ClientForm = ({
         error={errors.addressLine3}
         type="text"
       />
-
       <br />
-
-      <button type="submit" disabled={saving} className="btn btn-primary">
+      <button
+        type="submit"
+        disabled={saving}
+        className="btn btn-outline-secondary bi-save  btn-sm"
+      >
         {saving ? "Saving..." : "Save"}
+      </button>
+      &nbsp;
+      <button
+        type="button"
+        onClick={onCancel}
+        className="btn btn-outline-secondary bi-back  btn-sm"
+      >
+        Cancel
       </button>
     </form>
   );
@@ -110,6 +122,7 @@ const ClientForm = ({
 ClientForm.propTypes = {
   client: PropTypes.object.isRequired,
   onSave: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   errors: PropTypes.object,
   saving: PropTypes.bool,

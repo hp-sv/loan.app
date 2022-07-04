@@ -134,12 +134,12 @@ namespace Loan.Test
             var deleteException = await Assert.ThrowsAsync<HttpResponseException>(() => _controller.DeleteAsync(deleteClient.Id));
             Assert.NotNull(deleteException.Value);
 
-            var errors = deleteException.Value as List<ValidationError>;
+            var busError = deleteException.Value as BusinessValidationError;
 
-            Assert.True(errors?.Count == 1);
+            Assert.True(busError.ValidationErrors.Count == 1);
 
-            var error = errors?.First();
-            Assert.True(error?.ErrorCode == ClientValidationErrorCodes.CLIENT_HAS_AN_ACTIVE_ACCOUNT);            
+            var error = busError.ValidationErrors.First();
+            Assert.True(error.Code == ClientValidationErrorCodes.CLIENT_HAS_AN_ACTIVE_ACCOUNT);            
 
         }
 
@@ -153,12 +153,12 @@ namespace Loan.Test
 
             Assert.NotNull(createException.Value);
 
-            var errors = createException.Value as List<ValidationError>;
+            var busError = createException.Value as BusinessValidationError;
 
-            Assert.True(errors?.Count == 1);
+            Assert.True(busError.ValidationErrors.Count == 1);
 
-            var error = errors?.First();
-            Assert.True(error?.ErrorCode == ClientValidationErrorCodes.CLIENT_DATE_OF_BIRTH_ERROR);
+            var error = busError.ValidationErrors.First();
+            Assert.True(error.Code == ClientValidationErrorCodes.CLIENT_DATE_OF_BIRTH_ERROR);
         }
 
         [Fact]
@@ -171,12 +171,27 @@ namespace Loan.Test
 
             Assert.NotNull(createException.Value);
 
-            var errors = createException.Value as List<ValidationError>;
+            var busError = createException.Value as BusinessValidationError;
 
-            Assert.True(errors?.Count == 1);
+            Assert.True(busError.ValidationErrors.Count == 1);
 
-            var error = errors?.First();
-            Assert.True(error?.ErrorCode == ClientValidationErrorCodes.CLIENT_IS_UNDER_AGE);
+            var error = busError.ValidationErrors.First();
+            Assert.True(error.Code == ClientValidationErrorCodes.CLIENT_IS_UNDER_AGE);
+        }
+
+        [Fact]
+        public async void Can_Search_Client_To_All_Fields()
+        {
+            var searchResult = await _controller.SearchAsync("james");
+            var expected = 3;
+
+            Assert.IsType<ActionResult<IEnumerable<ClientDto>>>(searchResult);
+            
+            var result = searchResult?.Result as OkObjectResult;
+            var clients = result?.Value as IEnumerable<ClientDto>;
+            
+            Assert.NotNull(clients);
+            Assert.True(clients?.Count() == expected);
         }
 
 
