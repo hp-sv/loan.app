@@ -1,6 +1,7 @@
 import * as types from "./actionTypes";
 import * as clientApi from "../../api/clientApi";
 import { beginApiCall, apiCallError } from "./apiStatusActions";
+import { toast } from "react-toastify";
 
 export function searchClientSuccess(clients) {
   return { type: types.SEARCH_CLIENT_SUCCESS, clients };
@@ -21,6 +22,27 @@ export function createClientSuccess(client) {
 export function searchClients(filter) {
   return function (dispatch) {
     dispatch(beginApiCall());
+
+    return toast.promise(
+      clientApi.searchClients(filter),
+      {
+        pending: 'Searching client.. please wait.',
+        success: {          
+          render(result){
+            dispatch(searchClientSuccess(result.data));            
+            return false;
+          }
+        },
+        error: {
+          render(data){            
+            dispatch(apiCallError(data));            
+            throw data;
+          }
+        }
+      });
+
+      /*
+    
     return clientApi
       .searchClients(filter)
       .then((clients) => {
@@ -30,6 +52,8 @@ export function searchClients(filter) {
         dispatch(apiCallError(error));
         throw error;
       });
+      */
+
   };
 }
 

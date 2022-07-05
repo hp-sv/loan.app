@@ -24,7 +24,7 @@ function ManageClientPage({
   useEffect(() => {
     const { id } = props.params;
 
-    if (id && parseInt(id) !== props.client.id) {
+    if (id && parseInt(id) > 0 && !props.client.id) {
       getClientById(id).catch((ex) => {
         toast.error("Error loading client. " + ex);
       });

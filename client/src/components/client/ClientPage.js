@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { searchClients } from "../../store/actions/clientActions";
 import { setCurrentPageTitle } from "../../store/actions/pageAction";
-import Spinner from "../common/Spinner";
 import PropTypes from "prop-types";
 import ClientList from "./ClientList";
 import SearchForm from "../common/SearchForm";
 import { Navigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { setClientFilterBy } from "../../store/actions/filterAction";
+import Disabled from "../common/Disabled";
 
 function ClientPage({
   clients,
@@ -31,41 +30,35 @@ function ClientPage({
   }
 
   function handleSearch(event) {
-    event.preventDefault();
+    event.preventDefault();    
     setClientFilterBy(filterBy);
-    searchClients(filterBy).then(() => {
-      toast.success("Search client completed.");
-    });
+    searchClients(filterBy);
   }
 
   const [redirectToAddClient, setRedirectToAddClient] = useState(false);
 
-  return (
-    <>
+  return ( 
+    <>   
       {redirectToAddClient && <Navigate to="/client" />}
-      {loading ? (
-        <Spinner />
-      ) : (
-        <>
-          <div className="row">
-            <div className="input-group">
-              <button
+      <Disabled disabled={loading}>
+      <div className="row">
+          <div className="input-group">
+            <button
                 className="btn btn-outline-secondary bi-person btn-sm"
                 onClick={() => setRedirectToAddClient(true)}
               >
                 Add Client
               </button>
-              <SearchForm
-                placeHolder="Search client"
-                onChange={handleValueChange}
-                onSearch={handleSearch}
-                value={filterBy}
-              />
-            </div>
+            <SearchForm
+              placeHolder="Search client"
+              onChange={handleValueChange}
+              onSearch={handleSearch}
+              value={filterBy}
+            />
           </div>
-          <ClientList clients={clients} />
-        </>
-      )}
+      </div>
+      <ClientList clients={clients} />
+      </Disabled>
     </>
   );
 }

@@ -1,5 +1,5 @@
 const newClient = {
-  id: -1,
+  id: null,
   firstName: "",
   middleName: "",
   lastName: "",

@@ -25,7 +25,16 @@ function App() {
           <Route element={PageNotFound} />
         </Routes>
       </Router>
-      <ToastContainer autoClose={1000} />
+      <ToastContainer 
+        position="top-center" 
+        autoClose={1000} 
+        hideProgressBar={false} 
+        newestOnTop={false} 
+        closeOnClick 
+        rtl={false} 
+        pauseOnFocusLoss 
+        draggable 
+        pauseOnHover />
     </div>
   );
 }

@@ -64,9 +64,9 @@ namespace Loan.Repository
         {
             filter = filter.ToLower();
             return await context.Clients.Where(
-                    c => c.FirstName.ToLower().StartsWith(filter) 
-                    || c.MiddleName.ToLower().StartsWith(filter)
-                    || c.LastName.ToLower().StartsWith(filter)
+                    c => c.FirstName.ToLower().Contains(filter) 
+                    || c.MiddleName.ToLower().Contains(filter)
+                    || c.LastName.ToLower().Contains(filter)
                     ).ToListAsync();
         }
     }
