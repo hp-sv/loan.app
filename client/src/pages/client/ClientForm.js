@@ -1,17 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
-import TextInput from "../common/TextInput";
+import TextInput from "../../components/common/TextInput";
+import * as constants from "../../constants/Common";
+import Disabled from "../../components/common/Disabled"
 
 const ClientForm = ({
   client,
-  onSave,
-  onCancel,
+  onSubmitForm,
+  onCancelForm,
   onChange,
-  saving = false,
+  opt,
+  submitting = false,  
   errors = {},
-}) => {
+}) => {  
   return (
-    <form onSubmit={onSave}>
+    <Disabled disabled={submitting}>
+    <form onSubmit={onSubmitForm}>
       <h6>{client.id ? "Edit" : "Add"} Client</h6>
       {errors.onSave && (
         <div className="alert alert-danger" role="alert">
@@ -102,30 +106,36 @@ const ClientForm = ({
       <br />
       <button
         type="submit"
-        disabled={saving}
+        disabled={submitting}
         className="btn btn-outline-secondary bi-save  btn-sm"
-      >
-        {saving ? "Saving..." : "Save"}
+      >                
+        
+        {(opt === constants.RECORD_ADD) && (submitting ? "Saving new..." : "Save")}
+        {(opt === constants.RECORD_EDIT) && (submitting ? "Updating..." : "Update")}
+        {(opt === constants.RECORD_DELETE) && (submitting ? "Deleting..." : "Delete")}
+
       </button>
       &nbsp;
       <button
         type="button"
-        onClick={onCancel}
+        onClick={onCancelForm}
         className="btn btn-outline-secondary bi-back  btn-sm"
       >
         Cancel
       </button>
     </form>
+    </Disabled>
   );
 };
 
 ClientForm.propTypes = {
   client: PropTypes.object.isRequired,
-  onSave: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
+  onSubmitForm: PropTypes.func.isRequired,
+  onCancelForm: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
+  opt: PropTypes.number.isRequired,
   errors: PropTypes.object,
-  saving: PropTypes.bool,
+  submitting: PropTypes.bool,  
 };
 
 export default ClientForm;

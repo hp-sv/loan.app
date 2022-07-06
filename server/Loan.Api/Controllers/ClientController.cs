@@ -61,7 +61,7 @@ namespace Loan.Api.Controllers
             }                
             else
             {
-                return BadRequest();
+                return BadRequest(client);
             }
             
 
@@ -98,9 +98,9 @@ namespace Loan.Api.Controllers
             var result = await _domain.DeleteAsync(id);
 
             if (!result)
-                return BadRequest();
-            
-            return NoContent();
+                return BadRequest(id);
+
+            return Ok(id);
 
         }
 

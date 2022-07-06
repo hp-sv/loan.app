@@ -15,7 +15,7 @@ function Disabled({ disabled, children }) {
 
 Disabled.propTypes = {
     disabled: PropTypes.bool.isRequired,
-    children: PropTypes.object.isRequired
+    children: PropTypes.array.isRequired
 }
 
 export default Disabled;

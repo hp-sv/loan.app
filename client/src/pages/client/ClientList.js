@@ -36,7 +36,7 @@ const ClientList = ({ clients }) => (
               </Link>
             </td>
             <td width={25}>
-              <Link to={`/client/${client.id}`}>
+              <Link to={`/client/d/${client.id}`}>
                 <Icon.Trash2 size={20} title="Delete" className="text-muted" />
               </Link>
             </td>

@@ -11,12 +11,12 @@ export function getClientSuccess(client) {
   return { type: types.GET_CLIENT_SUCCESS, client };
 }
 
-export function updateClientSuccess(client) {
-  return { type: types.UPDATE_CLIENT_SUCCESS, client };
+export function saveClientSuccess(client) {
+  return { type: types.SAVE_CLIENT_SUCCESS, client };
 }
 
-export function createClientSuccess(client) {
-  return { type: types.CREATE_CLIENT_SUCCESS, client };
+export function deleteClientSuccess(client){
+  return {type: types.DELETE_CLIENT_SUCCESS, client};
 }
 
 export function searchClients(filter) {
@@ -26,17 +26,17 @@ export function searchClients(filter) {
     return toast.promise(
       clientApi.searchClients(filter),
       {
-        pending: 'Searching client.. please wait.',
+        pending: 'Searching client. Please wait.',
         success: {          
           render(result){
             dispatch(searchClientSuccess(result.data));            
-            return false;
+            return "Search client completed.";
           }
         },
         error: {
           render(data){            
-            dispatch(apiCallError(data));            
-            throw data;
+            dispatch(apiCallError(data));
+            return "Ooops something went wrong.";
           }
         }
       });
@@ -77,6 +77,30 @@ export function saveClient(client) {
   //eslint-disable-next-line no-unused-vars
   return function (dispatch, getState) {
     dispatch(beginApiCall());
+    
+    var saveMessage = (client.id ? "Update client completed." : "Save new client completed.");
+
+    return toast.promise(
+      clientApi.saveClient(client),
+      {
+        pending: 'Saving client. Please wait.',
+        success: {
+          render(result)
+            {            
+              dispatch(saveClientSuccess(result.data));
+              return saveMessage;
+            }
+        },
+        error: {
+          render(data){            
+            dispatch(apiCallError(data));
+            return "Ooops something went wrong.";
+          }
+        }
+      });
+
+
+/*
     return clientApi
       .saveClient(client)
       .then((savedClient) => {
@@ -87,6 +111,33 @@ export function saveClient(client) {
       .catch((error) => {
         dispatch(apiCallError(error));
         throw error;
+      });
+*/      
+  };
+}
+
+export function deleteClient(client) {
+  //eslint-disable-next-line no-unused-vars
+  return function (dispatch, getState) {
+    dispatch(beginApiCall());
+    
+    return toast.promise(
+      clientApi.deleteClient(client.id),
+      {
+        pending: 'Deleting client. Please wait.',
+        success: {
+          render()
+            { 
+              dispatch(deleteClientSuccess(client));
+              return "Delete client completed.";
+            }
+        },
+        error: {
+          render(data){            
+            dispatch(apiCallError(data));
+            return "Ooops something went wrong.";
+          }
+        }
       });
   };
 }

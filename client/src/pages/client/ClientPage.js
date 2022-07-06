@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { searchClients } from "../../store/actions/clientActions";
-import { setCurrentPageTitle } from "../../store/actions/pageAction";
 import PropTypes from "prop-types";
 import ClientList from "./ClientList";
-import SearchForm from "../common/SearchForm";
+import SearchForm from "../../components/common/SearchForm";
 import { Navigate } from "react-router-dom";
 import { setClientFilterBy } from "../../store/actions/filterAction";
-import Disabled from "../common/Disabled";
+import Disabled from "../../components/common/Disabled";
 
 function ClientPage({
   clients,
-  searchClients,
-  setCurrentPageTitle,
+  searchClients,  
   setClientFilterBy,
   clientFilterBy,
   loading,
 }) {
-  useEffect(() => {
-    setCurrentPageTitle("Clients");
+  useEffect(() => {    
     setFilterBy(clientFilterBy);
   }, []);
 
@@ -73,15 +70,14 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  searchClients,
-  setCurrentPageTitle,
+  searchClients,  
   setClientFilterBy,
 };
 
 ClientPage.propTypes = {
   clients: PropTypes.array.isRequired,
-  searchClients: PropTypes.func.isRequired,
-  setCurrentPageTitle: PropTypes.func.isRequired,
+  searchClients: PropTypes.func.isRequired,  
+  setClientFilterBy: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   clientFilterBy: PropTypes.string,
 };

@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+
+
 const TextInput = ({
   name,
   label,
@@ -26,8 +28,9 @@ const TextInput = ({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          style={{height:30}}
         />
-        {error && <div className="alert alert-danger">{error}</div>}
+        {error && <div className="alert alert-danger alert-sm" style={{padding:0,height:30}}>{error}</div>}
       </div>
     </div>
   );

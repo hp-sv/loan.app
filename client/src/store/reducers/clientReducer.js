@@ -12,13 +12,21 @@ export default function clientReducer(state = initialState.clients, action) {
         );
       } else {
         return [...state, action.client];
-      }
-    case types.CREATE_CLIENT_SUCCESS:
-      return [...state, { ...action.client }];
-    case types.UPDATE_CLIENT_SUCCESS:
-      return state.map((client) =>
+      }    
+    case types.SAVE_CLIENT_SUCCESS:
+      var existingClient = state.find((client) => client.id === action.client.id);
+      if(existingClient)
+      {
+        return state.map((client) =>
         client.id === action.client.id ? action.client : client
       );
+      } 
+      else 
+      {
+        return [...state, action.client];
+      }       
+      case types.DELETE_CLIENT_SUCCESS:        
+        return state.filter((client) => client.id !== action.client.id)
     default:
       return state;
   }

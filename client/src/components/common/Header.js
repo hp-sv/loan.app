@@ -1,11 +1,7 @@
-import { useSelector } from "react-redux";
-import { selectPageTitle } from "../../store/selector/pageTitleSelector";
 import NavigationLink from "./NavigationLink";
 import * as Icon from "react-bootstrap-icons";
 
-function Header() {
-  const currentPageTitle = useSelector(selectPageTitle);
-
+function Header() {  
   return (
     <div className="container bg-light">
       <div className="row">
@@ -20,11 +16,9 @@ function Header() {
         <div className="col">
           <NavigationLink />
         </div>
-      </div>
-      <br />
+      </div>            
       <div className="row">
-        <div className="col">
-          <h4>{currentPageTitle}</h4>
+        <div className="col">&nbsp;
         </div>
       </div>
     </div>

@@ -69,7 +69,11 @@ namespace Loan.Domain.Services
 
         private async Task IsClientExists(Client client)
         {
-            var isClientExist = await _clientRepository.IsClientExistsAsync(client.Id);
+            var isClientExist = true;
+            if (client == null) isClientExist = false;
+
+            if(client != null)
+                isClientExist =  await _clientRepository.IsClientExistsAsync(client.Id);
 
             if (!isClientExist)
                 _Erorrs.Add(new ValidationError { Code = ClientValidationErrorCodes.CLIENT_DO_NOT_EXISTS, Message = "Client does not exists." });

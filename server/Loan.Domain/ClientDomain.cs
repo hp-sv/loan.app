@@ -41,15 +41,11 @@ namespace Loan.Domain
         {
             var clientToDelete = await _repository.GetByIdAsync(id);
 
-            if (clientToDelete == null)
-                return false;
-
             await _validationService.ValidateForDelete(clientToDelete);
             if (_validationService.HasError)
                 throw _validationService.GetException();
 
             clientToDelete.RecordStatusId = LookupIds.RecordStatus.Deleted;
-
 
             return (await _transactionService.SaveChangesAsync() >= 0);
 
