@@ -56,9 +56,16 @@ namespace Loan.Repository
             return await context.Accounts.AnyAsync(a => a.Id == id);
         }
 
-        public Task<IEnumerable<Account>?> SearchAsyc(string filter)
+        public async Task<IEnumerable<Account>?> SearchAsyc(string filter)
         {
-            throw new NotImplementedException();
+            filter = filter.ToLower();
+            return await context.Accounts
+                    .Include(a=>a.AccountTransactions)
+                    .Include(a=>a.Client).Where(
+                    a => a.Client.FirstName.ToLower().Contains(filter)
+                    || a.Client.MiddleName.ToLower().Contains(filter)
+                    || a.Client.LastName.ToLower().Contains(filter)
+                    ).ToListAsync();
         }
 
         public async Task UpdateAsync(Account account)

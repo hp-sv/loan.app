@@ -94,9 +94,9 @@ namespace Loan.Domain
             return await _repository.IsAccountExistsAsync(id);
         }
 
-        public Task<IEnumerable<Account>?> SearchAsync(string filter)
+        public async Task<IEnumerable<Account>?> SearchAsync(string filter)
         {
-            throw new NotImplementedException();
+            return await _repository.SearchAsyc(filter);
         }
     }
 }

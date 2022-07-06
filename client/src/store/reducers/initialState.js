@@ -1,4 +1,4 @@
-export default {
+const intialState = {
   /* Client */
   clients: [],
 
@@ -20,3 +20,5 @@ export default {
   /*Api Counter*/
   apiCallsInProgress: 0,
 };
+
+export default intialState;

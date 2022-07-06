@@ -49,6 +49,9 @@ namespace Loan.Model.Client
         [DefaultValue("")]
         public string AddressLine3 { get; set; } = String.Empty;
 
+        public string FullName => (FirstName + " " + MiddleName + " " + LastName).Replace("  ", " ");
+        public string FullAddress => (AddressLine1 + " " + AddressLine2 + " " + AddressLine3).Replace("  ", " ");
+
     }
 
 }

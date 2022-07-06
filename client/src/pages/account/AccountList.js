@@ -9,10 +9,15 @@ const AccountList = ({ accounts }) => (
       <tr>
         <th />
         <th />
-        <th>First Name</th>
-        <th>Middle Name</th>
-        <th>Last Name</th>
+        <th>Account#</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Duration</th>
+        <th>Repayment Type</th>
         <th>Principal</th>
+        <th>Rate</th>
+        <th>Expected</th>
+        <th>Actual</th>
         <th>Balance</th>
       </tr>
     </thead>
@@ -34,10 +39,15 @@ const AccountList = ({ accounts }) => (
                 <Icon.Trash2 size={20} title="Delete" className="text-muted" />
               </Link>
             </td>
-            <td>{account.firstName}</td>
-            <td>{account.middleName}</td>
-            <td>{account.lastName}</td>
-            <td>{account.principal}</td>
+            <td>{account.id}</td>
+            <td>{account.client.fullName}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{account.totalAmount}</td>
+            <td>{account.rate}</td>
+            <td>{account.actualRepayments}</td>
+            <td>{account.expectedRepayments}</td>
             <td>{account.balance}</td>
           </tr>
         );

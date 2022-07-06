@@ -1,17 +1,15 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Loan.Model.Account;
 using Loan.Entity;
 using Loan.Interface.Constants;
 using Loan.Interface.Domain;
-using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Authorization;
+using Loan.Model.Account;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Loan.Api.Controllers
 {
 
     [Route(AccountRoutes.ROUTE)]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -65,6 +63,18 @@ namespace Loan.Api.Controllers
                 return NoContent();
             else
                 return BadRequest();
+        }
+
+
+        [HttpGet(AccountRoutes.SEARCH)]
+        public async Task<ActionResult<IEnumerable<AccountDto>>> SearchAsync(string filter)
+        {
+            var accounts = await _domain.SearchAsync(filter);
+
+            if (accounts == null)
+                return BadRequest($"Filter account by {filter} returned no result.");
+
+            return Ok(_mapper.Map<IEnumerable<AccountDto>>(accounts));
         }
     }
 }

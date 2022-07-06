@@ -12,7 +12,16 @@
     {
         public const string ROUTE = "api/account";        
         public const string ID = "{id}";
-        public const string GET_ACCOUNT_ROUTE_NAME = "GetAccountRoute";       
+        public const string GET_ACCOUNT_ROUTE_NAME = "GetAccountRoute";
+        public const string SEARCH = "search";
+
+    }
+
+    public static class LookupSetRoutes
+    {
+        public const string ROUTE = "api/lookupset";
+        public const string ID = "{id}";
+        public const string GET_LOOKUP_ROUTE_NAME = "GetLookupRoute";
         
     }
 

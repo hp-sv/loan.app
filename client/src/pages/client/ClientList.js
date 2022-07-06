@@ -10,11 +10,11 @@ const ClientList = ({ clients }) => (
         <th />
         <th />
         <th />
-        <th>First Name</th>
-        <th>Middle Name</th>
-        <th>Last Name</th>
-        <th>Principal</th>
-        <th>Balance</th>
+        <th>Id#</th>
+        <th>Name</th>
+        <th>Mobile</th>
+        <th>Email</th>
+        <th>Address</th>
       </tr>
     </thead>
     <tbody>
@@ -40,11 +40,11 @@ const ClientList = ({ clients }) => (
                 <Icon.Trash2 size={20} title="Delete" className="text-muted" />
               </Link>
             </td>
-            <td>{client.firstName}</td>
-            <td>{client.middleName}</td>
-            <td>{client.lastName}</td>
-            <td>{client.principal}</td>
-            <td>{client.balance}</td>
+            <td>{client.id}</td>
+            <td>{client.fullName}</td>
+            <td>{client.mobileNumber}</td>
+            <td>{client.emailAddress}</td>
+            <td>{client.fullAddress}</td>
           </tr>
         );
       })}

@@ -16,10 +16,15 @@ function AccountPage({
   accountFilterBy,
   loading,
 }) {
-  function handleValueChange() {}
+  function handleValueChange(event) {
+    const { value } = event.target;
+    setAccountFilterBy(value);
+  }
 
-  function handleSearch() {}
-
+  function handleSearch(event) {
+    event.preventDefault();
+    searchAccounts(accountFilterBy);
+  }
   const [redirectToAddAccount, setRedirectToAddAccount] = useState(false);
 
   return (
