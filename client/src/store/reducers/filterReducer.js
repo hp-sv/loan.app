@@ -8,7 +8,11 @@ export default function filterReducer(state = initialState.filters, action) {
         ...state,
         ...{ clientFilterBy: action.clientFilter.filterBy },
       };
-
+    case types.SET_ACCOUNT_FILTER_BY_COMPLETED:
+      return {
+        ...state,
+        ...{ accountFilterBy: action.accountFilter.filterBy },
+      };
     default:
       return state;
   }

@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 function NavigationLink() {
   return (
-    <div className="row bg-light">
+    <>
       <div className="col-md-1">
         <NavLink to="/" className="bi bi-house text-muted">
           Home
@@ -15,7 +15,7 @@ function NavigationLink() {
         </NavLink>
       </div>
       <div className="col-md-1">
-        <NavLink to="/accounts" className="bi bi-credit-card text-muted">
+        <NavLink to="/accounts" className="bi bi-journal text-muted">
           Accounts
         </NavLink>
       </div>
@@ -29,7 +29,7 @@ function NavigationLink() {
           About
         </NavLink>
       </div>
-    </div>
+    </>
   );
 }
 

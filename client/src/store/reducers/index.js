@@ -1,12 +1,12 @@
 import { combineReducers } from "redux";
 import clients from "./clientReducer";
-import page from "./pageReducer";
+import accounts from "./accountReducer";
 import apiCallsInProgress from "./apiStatusReducer";
 import filters from "./filterReducer";
 
 const rootReducer = combineReducers({
   clients,
-  page,
+  accounts,
   apiCallsInProgress,
   filters,
 });

@@ -2,6 +2,9 @@ export default {
   /* Client */
   clients: [],
 
+  /* Account*/
+  accounts: [],
+
   /*Page*/
   page: {
     title: "Home Page",
@@ -11,6 +14,7 @@ export default {
   /*filters*/
   filters: {
     clientFilterBy: "",
+    accountFilterBy: "",
   },
 
   /*Api Counter*/

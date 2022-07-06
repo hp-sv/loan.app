@@ -15,33 +15,30 @@ export function saveClientSuccess(client) {
   return { type: types.SAVE_CLIENT_SUCCESS, client };
 }
 
-export function deleteClientSuccess(client){
-  return {type: types.DELETE_CLIENT_SUCCESS, client};
+export function deleteClientSuccess(client) {
+  return { type: types.DELETE_CLIENT_SUCCESS, client };
 }
 
 export function searchClients(filter) {
   return function (dispatch) {
     dispatch(beginApiCall());
-
-    return toast.promise(
-      clientApi.searchClients(filter),
-      {
-        pending: 'Searching client. Please wait.',
-        success: {          
-          render(result){
-            dispatch(searchClientSuccess(result.data));            
-            return "Search client completed.";
-          }
+    return toast.promise(clientApi.searchClients(filter), {
+      pending: "Searching client. Please wait.",
+      success: {
+        render(result) {
+          dispatch(searchClientSuccess(result.data));
+          return "Search client completed.";
         },
-        error: {
-          render(data){            
-            dispatch(apiCallError(data));
-            return "Ooops something went wrong.";
-          }
-        }
-      });
+      },
+      error: {
+        render(data) {
+          dispatch(apiCallError(data));
+          return "Ooops something went wrong.";
+        },
+      },
+    });
 
-      /*
+    /*
     
     return clientApi
       .searchClients(filter)
@@ -53,14 +50,13 @@ export function searchClients(filter) {
         throw error;
       });
       */
-
   };
 }
 
 export function getClientById(id) {
   return function (dispatch) {
     dispatch(beginApiCall());
-    
+
     return clientApi
       .getClientById(id)
       .then((client) => {
@@ -77,30 +73,28 @@ export function saveClient(client) {
   //eslint-disable-next-line no-unused-vars
   return function (dispatch, getState) {
     dispatch(beginApiCall());
-    
-    var saveMessage = (client.id ? "Update client completed." : "Save new client completed.");
 
-    return toast.promise(
-      clientApi.saveClient(client),
-      {
-        pending: 'Saving client. Please wait.',
-        success: {
-          render(result)
-            {            
-              dispatch(saveClientSuccess(result.data));
-              return saveMessage;
-            }
+    var saveMessage = client.id
+      ? "Update client completed."
+      : "Save new client completed.";
+
+    return toast.promise(clientApi.saveClient(client), {
+      pending: "Saving client. Please wait.",
+      success: {
+        render(result) {
+          dispatch(saveClientSuccess(result.data));
+          return saveMessage;
         },
-        error: {
-          render(data){            
-            dispatch(apiCallError(data));
-            return "Ooops something went wrong.";
-          }
-        }
-      });
+      },
+      error: {
+        render(data) {
+          dispatch(apiCallError(data));
+          return "Ooops something went wrong.";
+        },
+      },
+    });
 
-
-/*
+    /*
     return clientApi
       .saveClient(client)
       .then((savedClient) => {
@@ -112,7 +106,7 @@ export function saveClient(client) {
         dispatch(apiCallError(error));
         throw error;
       });
-*/      
+*/
   };
 }
 
@@ -120,24 +114,21 @@ export function deleteClient(client) {
   //eslint-disable-next-line no-unused-vars
   return function (dispatch, getState) {
     dispatch(beginApiCall());
-    
-    return toast.promise(
-      clientApi.deleteClient(client.id),
-      {
-        pending: 'Deleting client. Please wait.',
-        success: {
-          render()
-            { 
-              dispatch(deleteClientSuccess(client));
-              return "Delete client completed.";
-            }
+
+    return toast.promise(clientApi.deleteClient(client.id), {
+      pending: "Deleting client. Please wait.",
+      success: {
+        render() {
+          dispatch(deleteClientSuccess(client));
+          return "Delete client completed.";
         },
-        error: {
-          render(data){            
-            dispatch(apiCallError(data));
-            return "Ooops something went wrong.";
-          }
-        }
-      });
+      },
+      error: {
+        render(data) {
+          dispatch(apiCallError(data));
+          return "Ooops something went wrong.";
+        },
+      },
+    });
   };
 }

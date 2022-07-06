@@ -1,7 +1,7 @@
 import NavigationLink from "./NavigationLink";
 import * as Icon from "react-bootstrap-icons";
 
-function Header() {  
+function Header() {
   return (
     <div className="container bg-light">
       <div className="row">
@@ -13,13 +13,10 @@ function Header() {
         </div>
       </div>
       <div className="row">
-        <div className="col">
-          <NavigationLink />
-        </div>
-      </div>            
+        <NavigationLink />
+      </div>
       <div className="row">
-        <div className="col">&nbsp;
-        </div>
+        <div className="col">&nbsp;</div>
       </div>
     </div>
   );

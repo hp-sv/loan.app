@@ -3,8 +3,11 @@ import { connect } from "react-redux";
 import ClientForm from "./ClientForm";
 import PropTypes from "prop-types";
 import { newClient } from "../../store/dataInitialiser";
-import { getClientById, saveClient, deleteClient } from "../../store/actions/clientActions";
-import { setCurrentPageTitle } from "../../store/actions/pageAction";
+import {
+  getClientById,
+  saveClient,
+  deleteClient,
+} from "../../store/actions/clientActions";
 import withRouter from "../../components/common/withRouter";
 import Spinner from "../../components/common/Spinner";
 import { toast } from "react-toastify";
@@ -13,7 +16,6 @@ import * as constants from "../../constants/Common";
 function ManageClientPage({
   clients,
   getClientById,
-  setCurrentPageTitle,
   saveClient,
   deleteClient,
   navigate,
@@ -33,7 +35,7 @@ function ManageClientPage({
       });
     } else {
       setClient({ ...props.client });
-    }    
+    }
   }, [props.client]);
 
   function handleChange(event) {
@@ -47,29 +49,27 @@ function ManageClientPage({
   function handleSumbit(event) {
     event.preventDefault();
     setSaving(true);
-    if( opt === constants.RECORD_DELETE){
+    if (opt === constants.RECORD_DELETE) {
       deleteClient(client)
-      .then(() => {      
-        navigate("/clients");
-      })      
-      .catch((ex) => {
-        catchError(ex);
-      });      
-    }
-    else 
-    { //RECORD_ADD, RECORD_EDIT
+        .then(() => {
+          navigate("/clients");
+        })
+        .catch((ex) => {
+          catchError(ex);
+        });
+    } else {
+      //RECORD_ADD, RECORD_EDIT
       saveClient(client)
-      .then(() => {      
-        navigate("/clients");
-      })      
-      .catch((ex) => {
-        catchError(ex);
-      });
+        .then(() => {
+          navigate("/clients");
+        })
+        .catch((ex) => {
+          catchError(ex);
+        });
     }
-
   }
 
-  function catchError(ex){
+  function catchError(ex) {
     const validationErrors = {
       onSave: ex.message,
       ...ex.error.errors,
@@ -94,7 +94,7 @@ function ManageClientPage({
               client={client}
               onChange={handleChange}
               onSubmitForm={handleSumbit}
-              onCancelForm={handleCancel}       
+              onCancelForm={handleCancel}
               opt={opt}
               submitting={saving}
               errors={errors}
@@ -109,11 +109,11 @@ function ManageClientPage({
 ManageClientPage.propTypes = {
   client: PropTypes.object.isRequired,
   clients: PropTypes.array.isRequired,
-  getClientById: PropTypes.func.isRequired,  
+  getClientById: PropTypes.func.isRequired,
   saveClient: PropTypes.func.isRequired,
   deleteClient: PropTypes.func.isRequired,
   navigate: PropTypes.func.isRequired,
-  opt: PropTypes.number.isRequired
+  opt: PropTypes.number.isRequired,
 };
 
 function getClient(clients, id) {
@@ -134,9 +134,8 @@ function mapStateToProps(state, ownProps) {
 
 const mapDispatchToProps = {
   getClientById,
-  setCurrentPageTitle,
   saveClient,
-  deleteClient
+  deleteClient,
 };
 
 export default withRouter(
