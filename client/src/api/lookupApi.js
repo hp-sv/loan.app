@@ -1,7 +1,7 @@
 import apiUrl from "./apiUrl";
 import { handleResponse, handleError } from "./apiUtils";
 
-const baseUrl = apiUrl.baseUrl + "lookup/";
+const baseUrl = apiUrl.baseUrl + "lookupset/";
 
 export function saveLookup(lookup) {
   return fetch(baseUrl + (lookup.id || ""), {

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import * as Icon from "react-bootstrap-icons";
 
-const AccountList = ({ accounts }) => (
+const AccountList = ({ accounts, accountStatus, repaymentSchedule, durationType }) => (
   <table className="table">
     <thead>
       <tr>
@@ -58,6 +58,9 @@ const AccountList = ({ accounts }) => (
 
 AccountList.propTypes = {
   accounts: PropTypes.array.isRequired,
+  accountStatus: PropTypes.object.isRequired, 
+  repaymentSchedule: PropTypes.object.isRequired, 
+  durationType: PropTypes.object.isRequired
 };
 
 export default AccountList;

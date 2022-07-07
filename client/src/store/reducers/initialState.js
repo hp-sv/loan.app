@@ -17,6 +17,17 @@ const intialState = {
     accountFilterBy: "",
   },
 
+  /**/
+  lookupSet:{
+    transactionType: {lookups:[]},
+    durationType:{lookups:[]},
+    repaymentSchedule:{lookups:[]},
+    recordStatus:{lookups:[]},
+    seedConstantType:{lookups:[]},
+    changeOperations:{lookups:[]},
+    accountStatus:{lookups:[]},
+  },
+
   /*Api Counter*/
   apiCallsInProgress: 0,
 };
