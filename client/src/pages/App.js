@@ -11,8 +11,6 @@ import AboutPage from "./about/AboutPage";
 import Header from "../components/common/Header";
 import PageNotFound from "./PageNotFound";
 import ClientPage from "./client/ClientPage";
-import ManageClientPage from "./client/ManageClientPage";
-
 import * as constants from "../constants/Common";
 
 function App() {
@@ -23,21 +21,16 @@ function App() {
         <Routes>
           <Route exact path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/clients" element={<ClientPage />} />
           <Route
-            path="/client/:id"
-            element={<ManageClientPage opt={constants.RECORD_EDIT} />}
+            exact
+            path="/clients"
+            element={<ClientPage mode={constants.PAGE_MANAGE} />}
           />
           <Route
-            path="/client/d/:id"
-            element={<ManageClientPage opt={constants.RECORD_DELETE} />}
+            exact
+            path="/accounts"
+            element={<AccountPage />}
           />
-          <Route
-            path="/client"
-            element={<ManageClientPage opt={constants.RECORD_ADD} />}
-          />
-          <Route path="/accounts" element={<AccountPage />} />
-
           <Route element={PageNotFound} />
         </Routes>
       </Router>

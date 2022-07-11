@@ -1,13 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const TextInput = ({
+const DecimalInput = ({
   name,
   label,
   onChange,
   placeholder,
   value,
-  type,
+  min,
+  max,
+  step,
   error,
 }) => {
   let wrapperClass = "form-group form-group-sm";
@@ -20,13 +22,16 @@ const TextInput = ({
       <label htmlFor={name}>{label}</label>
       <div className="field">
         <input
-          type={type}
+          type="number"
           name={name}
           className="form-control"
           placeholder={placeholder}
           value={value}
           onChange={onChange}
           style={{ height: 30 }}
+          min={min}
+          step={step}
+          max={max}
         />
         {error && (
           <div
@@ -41,14 +46,16 @@ const TextInput = ({
   );
 };
 
-TextInput.propTypes = {
+DecimalInput.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  type: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.number,
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
+  step: PropTypes.number.isRequired,
   error: PropTypes.string,
 };
 
-export default TextInput;
+export default DecimalInput;

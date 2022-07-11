@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Loan.Model.Account
+﻿namespace Loan.Model.Account
 {
     public class CreateAccountDto : AccountDtoBase
     {        

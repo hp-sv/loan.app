@@ -11,6 +11,18 @@ const newClient = {
   addressLine3: "",
 };
 
+const newAccount = {
+  id: null,
+  clientId: null,
+  rate: 0.0,
+  totalAmount: 0.0,
+  duration: 6,
+  durationTypeId: 10005,
+  repaymentTypeId: 10011,
+  statusId: 10027,
+};
+
 module.exports = {
   newClient,
+  newAccount,
 };

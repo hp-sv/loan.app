@@ -159,7 +159,7 @@ namespace Loan.Test
             var account = new Account { 
             ClientId = client.Id,
             Duration = 26,
-            DurationTypeId = LookupIds.DurationType.Weekly,
+            DurationTypeId = LookupIds.DurationType.Week,
             Rate = 0.010m,
             RepaymentTypeId = LookupIds.RepaymentSchedule.Weekly,
             StatusId = LookupIds.AccountStatuses.Active,
@@ -195,7 +195,7 @@ namespace Loan.Test
             {
                 ClientId = clientId,
                 Duration = 26,
-                DurationTypeId = LookupIds.DurationType.Weekly,
+                DurationTypeId = LookupIds.DurationType.Week,
                 Rate = 0.010m,
                 RepaymentTypeId = LookupIds.RepaymentSchedule.Weekly,
                 StatusId = LookupIds.AccountStatuses.Active,

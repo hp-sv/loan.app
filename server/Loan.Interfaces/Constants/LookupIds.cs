@@ -26,11 +26,11 @@
 
         public static class DurationType
         {
-            public const int Monthly = 10005;
-            public const int Weekly = 10006;
-            public const int Quarterly = 10007;
-            public const int HalfYearly = 10008;
-            public const int Yearly = 10009;
+            public const int Month = 10005;
+            public const int Week = 10006;
+            public const int Quarter = 10007;
+            public const int HalfYear = 10008;
+            public const int Year = 10009;
         }
 
         public static class RepaymentSchedule

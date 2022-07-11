@@ -13,13 +13,15 @@ import Spinner from "../../components/common/Spinner";
 import { toast } from "react-toastify";
 import * as constants from "../../constants/Common";
 
-function ManageClientPage({
+function ManageClient({
   clients,
   getClientById,
   saveClient,
   deleteClient,
   navigate,
-  opt,
+  mode,
+  afterClientSave,
+  handleCancelForm,
   ...props
 }) {
   const [client, setClient] = useState({ ...props.client });
@@ -49,10 +51,10 @@ function ManageClientPage({
   function handleSumbit(event) {
     event.preventDefault();
     setSaving(true);
-    if (opt === constants.RECORD_DELETE) {
+    if (mode === constants.RECORD_DELETE) {
       deleteClient(client)
         .then(() => {
-          navigate("/clients");
+          afterClientSave();
         })
         .catch((ex) => {
           catchError(ex);
@@ -61,7 +63,7 @@ function ManageClientPage({
       //RECORD_ADD, RECORD_EDIT
       saveClient(client)
         .then(() => {
-          navigate("/clients");
+          afterClientSave();
         })
         .catch((ex) => {
           catchError(ex);
@@ -79,10 +81,6 @@ function ManageClientPage({
     setErrors(validationErrors);
   }
 
-  function handleCancel() {
-    navigate("/clients");
-  }
-
   return (
     <>
       {client === null ? (
@@ -94,8 +92,8 @@ function ManageClientPage({
               client={client}
               onChange={handleChange}
               onSubmitForm={handleSumbit}
-              onCancelForm={handleCancel}
-              opt={opt}
+              onCancelForm={handleCancelForm}
+              mode={mode}
               submitting={saving}
               errors={errors}
             />
@@ -106,14 +104,16 @@ function ManageClientPage({
   );
 }
 
-ManageClientPage.propTypes = {
+ManageClient.propTypes = {
   client: PropTypes.object.isRequired,
   clients: PropTypes.array.isRequired,
   getClientById: PropTypes.func.isRequired,
   saveClient: PropTypes.func.isRequired,
   deleteClient: PropTypes.func.isRequired,
   navigate: PropTypes.func.isRequired,
-  opt: PropTypes.number.isRequired,
+  mode: PropTypes.number.isRequired,
+  afterClientSave: PropTypes.func.isRequired,
+  handleCancelForm: PropTypes.func.isRequired,
 };
 
 function getClient(clients, id) {
@@ -121,7 +121,7 @@ function getClient(clients, id) {
 }
 
 function mapStateToProps(state, ownProps) {
-  const { id } = ownProps.params;
+  const { id } = ownProps;
 
   const client =
     id && state.clients.length > 0 ? getClient(state.clients, id) : newClient;
@@ -139,5 +139,5 @@ const mapDispatchToProps = {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ManageClientPage)
+  connect(mapStateToProps, mapDispatchToProps)(ManageClient)
 );

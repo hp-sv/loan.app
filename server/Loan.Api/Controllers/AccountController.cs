@@ -22,7 +22,7 @@ namespace Loan.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AccountDto>>> GetClients()
+        public async Task<ActionResult<IEnumerable<AccountDto>>> GetAccounts()
         {
             var accounts = await _domain.GetAllAsync();
 
@@ -31,7 +31,7 @@ namespace Loan.Api.Controllers
 
 
         [HttpGet(AccountRoutes.ID, Name = AccountRoutes.GET_ACCOUNT_ROUTE_NAME)]
-        public async Task<ActionResult<AccountDto>> GetClient(int id, bool includeTransactions = false)
+        public async Task<ActionResult<AccountDto>> GetAccount(int id, bool includeTransactions = false)
         {
             var account = await _domain.GetByIdAsync(id, includeTransactions);
 

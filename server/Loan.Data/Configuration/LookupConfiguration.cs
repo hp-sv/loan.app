@@ -178,9 +178,9 @@ namespace Loan.Data.Configuration
             return new List<Lookup> {
                   new Lookup
                   {
-                      Id = LookupIds.DurationType.Weekly,
-                      Name = "Weekly",
-                      Description = "Weekly duration",
+                      Id = LookupIds.DurationType.Week,
+                      Name = "Week",
+                      Description = "Week duration",
                       LookupSetId = LookupIds.LookupSetId.DurationTypeSetId,
                       CreateBy = Seed.SEED_USER,
                       CreatedAt = Seed.SeedDate(),
@@ -191,9 +191,9 @@ namespace Loan.Data.Configuration
                   },
                   new Lookup
                   {
-                      Id = LookupIds.DurationType.Monthly,
-                      Name = "Monthly",
-                      Description = "Monthly duration",
+                      Id = LookupIds.DurationType.Month,
+                      Name = "Month",
+                      Description = "Month duration",
                       LookupSetId = LookupIds.LookupSetId.DurationTypeSetId,
                       CreateBy = Seed.SEED_USER,
                       CreatedAt = Seed.SeedDate(),
@@ -204,9 +204,9 @@ namespace Loan.Data.Configuration
                   },
                   new Lookup
                   {
-                      Id = LookupIds.DurationType.Quarterly,
-                      Name = "Quarterly",
-                      Description = "Quarterly duration",
+                      Id = LookupIds.DurationType.Quarter,
+                      Name = "Quarter",
+                      Description = "Quarter duration",
                       LookupSetId = LookupIds.LookupSetId.DurationTypeSetId,
                       CreateBy = Seed.SEED_USER,
                       CreatedAt = Seed.SeedDate(),
@@ -217,8 +217,8 @@ namespace Loan.Data.Configuration
                   },
                   new Lookup
                   {
-                      Id = LookupIds.DurationType.HalfYearly,
-                      Name = "Half a year",
+                      Id = LookupIds.DurationType.HalfYear,
+                      Name = "Half Year",
                       Description = "Half year duration",
                       LookupSetId = LookupIds.LookupSetId.DurationTypeSetId,
                       CreateBy = Seed.SEED_USER,
@@ -230,8 +230,8 @@ namespace Loan.Data.Configuration
                   },
                   new Lookup
                   {
-                      Id = LookupIds.DurationType.Yearly,
-                      Name = "Yearly",
+                      Id = LookupIds.DurationType.Year,
+                      Name = "Year",
                       Description = "Yearly duration",
                       LookupSetId = LookupIds.LookupSetId.DurationTypeSetId,
                       CreateBy = Seed.SEED_USER,

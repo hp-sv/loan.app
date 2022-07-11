@@ -1,13 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import * as Icon from "react-bootstrap-icons";
 
-const ClientList = ({ clients }) => (
+const ClientList = ({ clients, onSelect, onEdit, onDelete }) => (
   <table className="table">
     <thead>
       <tr>
-        <th />
+        {onSelect && <th />}
         <th />
         <th />
         <th>Id#</th>
@@ -21,24 +20,34 @@ const ClientList = ({ clients }) => (
       {clients.map((client) => {
         return (
           <tr key={client.id}>
-            <td width={25}>
-              <Link to={`/client/${client.id}`}>
-                <Icon.PencilSquare
+            {onSelect && (
+              <td width={20}>
+                <Icon.Check2Square
                   size={20}
-                  title="Edit"
+                  title="Select"
                   className="text-muted"
+                  style={{ cursor: "hand" }}
+                  onClick={() => onSelect(client)}
                 />
-              </Link>
+              </td>
+            )}
+            <td width={20}>
+              <Icon.PencilSquare
+                size={20}
+                title="Edit"
+                className="text-muted"
+                style={{ cursor: "hand" }}
+                onClick={() => onEdit(client.id)}
+              />
             </td>
-            <td width={25}>
-              <Link to={`/client/${client.id}`}>
-                <Icon.Wallet size={20} title="Account" className="text-muted" />
-              </Link>
-            </td>
-            <td width={25}>
-              <Link to={`/client/d/${client.id}`}>
-                <Icon.Trash2 size={20} title="Delete" className="text-muted" />
-              </Link>
+            <td width={20}>
+              <Icon.Trash2
+                size={20}
+                title="Edit"
+                className="text-muted"
+                style={{ cursor: "hand" }}
+                onClick={() => onDelete(client.id)}
+              />
             </td>
             <td>{client.id}</td>
             <td>{client.fullName}</td>
@@ -54,6 +63,9 @@ const ClientList = ({ clients }) => (
 
 ClientList.propTypes = {
   clients: PropTypes.array.isRequired,
+  onSelect: PropTypes.func,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default ClientList;
