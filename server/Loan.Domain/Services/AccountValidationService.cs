@@ -61,15 +61,32 @@ namespace Loan.Domain.Services
 
         private async Task IsAccountExists(Account account)
         {
-            var isClientExist = await _accountRepository.IsAccountExistsAsync(account.Id);
+            if(account!=null)
+            {
+                var isClientExist = await _accountRepository.IsAccountExistsAsync(account.Id);
 
-            if (!isClientExist)
-                _Erorrs.Add(new ValidationError { Code = AccountValidationErrorCodes.ACCOUNT_DOES_NOT_EXISTS, Message = "Account does not exists." });
+                if (!isClientExist)
+                    _Erorrs.Add(new ValidationError { Code = AccountValidationErrorCodes.ACCOUNT_DOES_NOT_EXISTS, Message = "Account does not exists." });
+            }            
+        }
+
+        private async Task IsAccountStatus(Account account)
+        {
+            var activeAccounts = new List<int> { 
+                LookupIds.AccountStatuses.Active, 
+                LookupIds.AccountStatuses.Approved, 
+                LookupIds.AccountStatuses.Pending };
+
+            if (account != null && activeAccounts.Contains(account.StatusId))
+             _Erorrs.Add(new ValidationError { Code = AccountValidationErrorCodes.ACCOUNT_IS_ACTIVE, Message = "Account is active." });
+            
         }
 
         public override async Task ValidateForDelete(Account account)
         {
             await IsAccountExists(account);
+            await IsAccountStatus(account);
+            
         }
     }
 }

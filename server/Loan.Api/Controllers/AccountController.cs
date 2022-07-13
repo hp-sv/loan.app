@@ -60,11 +60,26 @@ namespace Loan.Api.Controllers
             var result = await _domain.UpdateAsync(updatedAccount);
 
             if (result)
-                return NoContent();
+            {
+                return Ok(_mapper.Map<AccountDto>(updatedAccount));
+            }
             else
-                return BadRequest();
+            {
+                return BadRequest(updatedAccount);
+            }
         }
 
+        [HttpDelete(AccountRoutes.ID)]
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            var result = await _domain.DeleteAsync(id);
+
+            if (!result)
+                return BadRequest(id);
+
+            return Ok(id);
+
+        }
 
         [HttpGet(AccountRoutes.SEARCH)]
         public async Task<ActionResult<IEnumerable<AccountDto>>> SearchAsync(string filter)

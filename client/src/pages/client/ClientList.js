@@ -2,11 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import * as Icon from "react-bootstrap-icons";
 
-const ClientList = ({ clients, onSelect, onEdit, onDelete }) => (
+const ClientList = ({ clients, onEdit, onDelete }) => (
   <table className="table">
     <thead>
       <tr>
-        {onSelect && <th />}
         <th />
         <th />
         <th>Id#</th>
@@ -21,17 +20,6 @@ const ClientList = ({ clients, onSelect, onEdit, onDelete }) => (
       {clients.map((client) => {
         return (
           <tr key={client.id}>
-            {onSelect && (
-              <td width={20}>
-                <Icon.Check2Square
-                  size={20}
-                  title="Select"
-                  className="text-muted"
-                  style={{ cursor: "hand" }}
-                  onClick={() => onSelect(client)}
-                />
-              </td>
-            )}
             <td width={20}>
               <Icon.PencilSquare
                 size={20}

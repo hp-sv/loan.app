@@ -12,7 +12,9 @@
         public const int INVALID_DURATION = 10012;
         public const int INVALID_DURATION_TYPE = 10013;
         public const int INVALID_REPAYMENT_TYPE = 10014;
-        public const int ACCOUNT_DOES_NOT_EXISTS = 10015;        
+        public const int ACCOUNT_DOES_NOT_EXISTS = 10015;
+        public const int ACCOUNT_IS_ACTIVE = 10016;
+
     }
 
     public static class ClientValidationErrorCodes

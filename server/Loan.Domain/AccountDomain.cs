@@ -9,17 +9,20 @@ namespace Loan.Domain
 {
     public class AccountDomain : IAccountDomain
     {
-        private readonly IAccountRepository _repository;        
+        private readonly IAccountRepository _repository;
+        private readonly IClientRepository _clientRepository;
         private readonly IChangeTransactionService _transactionService;
         private readonly IAccountValidationService _validationService;
         private readonly IMapper _mapper;
 
         public AccountDomain(IAccountRepository accountRepository,                
+                IClientRepository clientRepository,
                 IChangeTransactionService transactionService,
                 IAccountValidationService validationService, 
                 IMapper mapper)
         {
-            _repository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));        
+            _repository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
+            _clientRepository = clientRepository ?? throw new ArgumentNullException(nameof(clientRepository));
             _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
             _validationService  = validationService ?? throw new ArgumentNullException(nameof(validationService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -27,6 +30,9 @@ namespace Loan.Domain
 
         public async Task<bool> CreateAsync(Account account)
         {
+            var client = await _clientRepository.GetByIdAsync(account.ClientId);
+            account.Client = client;
+
             await _validationService.ValidateForCreate(account);
 
             if (_validationService.HasError)            
@@ -36,9 +42,18 @@ namespace Loan.Domain
             return (await _transactionService.SaveChangesAsync() >= 0);
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var accountToDelete = await _repository.GetByIdAsync(id);
+
+            await _validationService.ValidateForDelete(accountToDelete);
+            if (_validationService.HasError)
+                throw _validationService.GetException();
+
+            accountToDelete.RecordStatusId = LookupIds.RecordStatus.Deleted;
+
+            return (await _transactionService.SaveChangesAsync() >= 0);
+
         }
 
         public Task<Account?> GetAccountByClientAsync(int clientId)

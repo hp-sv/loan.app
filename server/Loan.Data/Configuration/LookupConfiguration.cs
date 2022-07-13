@@ -408,6 +408,19 @@ namespace Loan.Data.Configuration
                  VersionNo = 0,
                  RecordStatusId = LookupIds.RecordStatus.Active,
                  SeedTypeId = LookupIds.SeedTypes.Constant
+             },
+             new Lookup
+             {
+                 Id = LookupIds.AccountStatuses.Completed,
+                 Name = "Completed",
+                 Description = "Account is completed",
+                 LookupSetId = LookupIds.LookupSetId.AccountStatusId,
+                 CreateBy = Seed.SEED_USER,
+                 CreatedAt = Seed.SeedDate(),
+                 TransactionId = Seed.SeedTransactionId(),
+                 VersionNo = 0,
+                 RecordStatusId = LookupIds.RecordStatus.Active,
+                 SeedTypeId = LookupIds.SeedTypes.Constant
              }};
         }
     }

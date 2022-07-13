@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { AutoComplete } from "antd";
 import * as clientApi from "../../api/clientApi";
+import Disabled from "./Disabled";
 
 const Option = AutoComplete.Option;
 
@@ -12,6 +13,7 @@ function AutoCompleteClient({
   onSelect,
   filterOption,
   error,
+  disable = false,
 }) {
   const [clients, setClients] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -66,16 +68,18 @@ function AutoCompleteClient({
     <div className={wrapperClass}>
       <label htmlFor={name}>{label}</label>
       <div className="field">
-        <AutoComplete
-          style={{ width: 200 }}
-          value={inputValue}
-          onSearch={handleSearch}
-          onChange={handleChange}
-          onSelect={handleSelect}
-          placeholder="Search client here"
-        >
-          {clientOptions}
-        </AutoComplete>
+        <Disabled disabled={disable}>
+          <AutoComplete
+            value={inputValue}
+            style={{ width: "100%" }}
+            onSearch={handleSearch}
+            onChange={handleChange}
+            onSelect={handleSelect}
+            placeholder="Search client here"
+          >
+            {clientOptions}
+          </AutoComplete>
+        </Disabled>
         {error && (
           <div
             className="alert alert-danger alert-sm"
@@ -94,6 +98,7 @@ AutoCompleteClient.propTypes = {
   label: PropTypes.string.isRequired,
   onSelect: PropTypes.func.isRequired,
   filterOption: PropTypes.func.isRequired,
+  disable: PropTypes.bool.isRequired,
   selected: PropTypes.string,
   error: PropTypes.string,
 };

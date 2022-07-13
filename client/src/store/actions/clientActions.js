@@ -76,7 +76,6 @@ export function saveClient(client) {
     dispatch(beginApiCall());
 
     const msgKey = `__saveClient__${client.id}`;
-
     var saveMessage = client.id
       ? "Updating client, please wait..."
       : "Saving new client, please wait...";
@@ -96,7 +95,6 @@ export function saveClient(client) {
           duration: 1,
         });
       })
-
       .catch((error) => {
         dispatch(apiCallError(error));
         message.destroy(msgKey);
@@ -129,7 +127,7 @@ export function deleteClient(client) {
         dispatch(deleteClientSuccess(client));
         message.destroy(msgKey);
         message.success({
-          content: "Deleted client.",
+          content: "Client deleted.",
           key: msgKey,
           duration: 1,
         });

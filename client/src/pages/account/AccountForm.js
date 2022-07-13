@@ -1,16 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import DecimalInput from "../../components/common/DecimalInput";
 import SelectInput from "../../components/common/SelectInput";
 import * as constants from "../../constants/Common";
 import Disabled from "../../components/common/Disabled";
+import AutoCompleteClient from "../../components/common/AutoCompleteClient";
 
 function AccountForm({
   account,
   onSubmitForm,
   onCancelForm,
   onChange,
+  onClientSelected,
   mode,
   durationType,
   repaymentSchedule,
@@ -20,7 +21,6 @@ function AccountForm({
   return (
     <Disabled disabled={submitting}>
       <form onSubmit={onSubmitForm}>
-        <h6>{account.id ? "Edit" : "Add"} Account</h6>
         {errors.onSave && (
           <div className="alert alert-danger" role="alert">
             {errors.onSave}
@@ -35,7 +35,28 @@ function AccountForm({
               })}
           </div>
         )}
-        <div>Client Name:{account.client.fullName}</div>
+        {mode === constants.RECORD_ADD && (
+          <AutoCompleteClient
+            name="clientId"
+            label="Client"
+            selected=""
+            onSelect={onClientSelected}
+            error={errors.clientId}
+            filterOption={() => true}
+            disable={false}
+          />
+        )}
+        {mode !== constants.RECORD_ADD && (
+          <AutoCompleteClient
+            name="clientId"
+            label="Client"
+            selected={account.client.fullName}
+            onSelect={onClientSelected}
+            error={errors.clientId}
+            filterOption={() => true}
+            disable={true}
+          />
+        )}
         <DecimalInput
           name="rate"
           label="Rate"
@@ -113,10 +134,10 @@ AccountForm.propTypes = {
   onSubmitForm: PropTypes.func.isRequired,
   onCancelForm: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
+  onClientSelected: PropTypes.func.isRequired,
   mode: PropTypes.number.isRequired,
   durationType: PropTypes.array.isRequired,
   repaymentSchedule: PropTypes.array.isRequired,
-  accountStatus: PropTypes.array.isRequired,
 };
 
 export default AccountForm;

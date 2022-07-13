@@ -18,7 +18,7 @@ const ClientForm = ({
   const emergencyContactFilter = (optionClient) => {
     return optionClient.id !== client.id;
   };
-  
+
   return (
     <Disabled disabled={submitting}>
       <form onSubmit={onSubmitForm}>
@@ -91,6 +91,7 @@ const ClientForm = ({
             filterOption={emergencyContactFilter}
             selected=""
             onSelect={onEmergencyContactSelected}
+            width={300}
             error={errors.emergencyContactId}
           />
         )}
@@ -159,7 +160,7 @@ ClientForm.propTypes = {
   onCancelForm: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   mode: PropTypes.number.isRequired,
-  onEmergencyContactSelected: PropTypes.number.isRequired,
+  onEmergencyContactSelected: PropTypes.func.isRequired,
   errors: PropTypes.object,
   submitting: PropTypes.bool,
 };

@@ -11,7 +11,6 @@ import {
   searchClients,
   saveClient,
   deleteClient,
-  getClientById,
 } from "../../store/actions/clientActions";
 import { setClientFilterBy } from "../../store/actions/filterAction";
 import * as constants from "../../constants/Common";
@@ -21,13 +20,12 @@ function ClientPage({
   searchClients,
   setClientFilterBy,
   clientFilterBy,
-  onAfterClientSelect,
-  getClientById,
   saveClient,
   deleteClient,
   mode,
 }) {
   const [pageMode, setPageMode] = useState(mode);
+
   const [drawerState, setDrawerState] = useState({
     visible: false,
     recordMode: constants.RECORD_NONE,
@@ -56,7 +54,7 @@ function ClientPage({
       visible: true,
       recordMode: constants.RECORD_EDIT,
       selectedClient: client,
-      title: "Edit Client",
+      title: "Edit client",
       submitting: false,
       error: {},
     });
@@ -67,7 +65,7 @@ function ClientPage({
       visible: true,
       recordMode: constants.RECORD_ADD,
       selectedClient: newClient,
-      title: "Add Client",
+      title: "Add new client",
       submitting: false,
       error: {},
     });
@@ -78,7 +76,7 @@ function ClientPage({
       visible: true,
       recordMode: constants.RECORD_DELETE,
       selectedClient: client,
-      title: "Delete Client",
+      title: "Delete client",
       submitting: false,
       error: {},
     });
@@ -208,7 +206,6 @@ function ClientPage({
         </div>
         <ClientList
           clients={clients}
-          onSelect={onAfterClientSelect}
           onEdit={handleEditClient}
           onDelete={handleDeleteClient}
         />
@@ -237,7 +234,6 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
   searchClients,
   setClientFilterBy,
-  getClientById,
   saveClient,
   deleteClient,
 };
@@ -245,14 +241,12 @@ const mapDispatchToProps = {
 ClientPage.propTypes = {
   clients: PropTypes.array.isRequired,
   searchClients: PropTypes.func.isRequired,
-  getClientById: PropTypes.func.isRequired,
   saveClient: PropTypes.func.isRequired,
   deleteClient: PropTypes.func.isRequired,
   setClientFilterBy: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   clientFilterBy: PropTypes.string,
   mode: PropTypes.number.isRequired,
-  onAfterClientSelect: PropTypes.func,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientPage);

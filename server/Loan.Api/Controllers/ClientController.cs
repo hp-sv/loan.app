@@ -38,8 +38,9 @@ namespace Loan.Api.Controllers
 
         [HttpPost]
         public async Task<ActionResult<ClientDto>> CreateAsync(CreateClientDto client)
-        {
-            var newClient = _mapper.Map<Client>(client);            
+        {            
+            var newClient = _mapper.Map<Client>(client);          
+
             await _domain.CreateAsync(newClient);
 
             var createdClient = _mapper.Map<ClientDto>(newClient);

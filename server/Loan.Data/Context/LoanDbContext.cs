@@ -56,7 +56,7 @@ namespace Loan.Data.Context
             modelBuilder.Entity<Client>()
                 .Property(p => p.FullAddress)
                 .HasComputedColumnSql("replace(replace([AddressLine1] + ' ' + [AddressLine2] + ' ' + [AddressLine3], '  ',' '), '  ', ' ')  PERSISTED");
-            
+                        
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new LookupSetConfiguration());

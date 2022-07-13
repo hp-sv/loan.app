@@ -1,7 +1,7 @@
 import * as types from "./actionTypes";
 import * as accountApi from "../../api/accountApi";
 import { beginApiCall, apiCallError } from "./apiStatusActions";
-import { toast } from "react-toastify";
+import { message } from "antd";
 
 export function searchAccountSuccess(accounts) {
   return { type: types.SEARCH_ACCOUNT_SUCCESS, accounts };
@@ -23,21 +23,33 @@ export function searchAccounts(filter) {
   return function (dispatch) {
     dispatch(beginApiCall());
 
-    return toast.promise(accountApi.searchAccounts(filter), {
-      pending: "Searching Account. Please wait.",
-      success: {
-        render(result) {
-          dispatch(searchAccountSuccess(result.data));
-          return "Search Account completed.";
-        },
-      },
-      error: {
-        render(data) {
-          dispatch(apiCallError(data));
-          return "Ooops something went wrong.";
-        },
-      },
+    const msgKey = "__searchAccount__";
+    message.loading({
+      content: "Searching account... Please wait.",
+      key: msgKey,
+      duration: 10,
     });
+
+    return accountApi
+      .searchAccounts(filter)
+      .then((accounts) => {
+        dispatch(searchAccountSuccess(accounts));
+        message.destroy(msgKey);
+        message.success({
+          content: "Search account completed.",
+          key: msgKey,
+          duration: 1,
+        });
+      })
+      .catch((error) => {
+        message.destroy(msgKey);
+        message.error({
+          content: "Ooops something went wrong. ",
+          key: msgKey,
+          duration: 1,
+        });
+        throw error;
+      });
   };
 }
 
@@ -62,25 +74,36 @@ export function saveAccount(account) {
   return function (dispatch, getState) {
     dispatch(beginApiCall());
 
+    const msgKey = `__saveAccount__${account.id}`;
     var saveMessage = account.id
-      ? "Update Account completed."
-      : "Save new Account completed.";
+      ? "Updating account, please wait..."
+      : "Saving new account, please wait...";
 
-    return toast.promise(accountApi.saveAccount(account), {
-      pending: "Saving Account. Please wait.",
-      success: {
-        render(result) {
-          dispatch(saveAccountSuccess(result.data));
-          return saveMessage;
-        },
-      },
-      error: {
-        render(data) {
-          dispatch(apiCallError(data));
-          return "Ooops something went wrong.";
-        },
-      },
-    });
+    var completedMessage = account.id
+      ? "Updated account."
+      : "Saved new account.";
+
+    message.loading({ content: saveMessage, key: msgKey, duration: 10 });
+    return accountApi
+      .saveAccount(account)
+      .then((savedAccount) => {
+        dispatch(saveAccountSuccess(savedAccount));
+        message.destroy(msgKey);
+        message.success({
+          content: completedMessage,
+          key: msgKey,
+          duration: 1,
+        });
+      })
+      .catch((error) => {
+        message.destroy(msgKey);
+        message.error({
+          content: "Ooops something went wrong. ",
+          key: msgKey,
+          duration: 1,
+        });
+        throw error;
+      });
   };
 }
 
@@ -89,20 +112,33 @@ export function deleteAccount(account) {
   return function (dispatch, getState) {
     dispatch(beginApiCall());
 
-    return toast.promise(accountApi.deleteAccount(account.id), {
-      pending: "Deleting account. Please wait.",
-      success: {
-        render() {
-          dispatch(deleteAccountSuccess(account));
-          return "Delete account completed.";
-        },
-      },
-      error: {
-        render(data) {
-          dispatch(apiCallError(data));
-          return "Ooops something went wrong.";
-        },
-      },
+    const msgKey = `__deleteAccount__${account.id}`;
+    message.loading({
+      content: "Deleting account... please wait.",
+      key: msgKey,
+      duration: 10,
     });
+
+    return accountApi
+      .deleteAccount(account.id)
+      .then(() => {
+        dispatch(deleteAccountSuccess(account));
+        message.destroy(msgKey);
+        message.success({
+          content: "Account deleted.",
+          key: msgKey,
+          duration: 1,
+        });
+      })
+      .catch((error) => {
+        dispatch(apiCallError(error));
+        message.destroy(msgKey);
+        message.error({
+          content: "Ooops something went wrong. ",
+          key: msgKey,
+          duration: 1,
+        });
+        throw error;
+      });
   };
 }

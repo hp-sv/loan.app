@@ -70,6 +70,7 @@
             public const int Active = 10029;
             public const int Cancelled = 10030;
             public const int Declined = 10031;
+            public const int Completed = 10032;
         }
     }
 }

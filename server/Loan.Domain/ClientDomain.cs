@@ -33,6 +33,12 @@ namespace Loan.Domain
             if (_validationService.HasError)
                 throw _validationService.GetException();
 
+            if (client.EmergencyContactId.HasValue)
+            {
+                var emergencyContact = await _repository.GetByIdAsync(client.EmergencyContactId.Value);
+                client.EmergencyContact = emergencyContact;
+            }
+
             await _repository.CreateAsync(client);
             return (await _transactionService.SaveChangesAsync() >= 0);
         }
