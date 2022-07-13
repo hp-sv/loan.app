@@ -5,6 +5,7 @@ import App from "./pages/App";
 import reportWebVitals from "./reportWebVitals";
 import configureAppStore from "./store/configureAppStore";
 import { Provider as ReduxProvider } from "react-redux";
+import "antd/dist/antd.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const store = configureAppStore();

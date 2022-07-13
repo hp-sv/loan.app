@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Input } from "antd";
 
 const TextInput = ({
   name,
@@ -19,7 +20,7 @@ const TextInput = ({
     <div className={wrapperClass}>
       <label htmlFor={name}>{label}</label>
       <div className="field">
-        <input
+        <Input
           type={type}
           name={name}
           className="form-control"

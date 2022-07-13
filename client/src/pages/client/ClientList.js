@@ -11,6 +11,7 @@ const ClientList = ({ clients, onSelect, onEdit, onDelete }) => (
         <th />
         <th>Id#</th>
         <th>Name</th>
+        <th>Emergency Contact</th>
         <th>Mobile</th>
         <th>Email</th>
         <th>Address</th>
@@ -37,7 +38,7 @@ const ClientList = ({ clients, onSelect, onEdit, onDelete }) => (
                 title="Edit"
                 className="text-muted"
                 style={{ cursor: "hand" }}
-                onClick={() => onEdit(client.id)}
+                onClick={() => onEdit(client)}
               />
             </td>
             <td width={20}>
@@ -46,11 +47,14 @@ const ClientList = ({ clients, onSelect, onEdit, onDelete }) => (
                 title="Edit"
                 className="text-muted"
                 style={{ cursor: "hand" }}
-                onClick={() => onDelete(client.id)}
+                onClick={() => onDelete(client)}
               />
             </td>
             <td>{client.id}</td>
             <td>{client.fullName}</td>
+            <td>
+              {client.emergencyContact && client.emergencyContact.fullName}
+            </td>
             <td>{client.mobileNumber}</td>
             <td>{client.emailAddress}</td>
             <td>{client.fullAddress}</td>

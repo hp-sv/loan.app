@@ -2,7 +2,8 @@
 
 namespace Loan.Model.Client
 {
-    public class UpdateClientDto : ClientDtoBase
+    public class UpdateClientDto : ClientDto
     {
+
     }
 }

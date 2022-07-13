@@ -1,7 +1,7 @@
 import * as types from "./actionTypes";
 import * as clientApi from "../../api/clientApi";
 import { beginApiCall, apiCallError } from "./apiStatusActions";
-import { toast } from "react-toastify";
+import { message } from "antd";
 
 export function searchClientSuccess(clients) {
   return { type: types.SEARCH_CLIENT_SUCCESS, clients };
@@ -22,34 +22,34 @@ export function deleteClientSuccess(client) {
 export function searchClients(filter) {
   return function (dispatch) {
     dispatch(beginApiCall());
-    return toast.promise(clientApi.searchClients(filter), {
-      pending: "Searching client. Please wait.",
-      success: {
-        render(result) {
-          dispatch(searchClientSuccess(result.data));
-          return "Search client completed.";
-        },
-      },
-      error: {
-        render(data) {
-          dispatch(apiCallError(data));
-          return "Ooops something went wrong.";
-        },
-      },
+
+    const msgKey = "__searchClient__";
+    message.loading({
+      content: "Searching client, please wait...",
+      key: msgKey,
     });
 
-    /*
-    
     return clientApi
       .searchClients(filter)
       .then((clients) => {
         dispatch(searchClientSuccess(clients));
+        message.destroy(msgKey);
+        message.success({
+          content: "Search client completed.",
+          key: msgKey,
+          duration: 1,
+        });
       })
       .catch((error) => {
+        message.destroy(msgKey);
+        message.error({
+          content: "Ooops something went wrong. ",
+          key: msgKey,
+          duration: 1,
+        });
         dispatch(apiCallError(error));
         throw error;
       });
-      */
   };
 }
 
@@ -64,6 +64,7 @@ export function getClientById(id) {
       })
       .catch((error) => {
         dispatch(apiCallError(error));
+
         throw error;
       });
   };
@@ -74,39 +75,38 @@ export function saveClient(client) {
   return function (dispatch, getState) {
     dispatch(beginApiCall());
 
+    const msgKey = `__saveClient__${client.id}`;
+
     var saveMessage = client.id
-      ? "Update client completed."
-      : "Save new client completed.";
+      ? "Updating client, please wait..."
+      : "Saving new client, please wait...";
 
-    return toast.promise(clientApi.saveClient(client), {
-      pending: "Saving client. Please wait.",
-      success: {
-        render(result) {
-          dispatch(saveClientSuccess(result.data));
-          return saveMessage;
-        },
-      },
-      error: {
-        render(data) {
-          dispatch(apiCallError(data));
-          return "Ooops something went wrong.";
-        },
-      },
-    });
+    var completedMessage = client.id ? "Updated client." : "Saved new client.";
 
-    /*
+    message.loading({ content: saveMessage, key: msgKey, duration: 10 });
+
     return clientApi
       .saveClient(client)
       .then((savedClient) => {
-        client.id
-          ? dispatch(updateClientSuccess(savedClient))
-          : dispatch(createClientSuccess(savedClient));
+        dispatch(saveClientSuccess(savedClient));
+        message.destroy(msgKey);
+        message.success({
+          content: completedMessage,
+          key: msgKey,
+          duration: 1,
+        });
       })
+
       .catch((error) => {
         dispatch(apiCallError(error));
+        message.destroy(msgKey);
+        message.error({
+          content: "Ooops something went wrong. ",
+          key: msgKey,
+          duration: 1,
+        });
         throw error;
       });
-*/
   };
 }
 
@@ -115,20 +115,33 @@ export function deleteClient(client) {
   return function (dispatch, getState) {
     dispatch(beginApiCall());
 
-    return toast.promise(clientApi.deleteClient(client.id), {
-      pending: "Deleting client. Please wait.",
-      success: {
-        render() {
-          dispatch(deleteClientSuccess(client));
-          return "Delete client completed.";
-        },
-      },
-      error: {
-        render(data) {
-          dispatch(apiCallError(data));
-          return "Ooops something went wrong.";
-        },
-      },
+    const msgKey = `__deleteClient__${client.id}`;
+
+    message.loading({
+      content: "Deleting client... please wait.",
+      key: msgKey,
+      duration: 1,
     });
+
+    return clientApi
+      .deleteClient(client.id)
+      .then(() => {
+        dispatch(deleteClientSuccess(client));
+        message.destroy(msgKey);
+        message.success({
+          content: "Deleted client.",
+          key: msgKey,
+          duration: 1,
+        });
+      })
+      .catch((error) => {
+        dispatch(apiCallError(error));
+        message.destroy(msgKey);
+        message.error({
+          content: "Ooops something went wrong. ",
+          key: msgKey,
+          duration: 1,
+        });
+      });
   };
 }

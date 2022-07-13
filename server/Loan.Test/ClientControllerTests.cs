@@ -89,7 +89,7 @@ namespace Loan.Test
             var deleteClient = _loanDbContext.Clients.Where(c=> !c.Accounts.Any(a=>a.StatusId == LookupIds.AccountStatuses.Active)).First();
             var deleteResult = await _controller.DeleteAsync(deleteClient.Id);
 
-            Assert.IsType<NoContentResult>(deleteResult);
+            Assert.IsType<OkObjectResult>(deleteResult);
 
             var deletedClient = _fixture.DbContext.Clients.Where(c=>c.Id == deleteClient.Id).FirstOrDefault();
             Assert.Null(deletedClient);

@@ -22,6 +22,7 @@
         public const int CLIENT_IS_UNDER_AGE = 20012;
         public const int CLIENT_DATE_OF_BIRTH_ERROR = 20013;
         public const int CLIENT_HAS_AN_ACTIVE_ACCOUNT = 20014;
+        public const int CLIENT_EMERGENCY_CONTACT_ERROR = 20015;
 
     }
 }

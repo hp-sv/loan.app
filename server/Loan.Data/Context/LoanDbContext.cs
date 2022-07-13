@@ -48,6 +48,15 @@ namespace Loan.Data.Context
                 if (typeof(ILoanEntity).IsAssignableFrom(entityType.ClrType))                
                     entityType.AddActiveRecordOnlyQueryFilter();
 
+            // Computed Columns
+            modelBuilder.Entity<Client>()
+                .Property(p => p.FullName)
+                .HasComputedColumnSql("replace(replace([FirstName] + ' ' + [MiddleName] + ' ' + [LastName], '  ',' '), '  ', ' ') PERSISTED");
+
+            modelBuilder.Entity<Client>()
+                .Property(p => p.FullAddress)
+                .HasComputedColumnSql("replace(replace([AddressLine1] + ' ' + [AddressLine2] + ' ' + [AddressLine3], '  ',' '), '  ', ' ')  PERSISTED");
+            
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new LookupSetConfiguration());

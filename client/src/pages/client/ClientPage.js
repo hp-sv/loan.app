@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import Disabled from "../../components/common/Disabled";
+import { Drawer } from "antd";
+import { newClient } from "../../store/dataInitialiser";
+
 import ClientList from "./ClientList";
+import ClientForm from "./ClientForm";
 import SearchForm from "../../components/common/SearchForm";
-import { searchClients } from "../../store/actions/clientActions";
+import {
+  searchClients,
+  saveClient,
+  deleteClient,
+  getClientById,
+} from "../../store/actions/clientActions";
 import { setClientFilterBy } from "../../store/actions/filterAction";
-import ManageClient from "./ManageClient";
 import * as constants from "../../constants/Common";
 
 function ClientPage({
@@ -15,12 +22,20 @@ function ClientPage({
   setClientFilterBy,
   clientFilterBy,
   onAfterClientSelect,
+  getClientById,
+  saveClient,
+  deleteClient,
   mode,
-  loading,
 }) {
   const [pageMode, setPageMode] = useState(mode);
-  const [recordMode, setRecordMode] = useState(constants.RECORD_NONE);
-  const [selectedClientId, setSelectedClientId] = useState(0);
+  const [drawerState, setDrawerState] = useState({
+    visible: false,
+    recordMode: constants.RECORD_NONE,
+    selectedClient: newClient,
+    title: "",
+    submitting: false,
+    error: {},
+  });
 
   useEffect(() => {
     setPageMode(mode);
@@ -31,69 +46,174 @@ function ClientPage({
     setClientFilterBy(value);
   }
 
-  function handleSearch(event) {
+  const handleSearch = (event) => {
     event.preventDefault();
     searchClients(clientFilterBy);
-  }
+  };
 
-  function handleEditClient(id) {
-    setRecordMode(constants.RECORD_EDIT);
-    setSelectedClientId(id);
+  function handleEditClient(client) {
+    setDrawerState({
+      visible: true,
+      recordMode: constants.RECORD_EDIT,
+      selectedClient: client,
+      title: "Edit Client",
+      submitting: false,
+      error: {},
+    });
   }
 
   function handleAddClient() {
-    setSelectedClientId(null);
-    setRecordMode(constants.RECORD_ADD);
+    setDrawerState({
+      visible: true,
+      recordMode: constants.RECORD_ADD,
+      selectedClient: newClient,
+      title: "Add Client",
+      submitting: false,
+      error: {},
+    });
   }
 
-  function handleDeleteClient(id) {
-    setRecordMode(constants.RECORD_DELETE);
-    setSelectedClientId(id);
+  function handleDeleteClient(client) {
+    setDrawerState({
+      visible: true,
+      recordMode: constants.RECORD_DELETE,
+      selectedClient: client,
+      title: "Delete Client",
+      submitting: false,
+      error: {},
+    });
   }
 
-  function handleAfterClientSaveAndCancel() {
-    setRecordMode(constants.RECORD_NONE);
+  function onDrawerClose() {
+    setDrawerState({
+      visible: false,
+      recordMode: constants.RECORD_NONE,
+      selectedClient: newClient,
+      title: "",
+      submitting: false,
+      error: {},
+    });
+  }
+
+  function handleSubmitForm(event) {
+    event.preventDefault();
+    if (drawerState.recordMode === constants.RECORD_DELETE) {
+      deleteClient(drawerState.selectedClient)
+        .then(() => {
+          onDrawerClose();
+        })
+        .catch((ex) => {
+          catchError(ex);
+        });
+    } else {
+      //RECORD_ADD, RECORD_EDIT
+      saveClient(drawerState.selectedClient)
+        .then(() => {
+          onDrawerClose();
+        })
+        .catch((ex) => {
+          catchError(ex);
+        });
+    }
+  }
+
+  function catchError(ex) {
+    const validationErrors = {
+      onSave: ex.message,
+      ...ex.error.errors,
+      validationErrors: ex.error.validationErrors,
+    };
+
+    setDrawerState((state) => ({
+      ...state,
+      error: validationErrors,
+    }));
+  }
+
+  function handleCancelForm() {
+    setDrawerState({
+      visible: false,
+      recordMode: constants.RECORD_NONE,
+      selectedClient: newClient,
+      title: "",
+      submitting: false,
+      error: {},
+    });
+  }
+
+  function handleEmergencyContactSelected(client) {
+    setDrawerState((prevState) => ({
+      ...prevState,
+      ...{
+        selectedClient: {
+          ...prevState.selectedClient,
+          emergencyContact: client,
+          emergencyContactId: client.id,
+        },
+      },
+    }));
+  }
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setDrawerState((prevState) => ({
+      ...prevState,
+      ...{
+        selectedClient: {
+          ...prevState.selectedClient,
+          [name]: name === "id" ? parseInt(value, 0) : value,
+        },
+      },
+    }));
   }
 
   function render() {
-    switch (recordMode) {
-      case constants.RECORD_ADD:
-      case constants.RECORD_EDIT:
-      case constants.RECORD_DELETE:
-        return (
-          <ManageClient
-            id={selectedClientId}
-            mode={recordMode}
-            afterClientSave={handleAfterClientSaveAndCancel}
-            handleCancelForm={handleAfterClientSaveAndCancel}
-          />
-        );
-      default:
-        return (
-          <Disabled disabled={loading}>
-            <div className="row">
-              <div className="input-group">
-                <SearchForm
-                  placeHolder="Search client"
-                  onChange={handleValueChange}
-                  onSearch={handleSearch}
-                  value={clientFilterBy}
-                />
-                <button
-                  className="btn btn-outline-secondary bi-person-plus btn-sm"
-                  onClick={() => handleAddClient()}
-                ></button>
-              </div>
-            </div>
-            <ClientList
-              clients={clients}
-              onSelect={onAfterClientSelect}
-              onEdit={handleEditClient}
-              onDelete={handleDeleteClient}
+    return (
+      <>
+        {drawerState.visible && (
+          <Drawer
+            title={drawerState.title}
+            placement={"right"}
+            closable={false}
+            onClose={onDrawerClose}
+            visible={drawerState.visible}
+            key={"createUpdateClient"}
+            size={"small"}
+          >
+            <ClientForm
+              client={drawerState.selectedClient}
+              onSubmitForm={handleSubmitForm}
+              onCancelForm={handleCancelForm}
+              onChange={handleChange}
+              onEmergencyContactSelected={handleEmergencyContactSelected}
+              mode={drawerState.recordMode}
+              submitting={drawerState.submitting}
+              errors={drawerState.error}
             />
-          </Disabled>
-        );
-    }
+          </Drawer>
+        )}
+        <div className="row">
+          <div className="input-group">
+            <SearchForm
+              placeHolder="Search client"
+              onChange={handleValueChange}
+              onSearch={handleSearch}
+              value={clientFilterBy}
+            />
+            <button
+              className="btn btn-outline-secondary bi-person-plus btn-sm"
+              onClick={() => handleAddClient()}
+            ></button>
+          </div>
+        </div>
+        <ClientList
+          clients={clients}
+          onSelect={onAfterClientSelect}
+          onEdit={handleEditClient}
+          onDelete={handleDeleteClient}
+        />
+      </>
+    );
   }
 
   return (
@@ -117,11 +237,17 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
   searchClients,
   setClientFilterBy,
+  getClientById,
+  saveClient,
+  deleteClient,
 };
 
 ClientPage.propTypes = {
   clients: PropTypes.array.isRequired,
   searchClients: PropTypes.func.isRequired,
+  getClientById: PropTypes.func.isRequired,
+  saveClient: PropTypes.func.isRequired,
+  deleteClient: PropTypes.func.isRequired,
   setClientFilterBy: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   clientFilterBy: PropTypes.string,

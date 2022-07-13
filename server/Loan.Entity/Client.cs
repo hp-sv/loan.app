@@ -57,6 +57,9 @@ namespace Loan.Entity
         public Client? EmergencyContact { get; set; } 
         public int? EmergencyContactId { get; set; }
 
+        public string? FullName { get; private set; }
+        public string? FullAddress { get; private set; }
+
         public Client(string firstName, string lastName)
         {        
             FirstName = firstName;

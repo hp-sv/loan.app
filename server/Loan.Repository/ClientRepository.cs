@@ -32,8 +32,10 @@ namespace Loan.Repository
 
         public async Task UpdateAsync(Client client)
         {
+            
             var clientToUpdate = await context.Clients.FirstAsync(c => c.Id == client.Id);
             _mapper.Map(client, clientToUpdate);
+            
             return;
         }
 
@@ -67,6 +69,7 @@ namespace Loan.Repository
                     c => c.FirstName.ToLower().Contains(filter) 
                     || c.MiddleName.ToLower().Contains(filter)
                     || c.LastName.ToLower().Contains(filter)
+                    || c.FullName.ToLower().Contains(filter)
                     ).ToListAsync();
         }
     }

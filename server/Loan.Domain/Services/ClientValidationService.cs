@@ -44,12 +44,18 @@ namespace Loan.Domain.Services
                 _Erorrs.Add(new ValidationError { Code = ClientValidationErrorCodes.CLIENT_DATE_OF_BIRTH_ERROR, Message = "Client must be born on or after first of January 1900" });
         }
 
+        private void validateEmergencyContact(Client client)
+        {
+            if(client.EmergencyContactId.HasValue && client.Id == client.EmergencyContactId)
+                _Erorrs.Add(new ValidationError { Code = ClientValidationErrorCodes.CLIENT_EMERGENCY_CONTACT_ERROR, Message = "Emergency contact must not be the client it self." });
+        }
+
         public override async Task ValidateForUpdate(Client client)
         {            
             validateAge(client);
             validateDob(client);
+            validateEmergencyContact(client);
             await IsClientExists(client);
-
         }
 
         public override async Task ValidateForDelete(Client client)

@@ -12,7 +12,6 @@ namespace Loan.Model.Client
         [MaxLength(255, ErrorMessage = "First name can be up to 255 characters only.")]
         [DefaultValue("")]
         public string FirstName { get; set; } = String.Empty;
-
         [DefaultValue("")]
         public string MiddleName { get; set; } = String.Empty;
 
@@ -21,8 +20,8 @@ namespace Loan.Model.Client
         [MaxLength(255, ErrorMessage = "Last name can be up to 255 characters only.")]
         [DefaultValue("")]
         public string LastName { get; set; } = String.Empty;
-        
-        
+
+
         [JsonConverter(typeof(DateTimeJsonConverter))]
         public DateTime Dob { get; set; } = new DateTime(1900, 1, 1);
 
@@ -33,7 +32,6 @@ namespace Loan.Model.Client
 
         [DefaultValue("")]
         public string EmailAddress { get; set; } = String.Empty;
-
 
         [Required(ErrorMessage = "Address line 1 is required.")]
         [MinLength(3, ErrorMessage = "Address line 1 must be at least three characters.")]
@@ -49,8 +47,8 @@ namespace Loan.Model.Client
         [DefaultValue("")]
         public string AddressLine3 { get; set; } = String.Empty;
 
-        public string FullName => (FirstName + " " + MiddleName + " " + LastName).Replace("  ", " ");
-        public string FullAddress => (AddressLine1 + " " + AddressLine2 + " " + AddressLine3).Replace("  ", " ");
+        public string FullName { get; set; } = String.Empty;
+        public string FullAddress { get; set; } = String.Empty;
 
     }
 

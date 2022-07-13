@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import TextInput from "../../components/common/TextInput";
+import AutoCompleteClient from "../../components/common/AutoCompleteClient";
 import * as constants from "../../constants/Common";
 import Disabled from "../../components/common/Disabled";
 
@@ -9,14 +10,18 @@ const ClientForm = ({
   onSubmitForm,
   onCancelForm,
   onChange,
+  onEmergencyContactSelected,
   mode,
   submitting = false,
   errors = {},
 }) => {
+  const emergencyContactFilter = (optionClient) => {
+    return optionClient.id !== client.id;
+  };
+  
   return (
     <Disabled disabled={submitting}>
       <form onSubmit={onSubmitForm}>
-        <h6>{client.id ? "Edit" : "Add"} Client</h6>
         {errors.onSave && (
           <div className="alert alert-danger" role="alert">
             {errors.onSave}
@@ -79,6 +84,25 @@ const ClientForm = ({
           error={errors.emailAddress}
           type="email"
         />
+        {!client.emergencyContact && (
+          <AutoCompleteClient
+            name="emergencyContactId"
+            label="Emergency Contact"
+            filterOption={emergencyContactFilter}
+            selected=""
+            onSelect={onEmergencyContactSelected}
+            error={errors.emergencyContactId}
+          />
+        )}
+        {client.emergencyContact && (
+          <AutoCompleteClient
+            name="emergencyContactId"
+            label="Emergency Contact"
+            selected={client.emergencyContact.fullName}
+            onSelect={onEmergencyContactSelected}
+            error={errors.emergencyContactId}
+          />
+        )}
         <TextInput
           name="addressLine1"
           label="Address Line 1"
@@ -135,6 +159,7 @@ ClientForm.propTypes = {
   onCancelForm: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   mode: PropTypes.number.isRequired,
+  onEmergencyContactSelected: PropTypes.number.isRequired,
   errors: PropTypes.object,
   submitting: PropTypes.bool,
 };
