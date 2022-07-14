@@ -24,22 +24,36 @@ namespace Loan.Domain.Services
 
         public override async Task ValidateForCreate(Account account)
         {
-            await IsValidClient(account);            
+            await IsClientExists(account);
+            await IsClientHasEmergencyContact(account);
+            await IsValidRate(account);
             await IsValidLookup(LookupIds.LookupSetId.DurationTypeSetId, account.DurationTypeId, "Duration", AccountValidationErrorCodes.INVALID_DURATION_TYPE);            
-            await IsValidLookup(LookupIds.LookupSetId.RepaymentScheduleId, account.RepaymentTypeId,"Repayment schedule", AccountValidationErrorCodes.INVALID_REPAYMENT_TYPE);            
-            await IsValidLookup(LookupIds.LookupSetId.RepaymentScheduleId, account.RepaymentTypeId, "Status", AccountValidationErrorCodes.INVALID_REPAYMENT_TYPE);
-            
+            await IsValidLookup(LookupIds.LookupSetId.RepaymentScheduleId, account.RepaymentTypeId,"Repayment schedule", AccountValidationErrorCodes.INVALID_REPAYMENT_TYPE); 
         }
         
-        private async Task IsValidClient(Account account)
+        private async Task IsClientExists(Account account)
         {
             var isClientExist = await _clientRepository.IsClientExistsAsync(account.ClientId);
 
             if (!isClientExist)
                 _Erorrs.Add(new ValidationError {Code = AccountValidationErrorCodes.IVALID_CLIENT, Message="Client does not exists."});
-        
+            
         }
-      
+        private async Task IsClientHasEmergencyContact(Account account)
+        {
+            var client = await _clientRepository.GetByIdAsync(account.ClientId);
+
+            if (client != null && !client.EmergencyContactId.HasValue)
+                _Erorrs.Add(new ValidationError { Code = AccountValidationErrorCodes.ACCOUNT_CLIENT_NO_EMERGENCY_CONTACT, Message = "Client must have an emergency contact." });            
+
+        }
+        private Task IsValidRate(Account account)
+        {            
+            if (account.Rate < 1 || account.Rate > 10)
+                _Erorrs.Add(new ValidationError { Code = AccountValidationErrorCodes.ACCOUNT_RATE_IS_INVALID, Message = "Account rate must be between 1 and 10;" });
+            return Task.CompletedTask;
+        }
+
         private async Task IsValidLookup(int lookupSetId, int lookupId, string lookupSetName, int errorCode)
         {
             var lookupSet = await _lookupSetDomain.GetByIdAsync(lookupSetId);
@@ -57,6 +71,8 @@ namespace Loan.Domain.Services
         public override async Task ValidateForUpdate(Account account)
         {
             await IsAccountExists(account);
+            await IsClientHasEmergencyContact(account);
+            await IsValidRate(account);
         }
 
         private async Task IsAccountExists(Account account)

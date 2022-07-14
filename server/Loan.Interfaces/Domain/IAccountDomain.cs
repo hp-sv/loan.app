@@ -7,5 +7,11 @@ namespace Loan.Interface.Domain
         public Task<Account?> GetAccountByClientAsync(int clientId);
         public Task<Account?> GetByIdAsync(int id, bool includeTransactions);
         public Task<bool> IsAccountExistsAsync(int id);
+
+        public Task<bool> Approve(int id, string comment);
+        public Task<bool> Cancel(int id, string comment);
+        public Task<bool> Decline(int id, string comment);
+
+
     }
 }

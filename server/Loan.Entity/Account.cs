@@ -50,6 +50,7 @@ namespace Loan.Entity
         public int StatusId { get; set; }
 
         public ICollection<AccountTransaction> AccountTransactions { set; get; } = new List<AccountTransaction>();
+        public ICollection<AccountComment> AccountComments { get; set; } = new List<AccountComment>();
 
     }
 }

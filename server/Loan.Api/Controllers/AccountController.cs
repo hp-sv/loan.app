@@ -91,5 +91,46 @@ namespace Loan.Api.Controllers
 
             return Ok(_mapper.Map<IEnumerable<AccountDto>>(accounts));
         }
+
+        [HttpPut(AccountRoutes.APPROVE)]
+        public async Task<ActionResult> Approve(int id, CreateAccountCommentDto comment)
+        {
+            var result = await _domain.Approve(id, comment.Comment);
+
+            var account = await _domain.GetByIdAsync(id);
+
+            if (result)            
+                return Ok(_mapper.Map<AccountDto>(account));            
+            else            
+                return BadRequest(_mapper.Map<AccountDto>(account));
+            
+        }
+
+        [HttpPut(AccountRoutes.CANCEL)]
+        public async Task<ActionResult> Cancel(int id, CreateAccountCommentDto comment)
+        {
+            var result = await _domain.Cancel(id, comment.Comment);
+
+            var account = await _domain.GetByIdAsync(id);
+
+            if (result)
+                return Ok(_mapper.Map<AccountDto>(account));
+            else
+                return BadRequest(_mapper.Map<AccountDto>(account));
+        }
+
+        [HttpPut(AccountRoutes.DECLINE)]
+        public async Task<ActionResult> Decline(int id, CreateAccountCommentDto comment)
+        {
+            var result = await _domain.Decline(id, comment.Comment);
+
+            var account = await _domain.GetByIdAsync(id);
+
+            if (result)
+                return Ok(_mapper.Map<AccountDto>(account));
+            else
+                return BadRequest(_mapper.Map<AccountDto>(account));
+        }
+
     }
 }
