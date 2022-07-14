@@ -11,15 +11,14 @@ import {
   searchClients,
   saveClient,
   deleteClient,
+  setClientFilter,
 } from "../../store/actions/clientActions";
-import { setClientFilterBy } from "../../store/actions/filterAction";
 import * as constants from "../../constants/Common";
 
 function ClientPage({
-  clients,
+  clientState,
   searchClients,
-  setClientFilterBy,
-  clientFilterBy,
+  setClientFilter,
   saveClient,
   deleteClient,
   mode,
@@ -41,12 +40,12 @@ function ClientPage({
 
   function handleValueChange(event) {
     const { value } = event.target;
-    setClientFilterBy(value);
+    setClientFilter(value);
   }
 
   const handleSearch = (event) => {
     event.preventDefault();
-    searchClients(clientFilterBy);
+    searchClients(clientState.filterBy, 1, clientState.pageSize);
   };
 
   function handleEditClient(client) {
@@ -165,6 +164,14 @@ function ClientPage({
     }));
   }
 
+  function handlePageChange(page, pageSize) {
+    searchClients(
+      clientState.filterBy,
+      page > 0 ? page : clientState.currentPage,
+      clientState.pageSize !== pageSize ? pageSize : clientState.pageSize
+    );
+  }
+
   function render() {
     return (
       <>
@@ -196,7 +203,7 @@ function ClientPage({
               placeHolder="Search client"
               onChange={handleValueChange}
               onSearch={handleSearch}
-              value={clientFilterBy}
+              value={clientState.filterBy}
             />
             <button
               className="btn btn-outline-secondary bi-person-plus btn-sm"
@@ -205,9 +212,10 @@ function ClientPage({
           </div>
         </div>
         <ClientList
-          clients={clients}
+          clientState={clientState}
           onEdit={handleEditClient}
           onDelete={handleDeleteClient}
+          onPageChange={handlePageChange}
         />
       </>
     );
@@ -223,29 +231,27 @@ function ClientPage({
 }
 
 function mapStateToProps(state) {
-  const { clients, filters } = state;
+  const { clientState } = state;
   return {
-    clients: clients.length === 0 ? [] : clients,
+    clientState,
     loading: state.apiCallsInProgress > 0,
-    clientFilterBy: filters.clientFilterBy,
   };
 }
 
 const mapDispatchToProps = {
   searchClients,
-  setClientFilterBy,
+  setClientFilter,
   saveClient,
   deleteClient,
 };
 
 ClientPage.propTypes = {
-  clients: PropTypes.array.isRequired,
+  clientState: PropTypes.object.isRequired,
   searchClients: PropTypes.func.isRequired,
   saveClient: PropTypes.func.isRequired,
   deleteClient: PropTypes.func.isRequired,
-  setClientFilterBy: PropTypes.func.isRequired,
+  updateClientState: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  clientFilterBy: PropTypes.string,
   mode: PropTypes.number.isRequired,
 };
 

@@ -2,6 +2,7 @@
 using Loan.Entity;
 using Loan.Interface.Constants;
 using Loan.Interface.Domain;
+using Loan.Model;
 using Loan.Model.Account;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,11 +23,11 @@ namespace Loan.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AccountDto>>> GetAccounts()
+        public async Task<ActionResult<PagedResultDto<AccountDto>>> GetAccounts(int pg, int pgsize)
         {
-            var accounts = await _domain.GetAllAsync();
+            var pagedResult = await _domain.GetAllAsync(pg, pgsize);
 
-            return Ok(_mapper.Map<IEnumerable<AccountDto>>(accounts));
+            return Ok(_mapper.Map<PagedResultDto<AccountDto>>(pagedResult));
         }
 
 
@@ -82,14 +83,14 @@ namespace Loan.Api.Controllers
         }
 
         [HttpGet(AccountRoutes.SEARCH)]
-        public async Task<ActionResult<IEnumerable<AccountDto>>> SearchAsync(string filter)
+        public async Task<ActionResult<PagedResultDto<AccountDto>>> SearchAsync(string filter, int pg, int pgSize)
         {
-            var accounts = await _domain.SearchAsync(filter);
+            var pagedResult = await _domain.SearchAsync(filter, pg, pgSize);
 
-            if (accounts == null)
+            if (pagedResult.RowCount == 0)
                 return BadRequest($"Filter account by {filter} returned no result.");
 
-            return Ok(_mapper.Map<IEnumerable<AccountDto>>(accounts));
+            return Ok(_mapper.Map<PagedResultDto<AccountDto>>(pagedResult));
         }
 
         [HttpPut(AccountRoutes.APPROVE)]

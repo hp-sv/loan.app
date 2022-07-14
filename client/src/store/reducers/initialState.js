@@ -1,9 +1,18 @@
 const intialState = {
   /* Client */
-  clients: [],
+  clientState: {
+    results: [],
+    currentPage: 0,
+    pageCount: 0,
+    pageSize: 15,
+    rowCount: 0,
+    firstRowOnPage: 0,
+    lastRowOnPage: 0,
+    filterBy: "",
+  },
 
   /* Account*/
-  accounts: [],
+  accounts: {},
 
   /*Page*/
   page: {
@@ -18,14 +27,14 @@ const intialState = {
   },
 
   /**/
-  lookupSet:{
-    transactionType: {lookups:[]},
-    durationType:{lookups:[]},
-    repaymentSchedule:{lookups:[]},
-    recordStatus:{lookups:[]},
-    seedConstantType:{lookups:[]},
-    changeOperations:{lookups:[]},
-    accountStatus:{lookups:[]},
+  lookupSet: {
+    transactionType: { lookups: [] },
+    durationType: { lookups: [] },
+    repaymentSchedule: { lookups: [] },
+    recordStatus: { lookups: [] },
+    seedConstantType: { lookups: [] },
+    changeOperations: { lookups: [] },
+    accountStatus: { lookups: [] },
   },
 
   /*Api Counter*/

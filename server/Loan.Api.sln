@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Loan.Repository", "Loan.Rep
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Loan.Data", "Loan.Data\Loan.Data.csproj", "{4453B462-FDA9-464D-9E24-FAF7036FF467}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loan.Test", "Loan.Test\Loan.Test.csproj", "{470A1615-1470-4EBE-9F5D-160D13EDAB40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Loan.Test", "Loan.Test\Loan.Test.csproj", "{470A1615-1470-4EBE-9F5D-160D13EDAB40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

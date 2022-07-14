@@ -1,16 +1,16 @@
 import { combineReducers } from "redux";
-import clients from "./clientReducer";
+import clientState from "./clientReducer";
 import accounts from "./accountReducer";
 import apiCallsInProgress from "./apiStatusReducer";
 import filters from "./filterReducer";
 import lookupSets from "./lookupSetReducer";
 
 const rootReducer = combineReducers({
-  clients,
+  clientState,
   accounts,
   apiCallsInProgress,
   filters,
-  lookupSets
+  lookupSets,
 });
 
 export default rootReducer;

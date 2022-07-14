@@ -17,20 +17,22 @@ namespace Loan.Repository
         {
             throw new NotImplementedException();
         }
-
-        public async Task<IEnumerable<LookupSet>> GetAllAsync()
+        
+        public async Task<PagedResult<LookupSet>> GetAllAsync(int page, int pageSize)
         {
-            return await context.LookupSets.Include(ls => ls.Lookups).ToListAsync();
+            var query = context.LookupSets.Include(ls=>ls.Lookups);
+            return await query.GetPagedAsync(page, pageSize);
         }
 
         public async Task<LookupSet?> GetByIdAsync(int id)
         {
             return await context.LookupSets.Include(ls => ls.Lookups).FirstOrDefaultAsync(ls => ls.Id == id);
         }
-
-        public Task<IEnumerable<LookupSet>?> SearchAsyc(string filter)
+        
+        public async Task<PagedResult<LookupSet>> SearchAsync(string filter, int page, int pageSize)
         {
-            throw new NotImplementedException();
+            var query = context.LookupSets.Include(ls => ls.Lookups).Where(ls=>ls.Name.Contains(filter));
+            return await query.GetPagedAsync(page, pageSize);
         }
 
         public Task UpdateAsync(LookupSet entity)

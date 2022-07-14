@@ -61,16 +61,24 @@ namespace Loan.Repository
         {
             return await context.Clients.AnyAsync(c => c.Id == id);
         }
+                
 
-        public async Task<IEnumerable<Client>?> SearchAsyc(string filter)
+       public async Task<PagedResult<Client>>GetAllAsync(int page, int pageSize)
+        {
+            var query = context.Clients.OrderBy(c => c.FirstName).ThenBy(c => c.LastName);
+            return await query.GetPagedAsync(page, pageSize);
+        }
+
+        public async Task<PagedResult<Client>> SearchAsync(string filter, int page, int pageSize)
         {
             filter = filter.ToLower();
-            return await context.Clients.Where(
-                    c => c.FirstName.ToLower().Contains(filter) 
+            var query = context.Clients.Where(
+                    c => c.FirstName.ToLower().Contains(filter)
                     || c.MiddleName.ToLower().Contains(filter)
                     || c.LastName.ToLower().Contains(filter)
                     || c.FullName.ToLower().Contains(filter)
-                    ).ToListAsync();
+                    );
+            return await query.GetPagedAsync(page, pageSize);
         }
     }
 }

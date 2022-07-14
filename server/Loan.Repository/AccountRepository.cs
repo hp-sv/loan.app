@@ -32,10 +32,11 @@ namespace Loan.Repository
         {
             return await context.Accounts.Include(a => a.Client).Where(a => a.ClientId == clientId).ToListAsync();
         }
-
-        public async Task<IEnumerable<Account>> GetAllAsync()
+        
+        public async Task<PagedResult<Account>> GetAllAsync(int page, int pageSize)
         {
-            return await context.Accounts.Include(a=>a.Client).OrderBy(a => a.Client.FirstName).ThenBy(a => a.Client.LastName).ToListAsync();
+            var query = context.Accounts.Include(a => a.Client).OrderBy(a => a.Client.FirstName).ThenBy(a => a.Client.LastName);
+            return await query.GetPagedAsync(page, pageSize);
         }
 
         public async Task<Account?> GetByIdAsync(int id)
@@ -56,16 +57,19 @@ namespace Loan.Repository
             return await context.Accounts.AnyAsync(a => a.Id == id);
         }
 
-        public async Task<IEnumerable<Account>?> SearchAsyc(string filter)
+        
+        public async Task<PagedResult<Account>> SearchAsync(string filter, int page, int pageSize)
         {
             filter = filter.ToLower();
-            return await context.Accounts
-                    .Include(a=>a.AccountTransactions)
-                    .Include(a=>a.Client).Where(
+            var query = context.Accounts
+                    .Include(a => a.AccountTransactions)
+                    .Include(a => a.Client).Where(
                     a => a.Client.FirstName.ToLower().Contains(filter)
                     || a.Client.MiddleName.ToLower().Contains(filter)
                     || a.Client.LastName.ToLower().Contains(filter)
-                    ).ToListAsync();
+                    );
+
+            return await query.GetPagedAsync(page, pageSize);
         }
 
         public async Task UpdateAsync(Account account)

@@ -18,7 +18,7 @@ namespace Loan.Test
         public IMapper Mapper { get; private set;}
 
         internal TestDateService DateService { get; private set;}
-
+       
         public LoanDbContext DbContext { get; private set; }        
         private IChangeTransactionScope GetChangeTransactionScope()
         {            
@@ -30,7 +30,7 @@ namespace Loan.Test
             return mockCTS.Object;         
         }
 
-        public LoanSeedDataFixture()
+       public LoanSeedDataFixture()
         {
             DateService = new TestDateService(new DateTime(2022, 06, 01, 08, 0, 0));
 
@@ -56,7 +56,7 @@ namespace Loan.Test
             Mapper = config.CreateMapper();
 
             ChangeTransactionService = new ChangeTransactionService(DbContext, ChangeTransactionScope);
-
+       
         }
 
         public void Dispose()

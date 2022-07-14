@@ -10,19 +10,19 @@ namespace Loan.Domain
     public class AccountDomain : IAccountDomain
     {
         private readonly IAccountRepository _repository;
-        private readonly IClientRepository _clientRepository;
+        private readonly IClientRepository _clientRepository;        
         private readonly IChangeTransactionService _transactionService;
         private readonly IAccountValidationService _validationService;
         private readonly IMapper _mapper;
 
         public AccountDomain(IAccountRepository accountRepository,                
-                IClientRepository clientRepository,
+                IClientRepository clientRepository,                
                 IChangeTransactionService transactionService,
                 IAccountValidationService validationService, 
                 IMapper mapper)
         {
             _repository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
-            _clientRepository = clientRepository ?? throw new ArgumentNullException(nameof(clientRepository));
+            _clientRepository = clientRepository ?? throw new ArgumentNullException(nameof(clientRepository));            
             _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
             _validationService  = validationService ?? throw new ArgumentNullException(nameof(validationService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -60,16 +60,7 @@ namespace Loan.Domain
         {
             throw new NotImplementedException();
         }
-
-        public async Task<IEnumerable<Account>> GetAllAsync()
-        {
-            var accounts = await _repository.GetAllAsync();
-
-            if (accounts == null)
-                throw _validationService.CreateException(AccountValidationErrorCodes.ACCOUNT_DOES_NOT_EXISTS, "Accounts do not exist.");
-
-            return accounts;
-        }
+        
         public async Task<Account?> GetByIdAsync(int id)
         {
             var account = await _repository.GetByIdAsync(id);
@@ -108,11 +99,7 @@ namespace Loan.Domain
         {
             return await _repository.IsAccountExistsAsync(id);
         }
-
-        public async Task<IEnumerable<Account>?> SearchAsync(string filter)
-        {
-            return await _repository.SearchAsyc(filter);
-        }
+        
 
 		public Task<bool> Approve(int id, string comment)
 		{
@@ -128,5 +115,15 @@ namespace Loan.Domain
 		{
 			throw new NotImplementedException();
 		}
-	}
+
+        public async Task<PagedResult<Account>> GetAllAsync(int pg, int pgSize)
+        {
+            return await _repository.GetAllAsync(pg, pgSize);
+        }
+
+        public async Task<PagedResult<Account>> SearchAsync(string filter, int pg, int pgSize)
+        {
+            return await _repository.SearchAsync(filter, pg, pgSize);
+        }
+    }
 }

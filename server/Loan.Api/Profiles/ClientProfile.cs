@@ -15,6 +15,9 @@ namespace Loan.Api.Profiles
             CreateMap<Model.Client.CreateClientDto, Client>();
             CreateMap<Model.Client.UpdateClientDto, Client>();
 
+            CreateMap<PagedResult<Client>, Model.PagedResultDto<Model.Client.ClientDto>>();
+
+
         }
 
     }

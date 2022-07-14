@@ -2,6 +2,7 @@
 using Loan.Entity;
 using Loan.Interface.Constants;
 using Loan.Interface.Domain;
+using Loan.Model;
 using Loan.Model.Client;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -22,10 +23,10 @@ namespace Loan.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ClientDto>>> GetClientsAsync() {
-            var clients = await _domain.GetAllAsync();
+        public async Task<ActionResult<PagedResultDto<ClientDto>>> GetClientsAsync(int pg, int pgSize) {
+            var pageResult = await _domain.GetAllAsync(pg, pgSize);
 
-            return Ok(_mapper.Map<IEnumerable<ClientDto>>(clients));
+            return Ok(_mapper.Map<PagedResultDto<ClientDto>>(pageResult));
         }
 
         [HttpGet(ClientRoutes.ID, Name = ClientRoutes.GET_CLIENT_ROUTE_NAME)]
@@ -106,14 +107,14 @@ namespace Loan.Api.Controllers
         }
 
         [HttpGet(ClientRoutes.SEARCH)]
-        public async Task<ActionResult<IEnumerable<ClientDto>>> SearchAsync(string filter)
+        public async Task<ActionResult<PagedResultDto<ClientDto>>> SearchAsync(string filter, int pg, int pgSize)
         {
-            var clients = await _domain.SearchAsync(filter);
+            var pagedResult = await _domain.SearchAsync(filter, pg, pgSize);
 
-            if (clients == null)
+            if (pagedResult.RowCount == 0 )
                 return BadRequest($"Filter client by {filter} returned no result.");
 
-            return Ok(_mapper.Map<IEnumerable<ClientDto>>(clients));
+            return Ok(_mapper.Map<PagedResultDto<ClientDto>>(pagedResult));
         }
 
     }

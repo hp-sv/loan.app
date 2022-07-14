@@ -24,8 +24,21 @@ export function getClientById(id) {
     .catch(handleError);
 }
 
-export function searchClients(filter) {
-  return fetch(baseUrl + "search?filter=" + filter, { method: "GET" })
-    .then(handleResponse)
-    .catch(handleError);
+export function searchClients(filter, page, pageSize) {
+  if (filter.length > 0) {
+    return fetch(
+      `${baseUrl}search?filter=${filter}&pg=${page}&pgsize=${pageSize}`,
+      {
+        method: "GET",
+      }
+    )
+      .then(handleResponse)
+      .catch(handleError);
+  } else {
+    return fetch(`${baseUrl}?pg=${page}&pgsize=${pageSize}`, {
+      method: "GET",
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  }
 }

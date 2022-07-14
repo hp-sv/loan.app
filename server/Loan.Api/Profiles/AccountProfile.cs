@@ -16,6 +16,8 @@ namespace Loan.Api.Profiles
 
             CreateMap<Model.Account.UpdateAccountDto, Account>();
             CreateMap<Model.Account.UpdateAccountTransactionDto, AccountTransaction>();
+
+            CreateMap<PagedResult<Account>, Model.PagedResultDto<Account>>();
         }
     }
 }

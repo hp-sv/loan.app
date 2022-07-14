@@ -10,17 +10,17 @@ namespace Loan.Domain
 {
     public class ClientDomain : IClientDomain
     {
-        private readonly IClientRepository _repository;
+        private readonly IClientRepository _repository;        
         private readonly IChangeTransactionService _transactionService;
         private readonly IClientValidationService _validationService; 
         private readonly IMapper _mapper;
 
-        public ClientDomain(IClientRepository repository, 
+        public ClientDomain(IClientRepository repository,                 
                 IChangeTransactionService transactionService, 
                 IClientValidationService validationService,
                 IMapper mapper)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));            
             _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
             _validationService = validationService ?? throw new ArgumentNullException(nameof(validationService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -57,9 +57,9 @@ namespace Loan.Domain
 
         }
 
-        public async Task<IEnumerable<Client>> GetAllAsync()
+        public async Task<PagedResult<Client>> GetAllAsync(int pg, int pgSize)
         {
-            return await _repository.GetAllAsync();
+            return await _repository.GetAllAsync(pg, pgSize);
         }
 
         public async Task<Client?> GetByIdAsync(int id, bool includeAccounts)
@@ -77,10 +77,11 @@ namespace Loan.Domain
             return await _repository.IsClientExistsAsync(id);
         }
 
-        public async Task<IEnumerable<Client>?> SearchAsync(string filter)
+        public async Task<PagedResult<Client>> SearchAsync(string filter, int pg, int pgSize)
         {
-            return await _repository.SearchAsyc(filter);
+            return await _repository.SearchAsync(filter, pg, pgSize);
         }
+        
 
         public async Task<bool> UpdateAsync(Client client)
         {

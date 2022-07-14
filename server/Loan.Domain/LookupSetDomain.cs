@@ -1,16 +1,16 @@
 ﻿using Loan.Entity;
 using Loan.Interface.Domain;
 using Loan.Interface.Repositories;
+using Loan.Interface.Services;
 
 namespace Loan.Domain
 {
     public class LookupSetDomain : ILookupSetDomain
     {
-
-        private readonly ILookupSetRepository _lookupSetRepository;
+        private readonly ILookupSetRepository _lookupSetRepository;        
         public LookupSetDomain(ILookupSetRepository lookupSetRepository)
         {
-            _lookupSetRepository = lookupSetRepository ?? throw new ArgumentNullException(nameof(lookupSetRepository));
+            _lookupSetRepository = lookupSetRepository ?? throw new ArgumentNullException(nameof(lookupSetRepository));            
         }
 
         public Task<bool> CreateAsync(LookupSet entity)
@@ -22,10 +22,11 @@ namespace Loan.Domain
         {
             throw new NotImplementedException();
         }
+                
 
-        public async Task<IEnumerable<LookupSet>> GetAllAsync()
+        public async Task<PagedResult<LookupSet>> GetAllAsync(int pg, int pgSize)
         {
-            return await _lookupSetRepository.GetAllAsync();
+            return await _lookupSetRepository.GetAllAsync(pg, pgSize);
         }
 
         public async Task<LookupSet?> GetByIdAsync(int id)
@@ -33,10 +34,11 @@ namespace Loan.Domain
             return await _lookupSetRepository.GetByIdAsync(id);
         }
 
-        public Task<IEnumerable<LookupSet>?> SearchAsync(string filter)
+        public async Task<PagedResult<LookupSet>> SearchAsync(string filter, int pg, int pgSize)
         {
-            throw new NotImplementedException();
+            return await _lookupSetRepository.SearchAsync(filter, pg, pgSize);
         }
+        
 
         public Task<bool> UpdateAsync(LookupSet entity)
         {

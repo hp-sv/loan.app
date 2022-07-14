@@ -15,6 +15,7 @@ using Loan.Data.Context;
 using Loan.Interface.Exceptions;
 using Loan.Entity;
 using Microsoft.EntityFrameworkCore;
+using Loan.Model;
 
 namespace Loan.Test
 {    
@@ -112,16 +113,16 @@ namespace Loan.Test
         [Fact]
         public async void Can_Get_Client_All_Clients()
         {
-            var getResult = await _controller.GetClientsAsync();
+            var getResult = await _controller.GetClientsAsync(1, 2);
             var expected = _loanDbContext.Clients.Where(c => c.RecordStatusId == LookupIds.RecordStatus.Active).Count();
 
-            Assert.IsType<ActionResult<IEnumerable<ClientDto>>>(getResult);
+            Assert.IsType<ActionResult<PagedResultDto<ClientDto>>>(getResult);
             Assert.IsType<OkObjectResult>(getResult.Result);
 
             var result = getResult.Result as OkObjectResult;
-            var clients = result?.Value as IEnumerable<ClientDto>;
-            Assert.NotNull(clients);
-            Assert.True(clients?.Count() == expected);            
+            var clientPagedResult = result?.Value as PagedResultDto<ClientDto>;
+                        
+            Assert.True(clientPagedResult.RowCount == expected);            
         }
 
 
@@ -182,16 +183,15 @@ namespace Loan.Test
         [Fact]
         public async void Can_Search_Client_To_All_Fields()
         {
-            var searchResult = await _controller.SearchAsync("james");
+            var searchResult = await _controller.SearchAsync("james", 1, 5);
             var expected = 3;
 
-            Assert.IsType<ActionResult<IEnumerable<ClientDto>>>(searchResult);
+            Assert.IsType<ActionResult<PagedResultDto<ClientDto>>>(searchResult);
             
             var result = searchResult?.Result as OkObjectResult;
-            var clients = result?.Value as IEnumerable<ClientDto>;
-            
-            Assert.NotNull(clients);
-            Assert.True(clients?.Count() == expected);
+            var clientPagedResult = result?.Value as PagedResultDto<ClientDto>;            
+                        
+            Assert.True(clientPagedResult.RowCount == expected);
         }
 
 

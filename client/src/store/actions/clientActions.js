@@ -3,8 +3,8 @@ import * as clientApi from "../../api/clientApi";
 import { beginApiCall, apiCallError } from "./apiStatusActions";
 import { message } from "antd";
 
-export function searchClientSuccess(clients) {
-  return { type: types.SEARCH_CLIENT_SUCCESS, clients };
+export function searchClientSuccess(searchResult) {
+  return { type: types.SEARCH_CLIENT_SUCCESS, searchResult };
 }
 
 export function getClientSuccess(client) {
@@ -19,7 +19,17 @@ export function deleteClientSuccess(client) {
   return { type: types.DELETE_CLIENT_SUCCESS, client };
 }
 
-export function searchClients(filter) {
+export function setClientFilterCompleted(filterBy) {
+  return { type: types.SET_CLIENT_FILTER_COMPLETED, filterBy };
+}
+
+export function setClientFilter(filterBy) {
+  return function (dispatch) {
+    dispatch(setClientFilterCompleted(filterBy));
+  };
+}
+
+export function searchClients(filter, page, pageSize) {
   return function (dispatch) {
     dispatch(beginApiCall());
 
@@ -30,9 +40,9 @@ export function searchClients(filter) {
     });
 
     return clientApi
-      .searchClients(filter)
-      .then((clients) => {
-        dispatch(searchClientSuccess(clients));
+      .searchClients(filter, page, pageSize)
+      .then((searchResult) => {
+        dispatch(searchClientSuccess(searchResult));
         message.destroy(msgKey);
         message.success({
           content: "Search client completed.",

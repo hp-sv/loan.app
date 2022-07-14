@@ -1,32 +1,51 @@
 import * as types from "../actions/actionTypes";
 import initialState from "./initialState";
 
-export default function clientReducer(state = initialState.clients, action) {
+export default function clientReducer(
+  state = initialState.clientState,
+  action
+) {
   switch (action.type) {
+    case types.SET_CLIENT_FILTER_COMPLETED:
+      return { ...state, filterBy: action.filterBy };
+
     case types.SEARCH_CLIENT_SUCCESS:
-      return action.clients;
+      return { ...state, ...action.searchResult };
+
     case types.GET_CLIENT_SUCCESS:
-      if (state.length > 0) {
-        return state.map((client) =>
-          client.id === action.client.id ? action.client : client
-        );
+      if (state.result.length > 0) {
+        return {
+          ...state,
+          results: state.result.map((client) =>
+            client.id === action.client.id ? action.client : client
+          ),
+        };
       } else {
-        return [...state, action.client];
-      }    
+        return { ...state, results: [action.client] };
+      }
+
     case types.SAVE_CLIENT_SUCCESS:
-      var existingClient = state.find((client) => client.id === action.client.id);
-      if(existingClient)
-      {
-        return state.map((client) =>
-        client.id === action.client.id ? action.client : client
+      var existingClient = state.results.find(
+        (client) => client.id === action.client.id
       );
-      } 
-      else 
-      {
-        return [...state, action.client];
-      }       
-      case types.DELETE_CLIENT_SUCCESS:        
-        return state.filter((client) => client.id !== action.client.id)
+
+      if (existingClient) {
+        return {
+          ...state,
+          results: state.results.map((client) =>
+            client.id === action.client.id ? action.client : client
+          ),
+        };
+      } else {
+        return { ...state, results: [action.client] };
+      }
+    case types.DELETE_CLIENT_SUCCESS:
+      return {
+        ...state,
+        results: state.results.filter(
+          (client) => client.id !== action.client.id
+        ),
+      };
     default:
       return state;
   }
