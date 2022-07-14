@@ -113,5 +113,20 @@ namespace Loan.Domain
         {
             return await _repository.SearchAsyc(filter);
         }
-    }
+
+		public Task<bool> Approve(int id, string comment)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<bool> Cancel(int id, string comment)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<bool> Decline(int id, string comment)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

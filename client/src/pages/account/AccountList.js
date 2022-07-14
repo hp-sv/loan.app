@@ -1,7 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import * as Icon from "react-bootstrap-icons";
+import {
+  EditOutlined,
+  DeleteOutlined 
+} from '@ant-design/icons';
 
 function AccountList({
   accounts,
@@ -39,20 +41,16 @@ function AccountList({
           return (
             <tr key={account.id}>
               <td width={20}>
-                <Icon.PencilSquare
-                  size={20}
-                  title="Edit"
-                  className="text-muted"
-                  style={{ cursor: "hand" }}
+                <EditOutlined                  
+                  title="Edit"      
+                  className="grid_inline_icon"                              
                   onClick={() => onEdit(account)}
                 />
               </td>
               <td width={20}>
-                <Icon.Trash2
-                  size={20}
-                  title="Edit"
-                  className="text-muted"
-                  style={{ cursor: "hand" }}
+                <DeleteOutlined                   
+                  title="Delete"                  
+                  className="grid_inline_icon"                              
                   onClick={() => onDelete(account)}
                 />
               </td>

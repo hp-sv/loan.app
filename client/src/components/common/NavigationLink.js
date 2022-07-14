@@ -1,32 +1,39 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import {
+  AccountBookOutlined ,
+  TeamOutlined,
+  InfoCircleOutlined,
+  HomeOutlined,
+  SettingOutlined
+} from '@ant-design/icons';
 
 function NavigationLink() {
   return (
     <>
       <div className="col-md-1">
-        <NavLink to="/" className="bi bi-house text-muted">
-          Home
+        <NavLink to="/" className="text-muted" style={{verticalAlign:"middle"}}>
+          <HomeOutlined/>Home
         </NavLink>
       </div>
       <div className="col-md-1">
-        <NavLink to="/clients" className="bi bi-people text-muted">
-          Clients
+        <NavLink to="/clients" className="text-muted">
+          <TeamOutlined/>Clients
         </NavLink>
       </div>
       <div className="col-md-1">
-        <NavLink to="/accounts" className="bi bi-journal text-muted">
-          Accounts
+        <NavLink to="/accounts" className="text-muted">
+          <AccountBookOutlined/>Accounts
         </NavLink>
       </div>
       <div className="col-md-1">
-        <NavLink to="/admin" className="bi bi-gear text-muted">
-          Admin
+        <NavLink to="/admin" className="text-muted">
+          <SettingOutlined/>Admin
         </NavLink>
       </div>
       <div className="col-md-1">
-        <NavLink to="/about" className="bi bi-info-circle text-muted">
-          About
+        <NavLink to="/about" className="text-muted">
+          <InfoCircleOutlined />About
         </NavLink>
       </div>
     </>

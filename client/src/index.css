@@ -20,3 +20,9 @@ code {
 nav {
   padding: 20px 0 20px 0;
 }
+
+.grid_inline_icon {
+  font-size:20px;
+  cursor: hand;
+  color:grey;
+}
