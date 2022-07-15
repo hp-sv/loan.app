@@ -8,20 +8,19 @@ import {
   searchAccounts,
   saveAccount,
   deleteAccount,
+  setAccountFilter,
 } from "../../store/actions/accountActions";
-import { setAccountFilterBy } from "../../store/actions/filterAction";
 import { getLookupSetById } from "../../store/actions/lookupSetActions";
 import * as constants from "../../constants/Common";
 import { newAccount } from "../../store/dataInitialiser";
 import { Drawer } from "antd";
 
 function AccountPage({
-  accounts,
+  accountState,  
   searchAccounts,
   saveAccount,
   deleteAccount,
-  setAccountFilterBy,
-  accountFilterBy,
+  setAccountFilter,  
   accountStatus,
   repaymentSchedule,
   durationType,
@@ -47,12 +46,12 @@ function AccountPage({
 
   function handleValueChange(event) {
     const { value } = event.target;
-    setAccountFilterBy(value);
+    setAccountFilter(value);    
   }
 
   function handleSearch(event) {
     event.preventDefault();
-    searchAccounts(accountFilterBy);
+    searchAccounts(accountState.filterBy, 1, accountState.pageSize);
   }
 
   function onDrawerClose() {
@@ -174,6 +173,14 @@ function AccountPage({
     });
   }
 
+  function handlePageChange(page, pageSize) {
+    searchAccounts(
+      accountState.filterBy,
+      page > 0 ? page : accountState.currentPage,
+      accountState.pageSize !== pageSize ? pageSize : accountState.pageSize
+    );
+  }
+
   function render() {
     return (
       <>
@@ -181,7 +188,8 @@ function AccountPage({
           <Drawer
             title={drawerState.title}
             placement={"right"}
-            closable={false}
+            closable={true}
+            maskClosable={false}
             onClose={onDrawerClose}
             visible={drawerState.visible}
             key={"createUpdateAccount"}
@@ -207,7 +215,7 @@ function AccountPage({
               placeHolder="Search account"
               onChange={handleValueChange}
               onSearch={handleSearch}
-              value={accountFilterBy}
+              value={accountState.filterBy}
             />
             <button
               className="btn btn-outline-secondary bi-journal-plus btn-sm"
@@ -216,12 +224,13 @@ function AccountPage({
           </div>
         </div>
         <AccountList
-          accounts={accounts}
+          accountState={accountState}          
           accountStatus={accountStatus}
           repaymentSchedule={repaymentSchedule}
           durationType={durationType}
           onEdit={handleEditAccount}
           onDelete={handleDeleteAccount}
+          onPageChange={handlePageChange}
         />
       </>
     );
@@ -236,12 +245,11 @@ function AccountPage({
 }
 
 AccountPage.propTypes = {
-  accounts: PropTypes.array.isRequired,
+  accountState: PropTypes.object.isRequired,  
   searchAccounts: PropTypes.func.isRequired,
   saveAccount: PropTypes.func.isRequired,
   deleteAccount: PropTypes.func.isRequired,
-  setAccountFilterBy: PropTypes.func.isRequired,
-  accountFilterBy: PropTypes.string.isRequired,
+  setAccountFilter: PropTypes.func.isRequired,  
   accountStatus: PropTypes.array.isRequired,
   repaymentSchedule: PropTypes.array.isRequired,
   durationType: PropTypes.array.isRequired,
@@ -249,11 +257,10 @@ AccountPage.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { accounts, filters, lookupSets } = state;
+  const { accountState, lookupSets } = state;
   return {
-    accounts: accounts.length === 0 ? [] : accounts,
-    loading: state.apiCallsInProgress > 0,
-    accountFilterBy: filters.accountFilterBy,
+    accountState,    
+    loading: state.apiCallsInProgress > 0,    
     accountStatus: lookupSets.accountStatus.lookups,
     repaymentSchedule: lookupSets.repaymentSchedule.lookups,
     durationType: lookupSets.durationType.lookups,
@@ -264,8 +271,8 @@ const mapDispatchToProps = {
   searchAccounts,
   saveAccount,
   deleteAccount,
-  setAccountFilterBy,
-  getLookupSetById,
+  setAccountFilter,  
+  getLookupSetById,  
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountPage);

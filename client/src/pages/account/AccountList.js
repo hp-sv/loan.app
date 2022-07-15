@@ -5,14 +5,21 @@ import {
   DeleteOutlined 
 } from '@ant-design/icons';
 
+import { Pagination } from "antd";
+
 function AccountList({
-  accounts,
+  accountState,
   accountStatus,
   repaymentSchedule,
   durationType,
   onEdit,
-  onDelete,
+  onDelete, onPageChange
 }) {
+
+  const { results, currentPage, rowCount, pageSize } = accountState;
+  const showTotal: PaginationProps["showTotal"] = (total) =>
+  `Total ${total} items`;
+
   function getLookupName(lookups, id) {
     const lookup = lookups.find((lookup) => lookup.id === id);
     return lookup ? lookup.name : null;
@@ -37,7 +44,7 @@ function AccountList({
         </tr>
       </thead>
       <tbody>
-        {accounts.map((account) => {
+        {results.map((account) => {
           return (
             <tr key={account.id}>
               <td width={20}>
@@ -69,18 +76,37 @@ function AccountList({
             </tr>
           );
         })}
+        <tr>          
+          <td colSpan={12}>
+            {
+              results.length > 0 && 
+              <Pagination
+              showLessItems={true}
+              showTotal={showTotal}
+              defaultCurrent={currentPage}
+              total={rowCount}
+              pageSize={pageSize}
+              onChange={onPageChange}
+              showSizeChanger={true}
+              pageSizeOptions={[10, 15, 20, 25, 50]}
+            />          
+            }
+            
+          </td>
+        </tr>
       </tbody>
     </table>
   );
 }
 
 AccountList.propTypes = {
-  accounts: PropTypes.array.isRequired,
+  accountState: PropTypes.object.isRequired,
   accountStatus: PropTypes.array.isRequired,
   repaymentSchedule: PropTypes.array.isRequired,
   durationType: PropTypes.array.isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onPageChange: PropTypes.func.isRequired,
 };
 
 export default AccountList;

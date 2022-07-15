@@ -3,8 +3,8 @@ import * as accountApi from "../../api/accountApi";
 import { beginApiCall, apiCallError } from "./apiStatusActions";
 import { message } from "antd";
 
-export function searchAccountSuccess(accounts) {
-  return { type: types.SEARCH_ACCOUNT_SUCCESS, accounts };
+export function searchAccountSuccess(searchResult) {
+  return { type: types.SEARCH_ACCOUNT_SUCCESS, searchResult };
 }
 
 export function getAccountSuccess(account) {
@@ -19,7 +19,16 @@ export function deleteAccountSuccess(account) {
   return { type: types.DELETE_ACCOUNT_SUCCESS, account };
 }
 
-export function searchAccounts(filter) {
+export function setAccountFilterCompleted(filterBy) {
+  return { type: types.SET_ACCOUNT_FILTER_COMPLETED, filterBy };
+}
+
+export function setAccountFilter(filterBy) {
+  return function (dispatch) {
+    dispatch(setAccountFilterCompleted(filterBy));
+  };
+}
+export function searchAccounts(filter, page, pageSize) {
   return function (dispatch) {
     dispatch(beginApiCall());
 
@@ -31,9 +40,9 @@ export function searchAccounts(filter) {
     });
 
     return accountApi
-      .searchAccounts(filter)
-      .then((accounts) => {
-        dispatch(searchAccountSuccess(accounts));
+      .searchAccounts(filter, page, pageSize)
+      .then((searchResult) => {
+        dispatch(searchAccountSuccess(searchResult));
         message.destroy(msgKey);
         message.success({
           content: "Search account completed.",

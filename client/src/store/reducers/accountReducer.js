@@ -1,31 +1,52 @@
 import * as types from "../actions/actionTypes";
 import initialState from "./initialState";
 
-export default function accountReducer(state = initialState.accounts, action) {
+export default function accountReducer(state = initialState.accountState, action) {
   switch (action.type) {
-    case types.SEARCH_ACCOUNT_SUCCESS:
-      return action.accounts;
+    case types.SET_ACCOUNT_FILTER_COMPLETED:
+      return { ...state, filterBy: action.filterBy };
+
+    case types.SEARCH_ACCOUNT_SUCCESS:      
+      if(action.searchResult.results.length > 0 )            
+        return { ...state, ...action.searchResult };      
+      else 
+        return state;
+
     case types.GET_ACCOUNT_SUCCESS:
-      if (state.length > 0) {
-        return state.map((account) =>
+      if (state.results.length > 0) {
+        return {
+          ...state,
+          results: state.results.map((account) =>
           account.id === action.account.id ? action.account : account
-        );
+          ),
+        };
       } else {
-        return [...state, action.account];
+        return { ...state, results: [action.account] };
       }
+
     case types.SAVE_ACCOUNT_SUCCESS:
-      var existingClient = state.find(
-        (client) => client.id === action.account.id
+      var existingAccount = state.results.find(
+        (account) => account.id === action.account.id
       );
-      if (existingClient) {
-        return state.map((account) =>
+
+      if (existingAccount) {
+        return {
+          ...state,
+          results: state.results.map((account) =>
           account.id === action.account.id ? action.account : account
-        );
+          ),
+        };
       } else {
-        return [...state, action.account];
+        return { ...state, results: [ ...state.results, action.account] };
       }
+
     case types.DELETE_ACCOUNT_SUCCESS:
-      return state.filter((account) => account.id !== action.account.id);
+      return {
+        ...state,
+        results: state.results.filter(
+          (account) => account.id !== action.account.id
+        ),
+      };
     default:
       return state;
   }

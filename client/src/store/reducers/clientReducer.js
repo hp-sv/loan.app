@@ -10,13 +10,16 @@ export default function clientReducer(
       return { ...state, filterBy: action.filterBy };
 
     case types.SEARCH_CLIENT_SUCCESS:
-      return { ...state, ...action.searchResult };
+      if(action.searchResult.results.length > 0 )            
+        return { ...state, ...action.searchResult };      
+      else 
+        return state;
 
     case types.GET_CLIENT_SUCCESS:
-      if (state.result.length > 0) {
+      if (state.results.length > 0) {
         return {
           ...state,
-          results: state.result.map((client) =>
+          results: state.results.map((client) =>
             client.id === action.client.id ? action.client : client
           ),
         };
@@ -36,8 +39,8 @@ export default function clientReducer(
             client.id === action.client.id ? action.client : client
           ),
         };
-      } else {
-        return { ...state, results: [action.client] };
+      } else {        
+        return { ...state, results: [ ...state.results, action.client] };
       }
     case types.DELETE_CLIENT_SUCCESS:
       return {

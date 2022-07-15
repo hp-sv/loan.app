@@ -25,8 +25,17 @@ export function getAccountById(id) {
     .catch(handleError);
 }
 
-export function searchAccounts(filter) {
-  return fetch(baseUrl + "search?filter=" + filter, { method: "GET" })
+export function searchAccounts(filter, page, pageSize) {
+
+  if(filter.length > 0){
+    return fetch(`${baseUrl}search?filter=${filter}&pg=${page}&pgsize=${pageSize}`, { method: "GET" })
     .then(handleResponse)
     .catch(handleError);
+  }
+  else 
+  {
+    return fetch(`${baseUrl}?pg=${page}&pgsize=${pageSize}`, { method: "GET" })
+    .then(handleResponse)
+    .catch(handleError);
+  }
 }

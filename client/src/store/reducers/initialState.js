@@ -12,7 +12,16 @@ const intialState = {
   },
 
   /* Account*/
-  accounts: {},
+  accountState: {
+    results: [],
+    currentPage: 0,
+    pageCount: 0,
+    pageSize: 15,
+    rowCount: 0,
+    firstRowOnPage: 0,
+    lastRowOnPage: 0,
+    filterBy: "",
+  },
 
   /*Page*/
   page: {

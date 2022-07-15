@@ -23,9 +23,9 @@ namespace Loan.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedResultDto<AccountDto>>> GetAccounts(int pg, int pgsize)
+        public async Task<ActionResult<PagedResultDto<AccountDto>>> GetAccounts(int pg, int pgSize)
         {
-            var pagedResult = await _domain.GetAllAsync(pg, pgsize);
+            var pagedResult = await _domain.GetAllAsync(pg, pgSize);
 
             return Ok(_mapper.Map<PagedResultDto<AccountDto>>(pagedResult));
         }

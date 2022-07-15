@@ -179,7 +179,8 @@ function ClientPage({
           <Drawer
             title={drawerState.title}
             placement={"right"}
-            closable={false}
+            closable={true}
+            maskClosable={false}
             onClose={onDrawerClose}
             visible={drawerState.visible}
             key={"createUpdateClient"}

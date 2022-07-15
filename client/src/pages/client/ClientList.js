@@ -57,6 +57,7 @@ const ClientList = ({ clientState, onEdit, onDelete, onPageChange }) => {
         })}
         <tr>
           <td colSpan={8}>
+            {results.length > 0 && 
             <Pagination
               showLessItems={true}
               showTotal={showTotal}
@@ -66,7 +67,7 @@ const ClientList = ({ clientState, onEdit, onDelete, onPageChange }) => {
               onChange={onPageChange}
               showSizeChanger={true}
               pageSizeOptions={[10, 15, 20, 25, 50]}
-            />
+            />}
           </td>
         </tr>
       </tbody>
