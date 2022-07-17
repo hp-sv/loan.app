@@ -19,6 +19,6 @@ namespace Loan.Model.Account
         [Required(ErrorMessage = "Specify your comment.")]
         [MaxLength(500, ErrorMessage = "Five hundred characters is the maximum length allowed for a comment.")]
         public string Comment { get; set; }
-
+        
     }
 }

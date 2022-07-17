@@ -30,14 +30,22 @@ namespace Loan.Repository
 
         public async Task<IEnumerable<Account>?> GetAccountByClientAsync(int clientId)
         {
-            return await context.Accounts.Include(a => a.Client).Where(a => a.ClientId == clientId).ToListAsync();
+            return await context.Accounts
+                .Include(a => a.AccountTransactions)
+                .ThenInclude(at => at.TransactionType)
+                .Include(a => a.AccountComments)
+                .ThenInclude(ac => ac.Status)
+                .Include(a => a.Client)
+                .Where(a => a.ClientId == clientId).ToListAsync();
         }
         
         public async Task<PagedResult<Account>> GetAllAsync(int page, int pageSize)
         {
             var query = context.Accounts
+                     .Include(a => a.AccountComments)
+                    .ThenInclude(ac => ac.Status)
                     .Include(a => a.AccountTransactions)
-                    .Include(a => a.AccountComments)
+                    .ThenInclude(at => at.TransactionType)
                     .Include(a => a.Client)
                     .OrderBy(a => a.Client.FirstName).ThenBy(a => a.Client.LastName);
             return await query.GetPagedAsync(page, pageSize);
@@ -47,7 +55,9 @@ namespace Loan.Repository
         {
             return await context.Accounts
                 .Include(a=>a.AccountComments)
+                .ThenInclude(ac=>ac.Status)
                 .Include(a=>a.AccountTransactions)
+                .ThenInclude(at=>at.TransactionType)
                 .Include(a => a.Client)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
@@ -57,7 +67,13 @@ namespace Loan.Repository
             if(!includeTransactions)
                 return await GetByIdAsync(id);
 
-            return await context.Accounts.Include(a => a.Client).Include(a => a.AccountTransactions).FirstOrDefaultAsync(a => a.Id == id);
+            return await context.Accounts
+                .Include(a => a.AccountComments)
+                .ThenInclude(ac => ac.Status)
+                .Include(a => a.AccountTransactions)
+                .ThenInclude(at => at.TransactionType)
+                .Include(a => a.Client)
+                .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<bool> IsAccountExistsAsync(int id)
@@ -70,9 +86,12 @@ namespace Loan.Repository
         {
             filter = filter.ToLower();
             var query = context.Accounts
+                    .Include(a => a.AccountComments)
+                    .ThenInclude(ac => ac.Status)
                     .Include(a => a.AccountTransactions)
-                    .Include(a=>a.AccountComments)
-                    .Include(a => a.Client).Where(
+                    .ThenInclude(at => at.TransactionType)
+                    .Include(a => a.Client)
+                    .Where(
                     a => a.Client.FirstName.ToLower().Contains(filter)
                     || a.Client.MiddleName.ToLower().Contains(filter)
                     || a.Client.LastName.ToLower().Contains(filter)

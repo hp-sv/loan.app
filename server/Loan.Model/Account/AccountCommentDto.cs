@@ -6,5 +6,7 @@ namespace Loan.Model.Account
     {
         [Required]
         public int Id { get; set; }
+
+        public DateTime CreatedAt { get; set; }
     }
 }

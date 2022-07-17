@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Loan.Model.Lookup;
+using System.ComponentModel.DataAnnotations;
 
 namespace Loan.Model.Account
 {
@@ -15,5 +16,7 @@ namespace Loan.Model.Account
         [Required(ErrorMessage = "Specifiy the actual amount for the transaction.")]
         public decimal ActualAmount { get; set; } = 0;
         public int TransactionTypeId { get; set; }
+
+        public LookupDto TransactionType { get; set; } = null!;
     }
 }

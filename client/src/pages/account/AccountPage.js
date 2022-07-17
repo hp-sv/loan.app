@@ -11,7 +11,11 @@ import {
 import { getLookupSetById } from "../../store/actions/lookupSetActions";
 import * as constants from "../../constants/Common";
 import { newAccount } from "../../store/dataInitialiser";
-import { Drawer } from "antd";
+import { Drawer, Tabs } from "antd";
+import AccountComment from "./AccountComment";
+import AccountTransaction from "./AccountTransaction";
+
+const { TabPane } = Tabs;
 
 function AccountPage({
   accountState,
@@ -103,6 +107,13 @@ function AccountPage({
     );
   }
 
+  const showTransactionsTab = (account) => {
+    return (
+      account.statusId === constants.ACCOUNT_STATUS_ACTIVE ||
+      account.statusId === constants.ACCOUNT_STATUS_APPROVE
+    );
+  };
+
   function render() {
     return (
       <>
@@ -117,15 +128,27 @@ function AccountPage({
             key={"createUpdateAccount"}
             size={"small"}
           >
-            <AccountForm
-              selectedAccount={drawerState.selectedAccount}
-              onSubmitSuccess={handleDrawerClose}
-              onCancel={handleDrawerClose}
-              mode={drawerState.recordMode}
-              durationType={durationType}
-              repaymentSchedule={repaymentSchedule}
-              accountStatus={accountStatus}
-            />
+            <Tabs defaultActiveKey="1">
+              <TabPane tab="Details" key="1">
+                <AccountForm
+                  selectedAccount={drawerState.selectedAccount}
+                  onSubmitSuccess={handleDrawerClose}
+                  onCancel={handleDrawerClose}
+                  mode={drawerState.recordMode}
+                  durationType={durationType}
+                  repaymentSchedule={repaymentSchedule}
+                  accountStatus={accountStatus}
+                />
+              </TabPane>
+              <TabPane tab="Comment(s)" key="2">
+                <AccountComment account={drawerState.selectedAccount} />
+              </TabPane>
+              {showTransactionsTab(drawerState.selectedAccount) && (
+                <TabPane tab="Transactions" key="3">
+                  <AccountTransaction account={drawerState.selectedAccount} />
+                </TabPane>
+              )}
+            </Tabs>
           </Drawer>
         )}
         <div className="row">

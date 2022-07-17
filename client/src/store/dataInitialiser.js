@@ -19,7 +19,9 @@ const newAccount = {
   duration: 6,
   durationTypeId: 10005,
   repaymentTypeId: 10011,
-  statusId: 10027,  
+  statusId: 10027,
+  accountComments: [],
+  accountTransactions: [],
 };
 
 module.exports = {
