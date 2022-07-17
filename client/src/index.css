@@ -22,7 +22,7 @@ nav {
 }
 
 .grid_inline_icon {
-  font-size:20px;
-  cursor: hand;
-  color:grey;
+  font-size: 20px;
+  cursor: pointer;
+  color: grey;
 }

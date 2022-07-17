@@ -24,14 +24,10 @@ function App() {
             path="/clients"
             element={<ClientPage mode={constants.PAGE_MANAGE} />}
           />
-          <Route
-            exact
-            path="/accounts"
-            element={<AccountPage />}
-          />
+          <Route exact path="/accounts" element={<AccountPage />} />
           <Route element={PageNotFound} />
         </Routes>
-      </Router>      
+      </Router>
     </div>
   );
 }

@@ -1,23 +1,90 @@
-import React from "react";
+import React, { useState } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import TextInput from "../../components/common/TextInput";
 import AutoCompleteClient from "../../components/common/AutoCompleteClient";
 import * as constants from "../../constants/Common";
 import Disabled from "../../components/common/Disabled";
+import { saveClient, deleteClient } from "../../store/actions/clientActions";
 
 const ClientForm = ({
-  client,
-  onSubmitForm,
-  onCancelForm,
-  onChange,
-  onEmergencyContactSelected,
+  selectedClient,
+  onCancel,
+  saveClient,
+  deleteClient,
+  onSubmitSuccess,
   mode,
-  submitting = false,
-  errors = {},
 }) => {
+  const [clientState, setClientState] = useState({
+    client: selectedClient,
+    submitting: false,
+    errors: {},
+  });
+
   const emergencyContactFilter = (optionClient) => {
     return optionClient.id !== client.id;
   };
+
+  function onSubmitForm(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (mode === constants.RECORD_DELETE) {
+      deleteClient(clientState.client)
+        .then(() => {
+          onSubmitSuccess();
+        })
+        .catch((ex) => {
+          catchError(ex);
+        });
+    } else {
+      //RECORD_ADD, RECORD_EDIT
+      saveClient(clientState.client)
+        .then(() => {
+          onSubmitSuccess();
+        })
+        .catch((ex) => {
+          catchError(ex);
+        });
+    }
+  }
+
+  function catchError(ex) {
+    const validationErrors = {
+      onSave: ex.message,
+      ...ex.error.errors,
+      validationErrors: ex.error.validationErrors,
+    };
+
+    setClientState((prevState) => ({
+      ...prevState,
+      errors: validationErrors,
+    }));
+  }
+
+  function handleOnChange(event) {
+    const { name, value } = event.target;
+    setClientState((prevState) => ({
+      ...prevState,
+      client: {
+        ...prevState.client,
+        [name]: name === "id" ? parseInt(value, 0) : value,
+      },
+    }));
+  }
+
+  function handleEmergencyContactSelected(client) {
+    setClientState((prevState) => ({
+      ...prevState,
+      client: {
+        ...prevState.client,
+        emergencyContact: client,
+        emergencyContactId: client.id,
+      },
+    }));
+  }
+
+  const { client, submitting, errors } = clientState;
 
   return (
     <Disabled disabled={submitting}>
@@ -40,7 +107,7 @@ const ClientForm = ({
           name="firstName"
           label="First Name"
           value={client.firstName}
-          onChange={onChange}
+          onChange={handleOnChange}
           error={errors.firstName}
           type="text"
         />
@@ -48,7 +115,7 @@ const ClientForm = ({
           name="middleName"
           label="Middle Name"
           value={client.middleName}
-          onChange={onChange}
+          onChange={handleOnChange}
           error={errors.middleName}
           type="text"
         />
@@ -56,7 +123,7 @@ const ClientForm = ({
           name="lastName"
           label="Last Name"
           value={client.lastName}
-          onChange={onChange}
+          onChange={handleOnChange}
           error={errors.lastName}
           type="text"
         />
@@ -64,7 +131,7 @@ const ClientForm = ({
           name="dob"
           label="Birth date"
           value={client.dob}
-          onChange={onChange}
+          onChange={handleOnChange}
           error={errors.dob}
           type="date"
         />
@@ -72,7 +139,7 @@ const ClientForm = ({
           name="mobileNumber"
           label="Mobile Number"
           value={client.mobileNumber}
-          onChange={onChange}
+          onChange={handleOnChange}
           error={errors.mobileNumber}
           type="text"
         />
@@ -80,35 +147,27 @@ const ClientForm = ({
           name="emailAddress"
           label="Email"
           value={client.emailAddress}
-          onChange={onChange}
+          onChange={handleOnChange}
           error={errors.emailAddress}
           type="email"
         />
-        {!client.emergencyContact && (
-          <AutoCompleteClient
-            name="emergencyContactId"
-            label="Emergency Contact"
-            filterOption={emergencyContactFilter}
-            selected=""
-            onSelect={onEmergencyContactSelected}
-            width={300}
-            error={errors.emergencyContactId}
-          />
-        )}
-        {client.emergencyContact && (
-          <AutoCompleteClient
-            name="emergencyContactId"
-            label="Emergency Contact"
-            selected={client.emergencyContact.fullName}
-            onSelect={onEmergencyContactSelected}
-            error={errors.emergencyContactId}
-          />
-        )}
+        <AutoCompleteClient
+          name="emergencyContactId"
+          label="Emergency Contact"
+          filterOption={emergencyContactFilter}
+          selected={
+            !client.emergencyContact ? "" : client.emergencyContact.fullName
+          }
+          onSelect={handleEmergencyContactSelected}
+          error={errors.emergencyContactId}
+          disable={false}
+          showEdit={false}
+        />
         <TextInput
           name="addressLine1"
           label="Address Line 1"
           value={client.addressLine1}
-          onChange={onChange}
+          onChange={handleOnChange}
           error={errors.addressLine1}
           type="text"
         />
@@ -116,7 +175,7 @@ const ClientForm = ({
           name="addressLine2"
           label="Address Line 2"
           value={client.addressLine2}
-          onChange={onChange}
+          onChange={handleOnChange}
           error={errors.addressLine2}
           type="text"
         />
@@ -124,7 +183,7 @@ const ClientForm = ({
           name="addressLine3"
           label="Address Line 3"
           value={client.addressLine3}
-          onChange={onChange}
+          onChange={handleOnChange}
           error={errors.addressLine3}
           type="text"
         />
@@ -132,7 +191,7 @@ const ClientForm = ({
         <button
           type="submit"
           disabled={submitting}
-          className="btn btn-outline-secondary bi-save  btn-sm"
+          className="btn btn-outline-secondary bi-save  btn-sm m-1"
         >
           {mode === constants.RECORD_ADD &&
             (submitting ? "Saving new..." : "Save")}
@@ -141,28 +200,25 @@ const ClientForm = ({
           {mode === constants.RECORD_DELETE &&
             (submitting ? "Deleting..." : "Delete")}
         </button>
-        &nbsp;
-        <button
-          type="button"
-          onClick={onCancelForm}
-          className="btn btn-outline-secondary bi-back  btn-sm"
-        >
-          Cancel
-        </button>
       </form>
     </Disabled>
   );
 };
 
 ClientForm.propTypes = {
-  client: PropTypes.object.isRequired,
-  onSubmitForm: PropTypes.func.isRequired,
-  onCancelForm: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
+  selectedClient: PropTypes.object.isRequired,
+  onSubmitSuccess: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  saveClient: PropTypes.func.isRequired,
+  deleteClient: PropTypes.func.isRequired,
   mode: PropTypes.number.isRequired,
-  onEmergencyContactSelected: PropTypes.func.isRequired,
-  errors: PropTypes.object,
-  submitting: PropTypes.bool,
 };
 
-export default ClientForm;
+const mapDispatchToProps = {
+  saveClient,
+  deleteClient,
+};
+
+export default connect((state) => {
+  return state;
+}, mapDispatchToProps)(ClientForm);

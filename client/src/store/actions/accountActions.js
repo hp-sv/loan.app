@@ -23,6 +23,17 @@ export function setAccountFilterCompleted(filterBy) {
   return { type: types.SET_ACCOUNT_FILTER_COMPLETED, filterBy };
 }
 
+export function approveAccountSuccess(account) {
+  return { type: types.APPROVE_ACCOUNT_SUCCESS, account };
+}
+
+export function cancelAccountSuccess(account) {
+  return { type: types.CANCEL_ACCOUNT_SUCCESS, account };
+}
+export function declineAccountSuccess(account) {
+  return { type: types.DECLINE_ACCOUNT_SUCCESS, account };
+}
+
 export function setAccountFilter(filterBy) {
   return function (dispatch) {
     dispatch(setAccountFilterCompleted(filterBy));
@@ -141,6 +152,108 @@ export function deleteAccount(account) {
       })
       .catch((error) => {
         dispatch(apiCallError(error));
+        message.destroy(msgKey);
+        message.error({
+          content: "Ooops something went wrong. ",
+          key: msgKey,
+          duration: 1,
+        });
+        throw error;
+      });
+  };
+}
+
+export function approveAccount(account) {
+  //eslint-disable-next-line no-unused-vars
+  return function (dispatch, getState) {
+    dispatch(beginApiCall());
+
+    const msgKey = `__approveAccount__${account.id}`;
+    var approveMessage = "Approving account, please wait...";
+
+    var completedMessage = "Approved account completed.";
+
+    message.loading({ content: approveMessage, key: msgKey, duration: 10 });
+    return accountApi
+      .approveAccount(account)
+      .then((approvedAccount) => {
+        dispatch(approveAccountSuccess(approvedAccount));
+        message.destroy(msgKey);
+        message.success({
+          content: completedMessage,
+          key: msgKey,
+          duration: 1,
+        });
+      })
+      .catch((error) => {
+        message.destroy(msgKey);
+        message.error({
+          content: "Ooops something went wrong. ",
+          key: msgKey,
+          duration: 1,
+        });
+        throw error;
+      });
+  };
+}
+
+export function cancelAccount(account) {
+  //eslint-disable-next-line no-unused-vars
+  return function (dispatch, getState) {
+    dispatch(beginApiCall());
+
+    const msgKey = `__cancelAccount__${account.id}`;
+    var cancelMessage = "Canceling account, please wait...";
+
+    var completedMessage = "Cancel account completed.";
+
+    message.loading({ content: cancelMessage, key: msgKey, duration: 10 });
+    return accountApi
+      .cancelAccount(account)
+      .then((cancelAccount) => {
+        dispatch(cancelAccountSuccess(cancelAccount));
+        message.destroy(msgKey);
+        message.success({
+          content: completedMessage,
+          key: msgKey,
+          duration: 1,
+        });
+      })
+      .catch((error) => {
+        message.destroy(msgKey);
+        message.error({
+          content: "Ooops something went wrong. ",
+          key: msgKey,
+          duration: 1,
+        });
+        throw error;
+      });
+  };
+}
+
+export function declineAccount(account) {
+  //eslint-disable-next-line no-unused-vars
+  return function (dispatch, getState) {
+    dispatch(beginApiCall());
+
+    const msgKey = `__declineAccount__${account.id}`;
+    var declineMessage = "Declining account, please wait...";
+
+    var completedMessage = "Decline account completed.";
+
+    message.loading({ content: declineMessage, key: msgKey, duration: 10 });
+    return accountApi
+      .declineAccount(account)
+      .then((declineAccount) => {
+        dispatch(declineAccountSuccess(declineAccount));
+        message.destroy(msgKey);
+        message.success({
+          content: completedMessage,
+          key: msgKey,
+          duration: 1,
+        });
+      })
+      .catch((error) => {
         message.destroy(msgKey);
         message.error({
           content: "Ooops something went wrong. ",

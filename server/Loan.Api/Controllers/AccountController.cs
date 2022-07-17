@@ -26,8 +26,9 @@ namespace Loan.Api.Controllers
         public async Task<ActionResult<PagedResultDto<AccountDto>>> GetAccounts(int pg, int pgSize)
         {
             var pagedResult = await _domain.GetAllAsync(pg, pgSize);
+            var pagedDto = _mapper.Map<PagedResultDto<AccountDto>>(pagedResult);
 
-            return Ok(_mapper.Map<PagedResultDto<AccountDto>>(pagedResult));
+            return Ok(pagedDto);
         }
 
 
@@ -62,6 +63,7 @@ namespace Loan.Api.Controllers
 
             if (result)
             {
+                updatedAccount = await _domain.GetByIdAsync(id);
                 return Ok(_mapper.Map<AccountDto>(updatedAccount));
             }
             else
@@ -94,43 +96,72 @@ namespace Loan.Api.Controllers
         }
 
         [HttpPut(AccountRoutes.APPROVE)]
-        public async Task<ActionResult> Approve(int id, CreateAccountCommentDto comment)
+        public async Task<ActionResult> Approve(int id, UpdateAccountDto account)
         {
-            var result = await _domain.Approve(id, comment.Comment);
+            var approveAccount = await _domain.GetByIdAsync(id);
 
-            var account = await _domain.GetByIdAsync(id);
-
-            if (result)            
-                return Ok(_mapper.Map<AccountDto>(account));            
-            else            
+            if(approveAccount != null)
+            {                
+                var updatedAccount = _mapper.Map(account, approveAccount);
+                var result = await _domain.Approve(updatedAccount);
+                if (result) {
+                    approveAccount = await _domain.GetByIdAsync(id);
+                    return Ok(_mapper.Map<AccountDto>(approveAccount));
+                }                
+                else 
+                    return BadRequest(_mapper.Map<AccountDto>(account));
+            }
+            else
+            {
                 return BadRequest(_mapper.Map<AccountDto>(account));
-            
+            }            
         }
 
         [HttpPut(AccountRoutes.CANCEL)]
-        public async Task<ActionResult> Cancel(int id, CreateAccountCommentDto comment)
+        public async Task<ActionResult> Cancel(int id, UpdateAccountDto account)
         {
-            var result = await _domain.Cancel(id, comment.Comment);
+            var cancelAccount = await _domain.GetByIdAsync(id);
 
-            var account = await _domain.GetByIdAsync(id);
+            if (cancelAccount != null)
+            {
+                var cancelledAccount = _mapper.Map(account, cancelAccount);
+                var result = await _domain.Cancel(cancelledAccount);
 
-            if (result)
-                return Ok(_mapper.Map<AccountDto>(account));
+                if (result)
+                {
+                    cancelAccount = await _domain.GetByIdAsync(id);
+                    return Ok(_mapper.Map<AccountDto>(cancelAccount));
+                }   
+                else
+                    return BadRequest(_mapper.Map<AccountDto>(account));
+            }
             else
+            {
                 return BadRequest(_mapper.Map<AccountDto>(account));
+            }
         }
 
         [HttpPut(AccountRoutes.DECLINE)]
-        public async Task<ActionResult> Decline(int id, CreateAccountCommentDto comment)
+        public async Task<ActionResult> Decline(int id, UpdateAccountDto account)
         {
-            var result = await _domain.Decline(id, comment.Comment);
+            var declineAccount = await _domain.GetByIdAsync(id);
 
-            var account = await _domain.GetByIdAsync(id);
-
-            if (result)
-                return Ok(_mapper.Map<AccountDto>(account));
+            if (declineAccount != null)
+            {
+                var declinedAccount = _mapper.Map(account, declineAccount);
+                var result = await _domain.Decline(declinedAccount);
+                if (result)
+                {
+                    declineAccount = await _domain.GetByIdAsync(id);
+                    return Ok(_mapper.Map<AccountDto>(declineAccount));
+                }                    
+                else
+                    return BadRequest(_mapper.Map<AccountDto>(account));
+            }
             else
+            {
                 return BadRequest(_mapper.Map<AccountDto>(account));
+            }
         }
 
     }

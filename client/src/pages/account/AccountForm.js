@@ -1,26 +1,188 @@
-import React from "react";
+import React, { useState, View } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import DecimalInput from "../../components/common/DecimalInput";
 import SelectInput from "../../components/common/SelectInput";
 import * as constants from "../../constants/Common";
 import Disabled from "../../components/common/Disabled";
 import AutoCompleteClient from "../../components/common/AutoCompleteClient";
+import PercentageInput from "../../components/common/PercentageInput";
+import MoneyInput from "../../components/common/MoneyInput";
+import NumberInput from "../../components/common/NumberInput";
+import TextInput from "../../components/common/TextInput";
+import CommentInput from "../../components/common/CommentInput";
+import {
+  saveAccount,
+  deleteAccount,
+  approveAccount,
+  cancelAccount,
+  declineAccount,
+} from "../../store/actions/accountActions";
 
 function AccountForm({
-  account,
-  onSubmitForm,
-  onCancelForm,
-  onChange,
-  onClientSelected,
+  selectedAccount,
+  onSubmitSuccess,
+  onCancel,
+  saveAccount,
+  deleteAccount,
+  approveAccount,
+  cancelAccount,
+  declineAccount,
   mode,
   durationType,
   repaymentSchedule,
-  submitting = false,
-  errors = {},
+  accountStatus,
 }) {
+  const [accountState, setAccountState] = useState({
+    account: selectedAccount,
+    comment: "",
+    submitting: false,
+    errors: {},
+  });
+
+  const handleCommentChange = (event) => {
+    const { value } = event.target;
+    setAccountState({ ...accountState, comment: value });
+  };
+
+  function handleOnChange(event) {
+    const { name, value } = event.target;
+    setAccountState((prevState) => ({
+      ...prevState,
+      account: {
+        ...prevState.account,
+        [name]: name === "id" ? parseInt(value, 0) : value,
+      },
+    }));
+  }
+
+  function handleClientSelected(client) {
+    setAccountState((prevState) => ({
+      ...prevState,
+      ...{
+        selectedAccount: {
+          ...prevState.selectedAccount,
+          clientId: client.id,
+          client: client,
+        },
+      },
+    }));
+  }
+
+  const handleOnSubmitForm = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (mode === constants.RECORD_DELETE) {
+      deleteAccount(accountState.account)
+        .then(() => {
+          onSubmitSuccess();
+        })
+        .catch((ex) => {
+          catchError(ex);
+        });
+    } else {
+      //RECORD_ADD, RECORD_EDIT
+      saveAccount(accountState.account)
+        .then(() => {
+          onSubmitSuccess();
+        })
+        .catch((ex) => {
+          catchError(ex);
+        });
+    }
+  };
+
+  const handleApprove = () => {
+    const accountComment = {
+      accountId: accountState.account.id,
+      statusId: constants.ACCOUNT_STATUS_APPROVE,
+      comment: accountState.comment,
+    };
+
+    const account = {
+      ...accountState.account,
+      accountComments: [accountComment],
+    };
+
+    approveAccount(account)
+      .then(() => {
+        onSubmitSuccess();
+      })
+      .catch((ex) => {
+        catchError(ex);
+      });
+  };
+
+  function catchError(ex) {
+    const validationErrors = {
+      onSave: ex.message,
+      ...ex.error.errors,
+      validationErrors: ex.error.validationErrors,
+    };
+    setAccountState((prevState) => ({
+      ...prevState,
+      errors: validationErrors,
+    }));
+  }
+
+  const handleCancel = () => {
+    const accountComment = {
+      accountId: accountState.account.id,
+      statusId: constants.ACCOUNT_STATUS_CANCEL,
+      comment: accountState.comment,
+    };
+
+    const account = {
+      ...accountState.account,
+      accountComments: [accountComment],
+    };
+
+    cancelAccount(account)
+      .then(() => {
+        onSubmitSuccess();
+      })
+      .catch((ex) => {
+        catchError(ex);
+      });
+  };
+
+  const handleDecline = () => {
+    const accountComment = {
+      accountId: accountState.account.id,
+      statusId: constants.ACCOUNT_STATUS_DECLINE,
+      comment: accountState.comment,
+    };
+
+    const account = {
+      ...accountState.account,
+      accountComments: [accountComment],
+    };
+
+    declineAccount(account)
+      .then(() => {
+        onSubmitSuccess();
+      })
+      .catch((ex) => {
+        catchError(ex);
+      });
+  };
+
+  const showSaveUpdateDelete =
+    mode === constants.RECORD_ADD ||
+    mode === constants.RECORD_EDIT ||
+    mode === constants.RECORD_DELETE;
+
+  const showApproveCancelDeny = mode === constants.RECORD_REVIEW;
+
+  const { account, submitting, errors } = accountState;
+
+  const accountReadOnly =
+    account.statusId === constants.ACCOUNT_STATUS_APPROVE ||
+    account.statusId === constants.ACCOUNT_STATUS_ACTIVE;
+
   return (
     <Disabled disabled={submitting}>
-      <form onSubmit={onSubmitForm}>
+      <form onSubmit={handleOnSubmitForm}>
         {errors.onSave && (
           <div className="alert alert-danger" role="alert">
             {errors.onSave}
@@ -35,109 +197,163 @@ function AccountForm({
               })}
           </div>
         )}
-        {mode === constants.RECORD_ADD && (
-          <AutoCompleteClient
-            name="clientId"
-            label="Client"
-            selected=""
-            onSelect={onClientSelected}
-            error={errors.clientId}
-            filterOption={() => true}
-            disable={false}
-          />
-        )}
-        {mode !== constants.RECORD_ADD && (
-          <AutoCompleteClient
-            name="clientId"
-            label="Client"
-            selected={account.client.fullName}
-            onSelect={onClientSelected}
-            error={errors.clientId}
-            filterOption={() => true}
-            disable={true}
-          />
-        )}
-        <DecimalInput
+
+        <AutoCompleteClient
+          name="clientId"
+          label="Client"
+          selected={
+            mode === constants.RECORD_ADD ? "" : account.client.fullName
+          }
+          onSelect={handleClientSelected}
+          error={errors.clientId}
+          filterOption={() => true}
+          disable={mode === constants.RECORD_EDIT ? true : false}
+          showEdit={true}
+        />
+        <PercentageInput
           name="rate"
           label="Rate"
           value={account.rate}
-          onChange={onChange}
+          onChange={handleOnChange}
           error={errors.rate}
           min={1}
-          step={0.1}
           max={10}
+          readOnly={accountReadOnly}
         />
-        <DecimalInput
-          name="totalAmount"
-          label="Total Amount"
-          value={account.totalAmount}
-          onChange={onChange}
-          error={errors.totalAmount}
-          min={1000}
-          step={1}
-          max={1000000}
+        <MoneyInput
+          name="principal"
+          label="Principal Amount"
+          value={account.principal}
+          onChange={handleOnChange}
+          error={errors.principal}
+          readOnly={accountReadOnly}
         />
-        <DecimalInput
+        <NumberInput
           name="duration"
           label="Duration"
           value={account.duration}
-          onChange={onChange}
+          onChange={handleOnChange}
           error={errors.duration}
-          min={4}
-          step={1}
-          max={360}
+          readOnly={accountReadOnly}
         />
         <SelectInput
           name="durationTypeId"
           label="Duration Type"
           value={account.durationTypeId}
-          onChange={onChange}
+          onChange={handleOnChange}
           options={durationType}
-          error={errors.totalAmount}
+          error={errors.durationTypeId}
+          readOnly={accountReadOnly}
         />
         <SelectInput
           name="repaymentTypeId"
           label="Repayment Type"
           value={account.repaymentTypeId}
-          onChange={onChange}
+          onChange={handleOnChange}
           options={repaymentSchedule}
-          error={errors.totalAmount}
+          error={errors.repaymentTypeId}
+          readOnly={accountReadOnly}
         />
+        <TextInput
+          name="StatusId"
+          label="Status"
+          value={
+            accountStatus.find((status) => status.id === account.statusId).name
+          }
+          onChange={() => {}}
+          error=""
+          readOnly={true}
+        />
+        {showApproveCancelDeny && (
+          <CommentInput
+            name="Comment"
+            label="Comment"
+            value={accountState.comment}
+            onChange={handleCommentChange}
+            error={
+              errors["accountComments[0].Comment"] &&
+              errors["accountComments[0].Comment"].length > 0
+                ? errors["accountComments[0].Comment"][0]
+                : ""
+            }
+          />
+        )}
+
         <br />
-        <button
-          type="submit"
-          disabled={submitting}
-          className="btn btn-outline-secondary bi-save  btn-sm"
-        >
-          {mode === constants.RECORD_ADD &&
-            (submitting ? "Saving new..." : "Save")}
-          {mode === constants.RECORD_EDIT &&
-            (submitting ? "Updating..." : "Update")}
-          {mode === constants.RECORD_DELETE &&
-            (submitting ? "Deleting..." : "Delete")}
-        </button>
-        &nbsp;
-        <button
-          type="button"
-          onClick={onCancelForm}
-          className="btn btn-outline-secondary bi-back  btn-sm"
-        >
-          Cancel
-        </button>
+
+        {showSaveUpdateDelete && !accountReadOnly && (
+          <>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="btn btn-outline-secondary bi-save btn-sm m-1"
+            >
+              {mode === constants.RECORD_ADD &&
+                (submitting ? "Saving new..." : "Save")}
+              {mode === constants.RECORD_EDIT &&
+                (submitting ? "Updating..." : "Update")}
+              {mode === constants.RECORD_DELETE &&
+                (submitting ? "Deleting..." : "Delete")}
+            </button>
+          </>
+        )}
+
+        {showApproveCancelDeny && (
+          <>
+            <button
+              type="button"
+              disabled={submitting}
+              className="btn btn-outline-secondary bi-hand-thumbs-up btn-sm m-1"
+              onClick={handleApprove}
+            >
+              Approve
+            </button>
+            <button
+              type="button"
+              disabled={submitting}
+              className="btn btn-outline-secondary bi-file-excel btn-sm m-1"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              disabled={submitting}
+              className="btn btn-outline-secondary bi-hand-thumbs-down btn-sm m-1"
+              onClick={handleDecline}
+            >
+              Decline
+            </button>
+          </>
+        )}
       </form>
     </Disabled>
   );
 }
 
 AccountForm.propTypes = {
-  account: PropTypes.object.isRequired,
-  onSubmitForm: PropTypes.func.isRequired,
-  onCancelForm: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  onClientSelected: PropTypes.func.isRequired,
+  selectedAccount: PropTypes.object.isRequired,
+  onSubmitSuccess: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  saveAccount: PropTypes.func.isRequired,
+  deleteAccount: PropTypes.func.isRequired,
+  approveAccount: PropTypes.func.isRequired,
+  cancelAccount: PropTypes.func.isRequired,
+  declineAccount: PropTypes.func.isRequired,
   mode: PropTypes.number.isRequired,
   durationType: PropTypes.array.isRequired,
   repaymentSchedule: PropTypes.array.isRequired,
+  accountStatus: PropTypes.array.isRequired,
 };
 
-export default AccountForm;
+const mapDispatchToProps = {
+  saveAccount,
+  deleteAccount,
+  approveAccount,
+  cancelAccount,
+  declineAccount,
+};
+
+export default connect(() => {
+  return {};
+}, mapDispatchToProps)(AccountForm);

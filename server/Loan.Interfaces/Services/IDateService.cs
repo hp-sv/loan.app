@@ -3,7 +3,6 @@
     public interface IDateService
     {
         public DateTime CurrentDate { get; }
-        public DateTime SytemStartDate { get; }       
-
+        public DateTime SytemStartDate { get; }                
     }
 }

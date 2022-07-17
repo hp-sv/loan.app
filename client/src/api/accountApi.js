@@ -26,16 +26,46 @@ export function getAccountById(id) {
 }
 
 export function searchAccounts(filter, page, pageSize) {
-
-  if(filter.length > 0){
-    return fetch(`${baseUrl}search?filter=${filter}&pg=${page}&pgsize=${pageSize}`, { method: "GET" })
-    .then(handleResponse)
-    .catch(handleError);
-  }
-  else 
-  {
+  if (filter.length > 0) {
+    return fetch(
+      `${baseUrl}search?filter=${filter}&pg=${page}&pgsize=${pageSize}`,
+      { method: "GET" }
+    )
+      .then(handleResponse)
+      .catch(handleError);
+  } else {
     return fetch(`${baseUrl}?pg=${page}&pgsize=${pageSize}`, { method: "GET" })
+      .then(handleResponse)
+      .catch(handleError);
+  }
+}
+
+export function approveAccount(account) {
+  return fetch(`${baseUrl}${account.id}/approve`, {
+    method: "PUT",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(account),
+  })
     .then(handleResponse)
     .catch(handleError);
-  }
+}
+
+export function cancelAccount(account) {
+  return fetch(`${baseUrl}${account.id}/cancel`, {
+    method: "PUT",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(account),
+  })
+    .then(handleResponse)
+    .catch(handleError);
+}
+
+export function declineAccount(account) {
+  return fetch(`${baseUrl}${account.id}/decline`, {
+    method: "PUT",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(account),
+  })
+    .then(handleResponse)
+    .catch(handleError);
 }

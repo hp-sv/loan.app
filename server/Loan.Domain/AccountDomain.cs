@@ -10,19 +10,32 @@ namespace Loan.Domain
     public class AccountDomain : IAccountDomain
     {
         private readonly IAccountRepository _repository;
-        private readonly IClientRepository _clientRepository;        
+        private readonly IAccountTransactionRepository _accountTransactionRepository;
+        private readonly IAccountCommentRepository _accountCommentRepository;
+        private readonly IClientRepository _clientRepository;
+        
+        private readonly IDateService _dateService;
+        private readonly IAccountTransactionGeneratorService _accountTransactionGeneratorService;
         private readonly IChangeTransactionService _transactionService;
         private readonly IAccountValidationService _validationService;
         private readonly IMapper _mapper;
 
-        public AccountDomain(IAccountRepository accountRepository,                
-                IClientRepository clientRepository,                
+        public AccountDomain(IAccountRepository accountRepository,
+                IAccountTransactionRepository accountTransactionRepository,
+                IAccountCommentRepository accountCommentRepository,
+                IClientRepository clientRepository,
+                IDateService dateService,
+                IAccountTransactionGeneratorService accountTransactionGeneratorService,
                 IChangeTransactionService transactionService,
                 IAccountValidationService validationService, 
                 IMapper mapper)
         {
             _repository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
-            _clientRepository = clientRepository ?? throw new ArgumentNullException(nameof(clientRepository));            
+            _accountTransactionRepository = accountTransactionRepository ?? throw new ArgumentNullException(nameof(accountTransactionRepository));
+            _accountCommentRepository = accountCommentRepository ?? throw new ArgumentNullException(nameof(accountCommentRepository));
+            _clientRepository = clientRepository ?? throw new ArgumentNullException(nameof(clientRepository));
+            _dateService = dateService ?? throw new ArgumentNullException(nameof(dateService));
+            _accountTransactionGeneratorService = accountTransactionGeneratorService ?? throw new ArgumentNullException(nameof(accountTransactionGeneratorService));            
             _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
             _validationService  = validationService ?? throw new ArgumentNullException(nameof(validationService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -99,23 +112,7 @@ namespace Loan.Domain
         {
             return await _repository.IsAccountExistsAsync(id);
         }
-        
-
-		public Task<bool> Approve(int id, string comment)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Task<bool> Cancel(int id, string comment)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Task<bool> Decline(int id, string comment)
-		{
-			throw new NotImplementedException();
-		}
-
+                
         public async Task<PagedResult<Account>> GetAllAsync(int pg, int pgSize)
         {
             return await _repository.GetAllAsync(pg, pgSize);
@@ -124,6 +121,50 @@ namespace Loan.Domain
         public async Task<PagedResult<Account>> SearchAsync(string filter, int pg, int pgSize)
         {
             return await _repository.SearchAsync(filter, pg, pgSize);
+        }
+
+        public async Task<bool> Approve(Account account)
+        {
+            await _validationService.ValidateForApprove(account);
+
+            if (_validationService.HasError)
+                throw _validationService.GetException();
+
+            account.StatusId = LookupIds.AccountStatuses.Approved;
+            account.StartDate = _dateService.CurrentDate;
+
+            var transactions = _accountTransactionGeneratorService.Generate(account);
+            var comments = account.AccountComments;
+
+            
+            await _accountTransactionRepository.CreateTransactionsAsync(transactions);
+            await _accountCommentRepository.CreateCommentsAsync(comments.ToList());            
+            await _repository.UpdateAsync(account);
+
+            return (await _transactionService.SaveChangesAsync() >= 0);
+
+        }
+
+        public async Task<bool> Cancel(Account account)
+        {            
+            account.StatusId = LookupIds.AccountStatuses.Cancelled;                      
+            var comments = account.AccountComments;
+
+            await _accountCommentRepository.CreateCommentsAsync(comments.ToList());
+            await _repository.UpdateAsync(account);
+
+            return (await _transactionService.SaveChangesAsync() >= 0);
+        }
+
+        public async Task<bool> Decline(Account account)
+        {
+            account.StatusId = LookupIds.AccountStatuses.Declined;            
+            var comments = account.AccountComments;
+
+            await _accountCommentRepository.CreateCommentsAsync(comments.ToList());
+            await _repository.UpdateAsync(account);
+
+            return (await _transactionService.SaveChangesAsync() >= 0);
         }
     }
 }

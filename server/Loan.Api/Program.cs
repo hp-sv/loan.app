@@ -36,7 +36,7 @@ builder.Services.AddControllers(options => {
     options.ReturnHttpNotAcceptable = true;
     options.Filters.Add<HttpResponseExceptionFilter>();        
 }).AddJsonOptions(options=>
-    {
+    {        
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 
@@ -59,6 +59,7 @@ builder.Services.AddDbContext<LoanDbContext>(
 builder.Services.AddScoped<IDateService, DateService>();
 builder.Services.AddScoped<IChangeTransactionScope, LoanTransactionScope>();
 builder.Services.AddScoped<IChangeTransactionService, ChangeTransactionService>();
+builder.Services.AddScoped<IAccountTransactionGeneratorService, AccountTransactionGeneratorService>();
 
 builder.Services.AddScoped<IClientValidationService, ClientValidationService>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
@@ -69,10 +70,12 @@ builder.Services.AddScoped<ILookupSetDomain, LookupSetDomain>();
 
 builder.Services.AddScoped<IAccountValidationService, AccountValidationService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-builder.Services.AddScoped<IAccountDomain, AccountDomain>();    
+builder.Services.AddScoped<IAccountDomain, AccountDomain>();
+
+builder.Services.AddScoped<IAccountTransactionRepository, AccountTransactionRepository>();
+builder.Services.AddScoped<IAccountCommentRepository, AccountCommentRepository>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>

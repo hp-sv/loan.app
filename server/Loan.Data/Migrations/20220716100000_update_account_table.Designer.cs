@@ -4,6 +4,7 @@ using Loan.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Loan.Data.Migrations
 {
     [DbContext(typeof(LoanDbContext))]
-    partial class LoanDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220716100000_update_account_table")]
+    partial class update_account_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,11 +49,6 @@ namespace Loan.Data.Migrations
                     b.Property<int>("DurationTypeId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Interest")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("decimal(18,2)")
-                        .HasComputedColumnSql("(Principal * (Rate/100)) PERSISTED");
-
                     b.Property<decimal>("Principal")
                         .HasColumnType("decimal(18,4)");
 
@@ -70,11 +67,6 @@ namespace Loan.Data.Migrations
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("TotalAmount")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("decimal(18,2)")
-                        .HasComputedColumnSql("(Principal * (1+(Rate/100))) PERSISTED");
-
                     b.Property<Guid>("TransactionId")
                         .HasColumnType("uniqueidentifier");
 
@@ -86,7 +78,6 @@ namespace Loan.Data.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("VersionNo")
-                        .IsConcurrencyToken()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -145,7 +136,6 @@ namespace Loan.Data.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("VersionNo")
-                        .IsConcurrencyToken()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -204,7 +194,6 @@ namespace Loan.Data.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("VersionNo")
-                        .IsConcurrencyToken()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -384,7 +373,6 @@ namespace Loan.Data.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("VersionNo")
-                        .IsConcurrencyToken()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -442,7 +430,6 @@ namespace Loan.Data.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("VersionNo")
-                        .IsConcurrencyToken()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -905,7 +892,6 @@ namespace Loan.Data.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("VersionNo")
-                        .IsConcurrencyToken()
                         .HasColumnType("int");
 
                     b.HasKey("Id");

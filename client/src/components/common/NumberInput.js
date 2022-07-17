@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Input } from "antd";
+import { InputNumber } from "antd";
 
-const TextInput = ({
+const NumberInput = ({
   name,
   label,
   onChange,
@@ -16,17 +16,21 @@ const TextInput = ({
     wrapperClass += " has-error";
   }
 
+  const handleOnChange = (value) => {
+    onChange({ target: { name, value } });
+  };
+
   return (
     <div className={wrapperClass}>
       <label htmlFor={name}>{label}</label>
       <div className="field">
-        <Input
-          type="text"
+        <InputNumber
           name={name}
           className="form-control"
           placeholder={placeholder}
           value={value}
-          onChange={onChange}
+          onChange={handleOnChange}
+          defaultValue={1000}
           readOnly={readOnly}
         />
         {error && (
@@ -42,14 +46,14 @@ const TextInput = ({
   );
 };
 
-TextInput.propTypes = {
+NumberInput.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
-  readOnly: PropTypes.bool,
-  value: PropTypes.string,
+  value: PropTypes.number,
   error: PropTypes.string,
+  readOnly: PropTypes.bool,
 };
 
-export default TextInput;
+export default NumberInput;

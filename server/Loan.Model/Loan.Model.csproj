@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Loan.Interfaces\Loan.Interface.csproj" />
+  </ItemGroup>
+
 </Project>

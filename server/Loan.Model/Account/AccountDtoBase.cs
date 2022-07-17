@@ -13,8 +13,8 @@ namespace Loan.Model.Account
         [Required(ErrorMessage = "Specify the rate for this account.")]
         public decimal Rate { get; set; }
 
-        [Required(ErrorMessage = "Specify the total amount for this account.")]
-        public decimal TotalAmount { get; set; }
+        [Required(ErrorMessage = "Specify the amount for this account.")]
+        public decimal Principal { get; set; }
 
         [Required(ErrorMessage = "Specify the duration for this account.")]
         public int Duration { get; set; }
@@ -27,6 +27,9 @@ namespace Loan.Model.Account
 
         [Required(ErrorMessage = "Specify the status of this account.")]
         public int StatusId { get; set; }
+
+        public DateTime? StartDate { get; set; }
+        public decimal? Interest  { get; set; }
 
     }
 }

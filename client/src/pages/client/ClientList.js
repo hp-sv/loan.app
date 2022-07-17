@@ -31,16 +31,16 @@ const ClientList = ({ clientState, onEdit, onDelete, onPageChange }) => {
                   size={20}
                   title="Edit"
                   className="text-muted"
-                  style={{ cursor: "hand" }}
+                  style={{ cursor: "pointer" }}
                   onClick={() => onEdit(client)}
                 />
               </td>
               <td width={20}>
-                <Icon.Trash2
+                <Icon.Trash
                   size={20}
                   title="Edit"
                   className="text-muted"
-                  style={{ cursor: "hand" }}
+                  style={{ cursor: "pointer" }}
                   onClick={() => onDelete(client)}
                 />
               </td>
@@ -57,17 +57,18 @@ const ClientList = ({ clientState, onEdit, onDelete, onPageChange }) => {
         })}
         <tr>
           <td colSpan={8}>
-            {results.length > 0 && 
-            <Pagination
-              showLessItems={true}
-              showTotal={showTotal}
-              defaultCurrent={currentPage}
-              total={rowCount}
-              pageSize={pageSize}
-              onChange={onPageChange}
-              showSizeChanger={true}
-              pageSizeOptions={[10, 15, 20, 25, 50]}
-            />}
+            {results.length > 0 && (
+              <Pagination
+                showLessItems={true}
+                showTotal={showTotal}
+                defaultCurrent={currentPage}
+                total={rowCount}
+                pageSize={pageSize}
+                onChange={onPageChange}
+                showSizeChanger={true}
+                pageSizeOptions={[10, 15, 20, 25, 50]}
+              />
+            )}
           </td>
         </tr>
       </tbody>

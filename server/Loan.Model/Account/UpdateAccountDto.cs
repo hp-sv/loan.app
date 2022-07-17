@@ -6,5 +6,8 @@ namespace Loan.Model.Account
     {
         [Required]
         public int Id { get; set; }
+        
+        public ICollection<CreateAccountCommentDto> AccountComments { get; set; } = new List<CreateAccountCommentDto>();
+
     }
 }

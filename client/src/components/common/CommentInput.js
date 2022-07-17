@@ -1,16 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Input } from "antd";
+const { TextArea } = Input;
 
-const TextInput = ({
-  name,
-  label,
-  onChange,
-  placeholder,
-  value,
-  error,
-  readOnly = false,
-}) => {
+const CommentInput = ({ name, label, onChange, placeholder, value, error }) => {
   let wrapperClass = "form-group form-group-sm";
   if (error && error.length > 0) {
     wrapperClass += " has-error";
@@ -20,14 +13,14 @@ const TextInput = ({
     <div className={wrapperClass}>
       <label htmlFor={name}>{label}</label>
       <div className="field">
-        <Input
-          type="text"
+        <TextArea
           name={name}
           className="form-control"
           placeholder={placeholder}
           value={value}
           onChange={onChange}
-          readOnly={readOnly}
+          rows={6}
+          maxLength={500}
         />
         {error && (
           <div
@@ -42,7 +35,7 @@ const TextInput = ({
   );
 };
 
-TextInput.propTypes = {
+CommentInput.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
@@ -52,4 +45,4 @@ TextInput.propTypes = {
   error: PropTypes.string,
 };
 
-export default TextInput;
+export default CommentInput;

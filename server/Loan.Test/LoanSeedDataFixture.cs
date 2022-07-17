@@ -163,7 +163,7 @@ namespace Loan.Test
             Rate = 0.010m,
             RepaymentTypeId = LookupIds.RepaymentSchedule.Weekly,
             StatusId = LookupIds.AccountStatuses.Active,
-            TotalAmount = 50000
+            Principal = 50000
             };
 
             DbContext.Accounts.Add(account);
@@ -199,7 +199,7 @@ namespace Loan.Test
                 Rate = 0.010m,
                 RepaymentTypeId = LookupIds.RepaymentSchedule.Weekly,
                 StatusId = LookupIds.AccountStatuses.Active,
-                TotalAmount = 50000
+                Principal = 50000
             };
 
             DbContext.Accounts.Add(account);

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Loan.Interface.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace Loan.Model.Account
 {
@@ -7,10 +8,12 @@ namespace Loan.Model.Account
         [Required]
         public int Id { get; set; }
 
-        public ICollection<AccountTransactionDto> AccountTransactions { get; set; }
-        public decimal ActualRepayments => AccountTransactions.Sum(at => at.ActualAmount);
-        public decimal ExpectedRepayments => AccountTransactions.Sum(at => at.ExpectedAmount);
-        public decimal Balance => (TotalAmount * (1 + Rate)) - ActualRepayments;
+        public ICollection<AccountTransactionDto> AccountTransactions { get; set; } = new List<AccountTransactionDto>();
+        public ICollection<AccountCommentDto> AccountComments { get; set; } = new List<AccountCommentDto>();
+
+        public decimal ActualRepayments => AccountTransactions.Where(at=>at.TransactionTypeId == LookupIds.TransactionType.Credit).Sum(at => at.ActualAmount);
+        public decimal ExpectedRepayments => AccountTransactions.Where(at => at.TransactionTypeId == LookupIds.TransactionType.Credit).Sum(at => at.ExpectedAmount);
+        public decimal Balance => (Principal + Interest.Value) - ActualRepayments;
         
     }
 }

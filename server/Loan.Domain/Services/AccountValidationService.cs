@@ -16,6 +16,8 @@ namespace Loan.Domain.Services
                 IClientRepository clientRepository,
                 IAccountRepository accountRepository,
                 ILookupSetDomain lookupSetDomain)
+
+
         {
             _lookupSetDomain = lookupSetDomain ?? throw new ArgumentNullException(nameof(lookupSetDomain));
             _clientRepository = clientRepository ?? throw new ArgumentNullException(nameof(clientRepository));
@@ -98,11 +100,42 @@ namespace Loan.Domain.Services
             
         }
 
+        private  async Task IsAccountStatusValidToApprove(Account account)
+        {
+            var validStatusToApprove = new List<int> {                
+                LookupIds.AccountStatuses.Pending,        
+                LookupIds.AccountStatuses.Cancelled };        
+
+            if (account != null && !validStatusToApprove.Contains(account.StatusId))
+                _Erorrs.Add(new ValidationError { Code = AccountValidationErrorCodes.ACCOUNT_STATUS_IS_NOT_PENDING_OR_CANCELLED, Message = "Account is not pending or cancelled." });
+        }
+
         public override async Task ValidateForDelete(Account account)
         {
             await IsAccountExists(account);
-            await IsAccountStatus(account);
-            
+            await IsAccountStatus(account);            
+        }
+
+        public async Task ValidateForApprove(Account account)
+        {            
+            await IsAccountStatusValidToApprove(account);
+            await IsAccountClientOverLimit(account);
+        }
+
+        private Task IsAccountClientOverLimit(Account account)
+        {
+            // TODO: Implement the rule
+            return Task.CompletedTask;
+        }
+
+        public Task ValidateForDecline(Account entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ValidateForCancel(Account entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

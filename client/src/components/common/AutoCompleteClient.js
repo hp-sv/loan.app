@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { AutoComplete } from "antd";
+import { AutoComplete, Drawer } from "antd";
 import * as clientApi from "../../api/clientApi";
 import Disabled from "./Disabled";
 import intialState from "../../store/reducers/initialState";
-import {
-  EditOutlined
-} from '@ant-design/icons';
+import { EditOutlined } from "@ant-design/icons";
+import * as constants from "../../constants/Common";
+import ClientForm from "../../pages/client/ClientForm";
 
 const Option = AutoComplete.Option;
 
@@ -16,13 +16,20 @@ function AutoCompleteClient({
   selected,
   onSelect,
   filterOption,
+  showEdit,
+  disable,
   error,
-  disable = false,
 }) {
+  const [selectedState, setSelectedState] = useState({
+    client: { id: -1 },
+    mode: constants.RECORD_NONE,
+    visible: false,
+  });
+
   const [clientState, setClientState] = useState(intialState.clientState);
   const [inputValue, setInputValue] = useState("");
-  
-  const {page, pageSize} = {page:1, pageSize: 50};
+
+  const { page, pageSize } = { page: 1, pageSize: 50 };
 
   useEffect(() => {
     if (clientState.results.length === 0 && selected && selected !== "") {
@@ -50,7 +57,25 @@ function AutoCompleteClient({
     const selectedClient = clientState.results.find(
       (client) => client.id === parseInt(option.id)
     );
+    setSelectedState({ ...selectedState, client: selectedClient });
+
     onSelect(selectedClient);
+  };
+
+  const handleEditClient = () => {
+    setSelectedState({
+      ...selectedState,
+      mode: constants.RECORD_EDIT,
+      visible: true,
+    });
+  };
+
+  const handleCloseEdit = () => {
+    setSelectedState({ ...selectedState, visible: false });
+  };
+
+  const handleCloseDrawer = () => {
+    setSelectedState({ ...selectedState, visible: false });
   };
 
   const clientOptions = clientState.results
@@ -70,14 +95,18 @@ function AutoCompleteClient({
     wrapperClass += " has-error";
   }
 
+  const style = {
+    width: showEdit && selectedState.client.id > 0 ? "90%" : "100%",
+  };
+
   return (
     <div className={wrapperClass}>
       <label htmlFor={name}>{label}</label>
-      <Disabled disabled={disable}>
-      <div className="field">        
+      <div className="field">
+        <Disabled disabled={disable}>
           <AutoComplete
             value={inputValue}
-            style={{ width: "90%" }}
+            style={style}
             onSearch={handleSearch}
             onChange={handleChange}
             onSelect={handleSelect}
@@ -85,8 +114,13 @@ function AutoCompleteClient({
           >
             {clientOptions}
           </AutoComplete>
-          <EditOutlined className="grid_inline_icon" />
-        
+        </Disabled>
+        {showEdit && selectedState.client.id > 0 && (
+          <EditOutlined
+            className="grid_inline_icon"
+            onClick={handleEditClient}
+          />
+        )}
         {error && (
           <div
             className="alert alert-danger alert-sm"
@@ -96,7 +130,23 @@ function AutoCompleteClient({
           </div>
         )}
       </div>
-      </Disabled>
+      <Drawer
+        title="Edit client"
+        placement={"right"}
+        closable={true}
+        maskClosable={false}
+        visible={selectedState.visible}
+        key={"updateClientFromAutoComplete"}
+        onClose={handleCloseEdit}
+        size={"small"}
+      >
+        <ClientForm
+          selectedClient={selectedState.client}
+          onSubmitSuccess={handleCloseDrawer}
+          onCancel={handleCloseDrawer}
+          mode={constants.RECORD_EDIT}
+        />
+      </Drawer>
     </div>
   );
 }
@@ -106,6 +156,7 @@ AutoCompleteClient.propTypes = {
   label: PropTypes.string.isRequired,
   onSelect: PropTypes.func.isRequired,
   filterOption: PropTypes.func.isRequired,
+  showEdit: PropTypes.bool.isRequired,
   disable: PropTypes.bool.isRequired,
   selected: PropTypes.string,
   error: PropTypes.string,

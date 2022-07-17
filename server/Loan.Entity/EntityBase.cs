@@ -16,7 +16,9 @@ namespace Loan.Entity
         public DateTime? UpdatedAt { get; set; }
 
         [Required(ErrorMessage = "Must specify the transaction identity when this record was created.", AllowEmptyStrings = false)]
-        public Guid TransactionId { get; set; } 
+        public Guid TransactionId { get; set; }
+
+        [ConcurrencyCheck]
         public int VersionNo { get; set; } = 0;
         public int RecordStatusId { get; set; } = 0;
 

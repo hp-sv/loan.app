@@ -35,13 +35,21 @@ namespace Loan.Repository
         
         public async Task<PagedResult<Account>> GetAllAsync(int page, int pageSize)
         {
-            var query = context.Accounts.Include(a => a.Client).OrderBy(a => a.Client.FirstName).ThenBy(a => a.Client.LastName);
+            var query = context.Accounts
+                    .Include(a => a.AccountTransactions)
+                    .Include(a => a.AccountComments)
+                    .Include(a => a.Client)
+                    .OrderBy(a => a.Client.FirstName).ThenBy(a => a.Client.LastName);
             return await query.GetPagedAsync(page, pageSize);
         }
 
         public async Task<Account?> GetByIdAsync(int id)
         {
-            return await context.Accounts.Include(a => a.Client).FirstOrDefaultAsync(a => a.Id == id);
+            return await context.Accounts
+                .Include(a=>a.AccountComments)
+                .Include(a=>a.AccountTransactions)
+                .Include(a => a.Client)
+                .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<Account?> GetByIdAsync(int id, bool includeTransactions)
@@ -63,6 +71,7 @@ namespace Loan.Repository
             filter = filter.ToLower();
             var query = context.Accounts
                     .Include(a => a.AccountTransactions)
+                    .Include(a=>a.AccountComments)
                     .Include(a => a.Client).Where(
                     a => a.Client.FirstName.ToLower().Contains(filter)
                     || a.Client.MiddleName.ToLower().Contains(filter)
@@ -79,7 +88,6 @@ namespace Loan.Repository
             _mapper.Map(account, accountToUpdate);
 
             return;
-
         }
     }
 }

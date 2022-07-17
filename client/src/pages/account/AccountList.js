@@ -1,28 +1,41 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  EditOutlined,
-  DeleteOutlined 
-} from '@ant-design/icons';
-
+import * as Icon from "react-bootstrap-icons";
 import { Pagination } from "antd";
-
+import * as constants from "../../constants/Common";
 function AccountList({
   accountState,
   accountStatus,
   repaymentSchedule,
   durationType,
   onEdit,
-  onDelete, onPageChange
+  onDelete,
+  onReview,
+  onPageChange,
 }) {
-
   const { results, currentPage, rowCount, pageSize } = accountState;
   const showTotal: PaginationProps["showTotal"] = (total) =>
-  `Total ${total} items`;
+    `Total ${total} items`;
 
   function getLookupName(lookups, id) {
     const lookup = lookups.find((lookup) => lookup.id === id);
     return lookup ? lookup.name : null;
+  }
+
+  function showDelete(account) {
+    return (
+      account.statusId === constants.ACCOUNT_STATUS_CANCEL ||
+      account.statusId === constants.ACCOUNT_STATUS_PENDING ||
+      account.statusId === constants.ACCOUNT_STATUS_DECLINE
+    );
+  }
+
+  function showReview(account) {
+    return (
+      account.statusId === constants.ACCOUNT_STATUS_CANCEL ||
+      account.statusId === constants.ACCOUNT_STATUS_PENDING ||
+      account.statusId === constants.ACCOUNT_STATUS_DECLINE
+    );
   }
 
   return (
@@ -30,68 +43,106 @@ function AccountList({
       <thead>
         <tr>
           <th />
-          <th />
-          <th>Account#</th>
-          <th>Name</th>
-          <th>Status</th>
-          <th>Duration</th>
-          <th>Repayment Type</th>
-          <th>Principal</th>
-          <th>Rate</th>
-          <th>Expected</th>
-          <th>Actual</th>
-          <th>Balance</th>
+          <th align="middle">Account#</th>
+          <th align="middle">Name</th>
+          <th align="middle">Status</th>
+          <th align="middle">Duration</th>
+          <th align="middle">Repayment Type</th>
+          <th align="middle">Principal</th>
+          <th align="middle">Rate</th>
+          <th align="middle">Interest</th>
+          <th align="middle">Expected</th>
+          <th align="middle">Actual</th>
+          <th align="middle">Balance</th>
         </tr>
       </thead>
       <tbody>
         {results.map((account) => {
           return (
             <tr key={account.id}>
-              <td width={20}>
-                <EditOutlined                  
-                  title="Edit"      
-                  className="grid_inline_icon"                              
-                  onClick={() => onEdit(account)}
-                />
-              </td>
-              <td width={20}>
-                <DeleteOutlined                   
-                  title="Delete"                  
-                  className="grid_inline_icon"                              
-                  onClick={() => onDelete(account)}
-                />
-              </td>
-              <td>{account.id}</td>
-              <td>{account.client.fullName}</td>
-              <td>{getLookupName(accountStatus, account.statusId)}</td>
-              <td>{getLookupName(durationType, account.durationTypeId)}</td>
               <td>
+                <div className="input-group sm">
+                  <Icon.PencilSquare
+                    size={20}
+                    title="Edit"
+                    className="text-muted m-1"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => onEdit(account)}
+                  />
+                  {showDelete(account) && (
+                    <Icon.Trash
+                      size={20}
+                      title="Edit"
+                      className="text-muted m-1"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => onDelete(account)}
+                    />
+                  )}
+                  {showReview(account) && (
+                    <Icon.CheckSquare
+                      size={20}
+                      title="Review account"
+                      className="text-muted m-1"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => onReview(account)}
+                    />
+                  )}
+                </div>
+              </td>
+              <td align="middle">{account.id}</td>
+              <td align="left">{account.client.fullName}</td>
+              <td align="middle">
+                {getLookupName(accountStatus, account.statusId)}
+              </td>
+              <td align="middle">
+                {getLookupName(durationType, account.durationTypeId)}
+              </td>
+              <td align="middle">
                 {getLookupName(repaymentSchedule, account.repaymentTypeId)}
               </td>
-              <td>{account.totalAmount}</td>
-              <td>{account.rate}</td>
-              <td>{account.actualRepayments}</td>
-              <td>{account.expectedRepayments}</td>
-              <td>{account.balance}</td>
+              <td align="middle">
+                {account.principal.toLocaleString(undefined, {
+                  maximumFractionDigits: 2,
+                })}
+              </td>
+              <td align="middle">{`${account.rate}%`}</td>
+              <td align="middle">
+                {account.interest.toLocaleString(undefined, {
+                  maximumFractionDigits: 2,
+                })}
+              </td>
+              <td align="middle">
+                {account.expectedRepayments.toLocaleString(undefined, {
+                  maximumFractionDigits: 2,
+                })}
+              </td>
+              <td align="middle">
+                {account.actualRepayments.toLocaleString(undefined, {
+                  maximumFractionDigits: 2,
+                })}
+              </td>
+              <td align="middle">
+                {account.balance.toLocaleString(undefined, {
+                  maximumFractionDigits: 2,
+                })}
+              </td>
             </tr>
           );
         })}
-        <tr>          
+        <tr>
           <td colSpan={12}>
-            {
-              results.length > 0 && 
+            {results.length > 0 && (
               <Pagination
-              showLessItems={true}
-              showTotal={showTotal}
-              defaultCurrent={currentPage}
-              total={rowCount}
-              pageSize={pageSize}
-              onChange={onPageChange}
-              showSizeChanger={true}
-              pageSizeOptions={[10, 15, 20, 25, 50]}
-            />          
-            }
-            
+                showLessItems={true}
+                showTotal={showTotal}
+                defaultCurrent={currentPage}
+                total={rowCount}
+                pageSize={pageSize}
+                onChange={onPageChange}
+                showSizeChanger={true}
+                pageSizeOptions={[10, 15, 20, 25, 50]}
+              />
+            )}
           </td>
         </tr>
       </tbody>
@@ -106,6 +157,7 @@ AccountList.propTypes = {
   durationType: PropTypes.array.isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onReview: PropTypes.func.isRequired,
   onPageChange: PropTypes.func.isRequired,
 };
 

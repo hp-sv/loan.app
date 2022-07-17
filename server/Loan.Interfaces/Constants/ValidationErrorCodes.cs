@@ -16,6 +16,7 @@
         public const int ACCOUNT_IS_ACTIVE = 10016;
         public const int ACCOUNT_CLIENT_NO_EMERGENCY_CONTACT = 10017;
         public const int ACCOUNT_RATE_IS_INVALID = 10018;
+        public const int ACCOUNT_STATUS_IS_NOT_PENDING_OR_CANCELLED = 10019;
     }
 
     public static class ClientValidationErrorCodes

@@ -13,6 +13,8 @@ namespace Loan.Data.Context
         public DbSet<Account> Accounts { get; set; } = null!;
         public DbSet<AccountTransaction> AccountTransactions { get; set; } = null!;
 
+        public DbSet<AccountComment> AccountComments { get; set; } = null!;
+
         public async Task<int> SaveChangesAsync()
         {
             return await SaveChangesAsync(CancellationToken.None);
@@ -56,7 +58,15 @@ namespace Loan.Data.Context
             modelBuilder.Entity<Client>()
                 .Property(p => p.FullAddress)
                 .HasComputedColumnSql("replace(replace([AddressLine1] + ' ' + [AddressLine2] + ' ' + [AddressLine3], '  ',' '), '  ', ' ')  PERSISTED");
-                        
+
+            modelBuilder.Entity<Account>()
+                .Property(p => p.Interest)
+                .HasComputedColumnSql("(Principal * (Rate/100)) PERSISTED");
+
+            modelBuilder.Entity<Account>()
+                .Property(p => p.TotalAmount)
+                .HasComputedColumnSql("(Principal * (1+(Rate/100))) PERSISTED");
+
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new LookupSetConfiguration());

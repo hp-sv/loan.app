@@ -16,6 +16,12 @@ namespace Loan.Entity.Profiles
                 .ForMember(dest => dest.VersionNo, act => act.Ignore())
                 .ForMember(dest => dest.RecordStatusId, act => act.Ignore())
                 ;
+
+            CreateMap<AccountComment, AccountComment>()
+                .ForMember(dest => dest.VersionNo, act => act.Ignore())
+                .ForMember(dest => dest.RecordStatusId, act => act.Ignore())
+                ;
+
         }
     }
 }

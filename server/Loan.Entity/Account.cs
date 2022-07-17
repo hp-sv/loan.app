@@ -22,9 +22,9 @@ namespace Loan.Entity
         [Column(TypeName = "decimal(18,4)")]
         public decimal Rate { get; set; }
 
-        [Required(ErrorMessage = "Specify the total amount for this account.")]
+        [Required(ErrorMessage = "Specify the amount for this account.")]
         [Column(TypeName = "decimal(18,4)")]
-        public decimal TotalAmount { get; set; }
+        public decimal Principal { get; set; }
 
         [Required(ErrorMessage = "Specify the duration for this account.")]
         public int Duration { get; set; }
@@ -48,6 +48,11 @@ namespace Loan.Entity
 
         [Required]
         public int StatusId { get; set; }
+
+        public DateTime? StartDate { get; set; }
+
+        public decimal? Interest { get; set; }
+        public decimal? TotalAmount { get; set; }
 
         public ICollection<AccountTransaction> AccountTransactions { set; get; } = new List<AccountTransaction>();
         public ICollection<AccountComment> AccountComments { get; set; } = new List<AccountComment>();

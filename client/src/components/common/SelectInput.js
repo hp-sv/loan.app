@@ -1,5 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Select } from "antd";
+
+const { Option } = Select;
 
 const SelectInput = ({
   name,
@@ -9,27 +12,32 @@ const SelectInput = ({
   value,
   error,
   options,
+  readOnly = false,
 }) => {
+  const handleOnChange = (value) => {
+    onChange({ target: { name, value } });
+  };
+
   return (
     <div className="form-group">
       <label htmlFor={name}>{label}</label>
       <div className="field">
         {/* Note, value is set here rather than on the option - docs: https://facebook.github.io/react/docs/forms.html */}
-        <select
+        <Select
           name={name}
           value={value}
-          onChange={onChange}
+          onChange={!readOnly && handleOnChange}
           className="form-control"
         >
-          <option value="">{defaultOption}</option>
+          <Option value="">{defaultOption}</Option>
           {options.map((option) => {
             return (
-              <option key={option.id} value={option.id}>
+              <Option key={`${name}_option_${option.id}`} value={option.id}>
                 {option.name}
-              </option>
+              </Option>
             );
           })}
-        </select>
+        </Select>
         {error && <div className="alert alert-danger">{error}</div>}
       </div>
     </div>
@@ -44,6 +52,7 @@ SelectInput.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   error: PropTypes.string,
   options: PropTypes.arrayOf(PropTypes.object),
+  readOnly: PropTypes.bool,
 };
 
 export default SelectInput;
