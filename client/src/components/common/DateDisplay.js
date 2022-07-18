@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import parseJSON from "date-fns/parseJSON";
 import { format } from "date-fns";
 
 const DateDisplay = (date) => {

@@ -3,11 +3,6 @@ import PropTypes from "prop-types";
 import DateDisplay from "../../components/common/DateDisplay";
 import PaginateArray from "../../module/PaginateArray";
 import SmallPagination from "../../components/common/SmallPagination";
-import { Pagination } from "antd";
-import { PaginationProps } from "antd";
-
-const showTotal: PaginationProps["showTotal"] = (total) =>
-  `Total ${total} items`;
 
 function AccountTransaction({ account }) {
   const [selectedAccount, setSelectedAccount] = useState({
