@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import DateDisplay from "../../components/common/DateDisplay";
-import paginateArray from "../../module/paginateArray";
+import paginateArray from "../../module/PaginateArray";
 import SmallPagination from "../../components/common/SmallPagination";
 
 function AccountTransaction({ account }) {

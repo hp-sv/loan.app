@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import DateDisplay from "../../components/common/DateDisplay";
-import paginateArray from "../../module/paginateArray";
+import paginateArray from "../../module/PaginateArray";
 import SmallPagination from "../../components/common/SmallPagination";
 import AccountCommentForm from "./AccountCommentForm";
 

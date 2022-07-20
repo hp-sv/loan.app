@@ -79,7 +79,8 @@ builder.Services.AddScoped<IAccountCommentRepository, AccountCommentRepository>(
 
 builder.Services.AddAutoMapper((serviceProvider, cfg) =>
 {    
-   cfg.AddCollectionMappers();   
+   cfg.AddCollectionMappers();
+   cfg.UseEntityFrameworkCoreModel<LoanDbContext>(serviceProvider);
 }, AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddAuthentication("Bearer")
