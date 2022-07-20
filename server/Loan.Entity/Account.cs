@@ -8,10 +8,6 @@ namespace Loan.Entity
     public class Account: EntityBase
     {
 
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]        
-        public int Id { get; set; }
-
         [ForeignKey("ClientId")]
         public Client Client { get; set; } = null!;
 

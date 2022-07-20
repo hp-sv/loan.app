@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import DateDisplay from "../../components/common/DateDisplay";
-import paginateArray from "../../module/PaginateArray";
+import paginateArray from "../../module/paginateArray";
 import SmallPagination from "../../components/common/SmallPagination";
+import formatMoney from "../../module/formatMoney";
 
 function AccountTransaction({ account }) {
   const [selectedAccount, setSelectedAccount] = useState({
@@ -30,9 +31,9 @@ function AccountTransaction({ account }) {
       <thead>
         <tr>
           <td>Date</td>
+          <td>Transaction</td>
           <td>Type</td>
-          <td>Expected</td>
-          <td>Actual</td>
+          <td>Amount</td>
         </tr>
       </thead>
       <tbody>
@@ -44,11 +45,17 @@ function AccountTransaction({ account }) {
               >
                 <td>{DateDisplay(accountTransaction.transactionDate)}</td>
                 <td>{accountTransaction.transactionType.name}</td>
-                <td>{accountTransaction.expectedAmount}</td>
-                <td>{accountTransaction.actualdAmount}</td>
+                <td>{accountTransaction.journalEntryType.name}</td>
+                <td>{formatMoney(accountTransaction.amount)}</td>
               </tr>
             );
           })}
+        <tr>
+          <td colSpan={2}>
+            Total Credit(s) : {formatMoney(selectedAccount.actualRepayments)}
+          </td>
+          <td colSpan={2}>Balance : {formatMoney(selectedAccount.balance)}</td>
+        </tr>
         {selectedAccount.displayPagination && (
           <tr>
             <td colSpan={4}>

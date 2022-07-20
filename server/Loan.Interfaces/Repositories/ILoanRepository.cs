@@ -11,5 +11,6 @@ namespace Loan.Interface.Repositories
         public Task UpdateAsync(T entity);
         public Task DeleteAsync(int id);
         public Task<PagedResult<T>> SearchAsync(string filter,int page, int pageSize);
+        public void UpdateChildEntities<T>(ICollection<T> source, ICollection<T> destination, Func<T, T, bool> Equals);
     }
 }

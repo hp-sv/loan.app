@@ -7,7 +7,7 @@ using Loan.Interface.Services;
 
 namespace Loan.Domain
 {
-    public class AccountDomain : IAccountDomain
+    public class AccountDomain : LoanDomainBase, IAccountDomain
     {
         private readonly IAccountRepository _repository;
         private readonly IAccountTransactionRepository _accountTransactionRepository;
@@ -17,9 +17,7 @@ namespace Loan.Domain
         private readonly IDateService _dateService;
         private readonly IAccountTransactionGeneratorService _accountTransactionGeneratorService;
         private readonly IChangeTransactionService _transactionService;
-        private readonly IAccountValidationService _validationService;
-        private readonly IMapper _mapper;
-
+        private readonly IAccountValidationService _validationService;        
         public AccountDomain(IAccountRepository accountRepository,
                 IAccountTransactionRepository accountTransactionRepository,
                 IAccountCommentRepository accountCommentRepository,
@@ -28,7 +26,7 @@ namespace Loan.Domain
                 IAccountTransactionGeneratorService accountTransactionGeneratorService,
                 IChangeTransactionService transactionService,
                 IAccountValidationService validationService, 
-                IMapper mapper)
+                IMapper mapper) : base(mapper)
         {
             _repository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
             _accountTransactionRepository = accountTransactionRepository ?? throw new ArgumentNullException(nameof(accountTransactionRepository));
@@ -38,7 +36,7 @@ namespace Loan.Domain
             _accountTransactionGeneratorService = accountTransactionGeneratorService ?? throw new ArgumentNullException(nameof(accountTransactionGeneratorService));            
             _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
             _validationService  = validationService ?? throw new ArgumentNullException(nameof(validationService));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            
         }
 
         public async Task<bool> CreateAsync(Account account)
@@ -125,22 +123,26 @@ namespace Loan.Domain
 
         public async Task<bool> ApproveAsync(Account account)
         {
+            var approvedAccount = await _repository.GetByIdAsync(account.Id);
+            if (approvedAccount == null)            
+               throw _validationService.CreateException(AccountValidationErrorCodes.ACCOUNT_DOES_NOT_EXISTS, "Account does not exists.");
+            
+            _mapper.Map(account, approvedAccount);            
+
             await _validationService.ValidateForApprove(account);
 
             if (_validationService.HasError)
                 throw _validationService.GetException();
 
-            account.StatusId = LookupIds.AccountStatuses.Approved;
-            account.StartDate = _dateService.CurrentDate;
+            approvedAccount.StatusId = LookupIds.AccountStatuses.Approved;
+            approvedAccount.StartDate = _dateService.CurrentDate;
 
-            var transactions = _accountTransactionGeneratorService.Generate(account);
+            var transactions = _accountTransactionGeneratorService.Generate(approvedAccount);
+            _repository.UpdateChildEntities(transactions, approvedAccount.AccountTransactions, (s, d) => s.Id == d.Id && s.Id != default(int));
+
             var comments = account.AccountComments;
-
+            _repository.UpdateChildEntities(comments, approvedAccount.AccountComments, (s, d) => s.Id == d.Id && s.Id != default(int));
             
-            await _accountTransactionRepository.CreateTransactionsAsync(transactions);
-            await _accountCommentRepository.CreateCommentsAsync(comments.ToList());            
-            await _repository.UpdateAsync(account);
-
             return (await _transactionService.SaveChangesAsync() >= 0);
 
         }

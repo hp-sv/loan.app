@@ -5,6 +5,11 @@ namespace Loan.Entity
 {
     public class EntityBase : ILoanEntity 
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+
         [Required(ErrorMessage = "Must specify the user who created this record.", AllowEmptyStrings = false)]
         [MaxLength(255)]
         public string CreateBy { get; set; } = string.Empty;

@@ -50,22 +50,21 @@ namespace Loan.Domain.Services
         }
 
         public List<AccountTransaction> Generate(Account account) {
-
             
-            var principal = createAccountTransaction(account, account.StartDate.Value, account.Principal, LookupIds.TransactionType.Debit);
-            principal.ActualAmount = account.Principal;
+            var principal = createAccountTransaction(account, account.StartDate.Value, account.Principal, LookupIds.TransactionType.Projection, LookupIds.JournalEntryType.Debit);            
             account.AccountTransactions.Add(principal);
 
-            var interest = createAccountTransaction(account, account.StartDate.Value, account.Interest.Value, LookupIds.TransactionType.Debit);
-            interest.ActualAmount = account.Interest.Value;
-            account.AccountTransactions.Add(interest);
+            var interestAmount = Math.Ceiling(account.Principal * (account.Rate/100));
+            var interest = createAccountTransaction(account, account.StartDate.Value, interestAmount, LookupIds.TransactionType.Projection, LookupIds.JournalEntryType.Debit);
+                        account.AccountTransactions.Add(interest);
             
             var totalDays = getDuration(account);
             var daysInterval = getDurationDivider(account);
 
-            var totalNumberOfTransactions = Math.Ceiling(totalDays / (decimal)daysInterval);
-            var totalAmount = account.TotalAmount.Value;
-            decimal repaymentAmount = Math.Ceiling(totalAmount / totalNumberOfTransactions);
+            var totalNumberOfTransactions = Math.Ceiling(totalDays / (decimal)daysInterval);            
+            var totalAmount = account.Principal + interestAmount;
+            
+            decimal repaymentAmount = Math.Round((totalAmount / totalNumberOfTransactions)/100, 0 ) * 100;
 
             var transactionDate = account.StartDate.Value.AddDays(daysInterval);
 
@@ -76,7 +75,7 @@ namespace Loan.Domain.Services
                 if ((totalAmount - totalRepayment) <= repaymentAmount)
                     repaymentAmount = (totalAmount - totalRepayment);
 
-                account.AccountTransactions.Add(createAccountTransaction(account, transactionDate, repaymentAmount, LookupIds.TransactionType.Credit));
+                account.AccountTransactions.Add(createAccountTransaction(account, transactionDate, repaymentAmount, LookupIds.TransactionType.Projection, LookupIds.JournalEntryType.Credit));
                 transactionDate = transactionDate.AddDays(daysInterval);
                 totalRepayment = totalRepayment + repaymentAmount;
             }
@@ -84,16 +83,19 @@ namespace Loan.Domain.Services
             return account.AccountTransactions.ToList();
             
         }
-        private AccountTransaction createAccountTransaction(Account account, DateTime transactionDate, decimal amount, int transactionTypeId)
+        private AccountTransaction createAccountTransaction(Account account, DateTime transactionDate, decimal amount, int transactionTypeId, int journalEntryTypeId)
         {            
             return new AccountTransaction() {        
                 AccountId = account.Id,
                 Account = account,
                 TransactionDate = transactionDate,
                 TransactionTypeId= transactionTypeId,
-                ExpectedAmount = amount,
+                Amount = amount,
+                JournalEntryTypeId= journalEntryTypeId
             };
-        }        
+        }
+
+     
     }
 
     

@@ -7,10 +7,7 @@ namespace Loan.Entity
 {
     public class AccountComment : EntityBase
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
+       
         [ForeignKey("AccountId")]
         public Account Account { get; set; }
 

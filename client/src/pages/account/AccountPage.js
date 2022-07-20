@@ -114,6 +114,8 @@ function AccountPage({
     );
   };
 
+  const showCommentsTab = drawerState.recordMode !== constants.RECORD_ADD;
+
   function render() {
     return (
       <>
@@ -140,9 +142,11 @@ function AccountPage({
                   accountStatus={accountStatus}
                 />
               </TabPane>
-              <TabPane tab="Comment(s)" key="2">
-                <AccountComment account={drawerState.selectedAccount} />
-              </TabPane>
+              {showCommentsTab && (
+                <TabPane tab="Comment(s)" key="2">
+                  <AccountComment account={drawerState.selectedAccount} />
+                </TabPane>
+              )}
               {showTransactionsTab(drawerState.selectedAccount) && (
                 <TabPane tab="Transactions" key="3">
                   <AccountTransaction account={drawerState.selectedAccount} />

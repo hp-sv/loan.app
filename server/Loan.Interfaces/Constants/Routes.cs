@@ -14,7 +14,7 @@
         public const string ID = "{id}";
         public const string GET_ACCOUNT_ROUTE_NAME = "GetAccountRoute";
         public const string SEARCH = "search";
-        public const string APPROVE = "{id}/approve";
+        public const string APPROVE = "approve";
         public const string DECLINE = "{id}/decline";
         public const string CANCEL = "{id}/cancel";
         public const string COMMENT = "{id}/comment";

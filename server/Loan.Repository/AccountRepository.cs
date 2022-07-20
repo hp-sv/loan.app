@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Loan.Repository
 {
-    public class AccountRepository : LoanRepositoryBase<Account>, IAccountRepository 
+    public class AccountRepository : LoanRepositoryBase<Account>, IAccountRepository
     {
         private readonly IMapper _mapper;
         public AccountRepository(LoanDbContext loanDbContext, IMapper mapper) : base(loanDbContext)
@@ -39,6 +39,8 @@ namespace Loan.Repository
             return await context.Accounts
                 .Include(a => a.AccountTransactions)
                 .ThenInclude(at => at.TransactionType)
+                .Include(a => a.AccountTransactions)
+                .ThenInclude(at => at.JournalEntryType)
                 .Include(a => a.AccountComments.OrderByDescending(ac=>ac.Id))
                 .ThenInclude(ac => ac.Status)
                 .Include(a => a.Client)
@@ -52,6 +54,8 @@ namespace Loan.Repository
                     .ThenInclude(ac => ac.Status)
                     .Include(a => a.AccountTransactions)
                     .ThenInclude(at => at.TransactionType)
+                    .Include(a => a.AccountTransactions)
+                    .ThenInclude(at => at.JournalEntryType)
                     .Include(a => a.Client)
                     .OrderBy(a => a.Client.FirstName).ThenBy(a => a.Client.LastName);
             return await query.GetPagedAsync(page, pageSize);
@@ -64,6 +68,8 @@ namespace Loan.Repository
                 .ThenInclude(ac=>ac.Status)
                 .Include(a=>a.AccountTransactions)
                 .ThenInclude(at=>at.TransactionType)
+                .Include(a => a.AccountTransactions)
+                .ThenInclude(at => at.JournalEntryType)
                 .Include(a => a.Client)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
@@ -78,6 +84,8 @@ namespace Loan.Repository
                 .ThenInclude(ac => ac.Status)
                 .Include(a => a.AccountTransactions)
                 .ThenInclude(at => at.TransactionType)
+                .Include(a => a.AccountTransactions)
+                .ThenInclude(at => at.JournalEntryType)
                 .Include(a => a.Client)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
@@ -96,6 +104,8 @@ namespace Loan.Repository
                     .ThenInclude(ac => ac.Status)
                     .Include(a => a.AccountTransactions)
                     .ThenInclude(at => at.TransactionType)
+                    .Include(a => a.AccountTransactions)
+                    .ThenInclude(at => at.JournalEntryType)
                     .Include(a => a.Client)
                     .Where(
                     a => a.Client.FirstName.ToLower().Contains(filter)
@@ -108,9 +118,11 @@ namespace Loan.Repository
 
         public async Task UpdateAsync(Account account)
         {
-            var accountToUpdate = await context.Accounts.FirstOrDefaultAsync(a => a.Id == account.Id);
+            var accountToUpdate = await context.Accounts.FirstOrDefaultAsync(a => a.Id == account.Id);           
 
             _mapper.Map(account, accountToUpdate);
+
+
 
             return;
         }

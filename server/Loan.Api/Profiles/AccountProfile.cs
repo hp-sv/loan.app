@@ -22,11 +22,11 @@ namespace Loan.Api.Profiles
             CreateMap<Model.Account.UpdateAccountDto, Account>()
                 .ForMember(dest => dest.Client, act => act.Ignore());
 
-            CreateMap<Model.Account.AccountCommentDto, AccountComment>()
-                .EqualityComparison((dto, o) => dto.Id == o.Id);
 
-            CreateMap<PagedResult<Account>, Model.PagedResultDto<Model.Account.AccountDto>>();
-                        
+            CreateMap<Model.Account.UpdateAccountDto, Model.Account.AccountDto>();
+
+            CreateMap<Model.Account.AccountCommentDto, AccountComment>();
+            CreateMap<PagedResult<Account>, Model.PagedResultDto<Model.Account.AccountDto>>();                        
         }
     }
 }

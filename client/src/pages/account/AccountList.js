@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import * as Icon from "react-bootstrap-icons";
 import { Pagination } from "antd";
 import * as constants from "../../constants/Common";
+import formatMoney from "../../module/formatMoney";
+
 function AccountList({
   accountState,
   accountStatus,
@@ -106,26 +108,10 @@ function AccountList({
                 })}
               </td>
               <td align="middle">{`${account.rate}%`}</td>
-              <td align="middle">
-                {account.interest.toLocaleString(undefined, {
-                  maximumFractionDigits: 2,
-                })}
-              </td>
-              <td align="middle">
-                {account.expectedRepayments.toLocaleString(undefined, {
-                  maximumFractionDigits: 2,
-                })}
-              </td>
-              <td align="middle">
-                {account.actualRepayments.toLocaleString(undefined, {
-                  maximumFractionDigits: 2,
-                })}
-              </td>
-              <td align="middle">
-                {account.balance.toLocaleString(undefined, {
-                  maximumFractionDigits: 2,
-                })}
-              </td>
+              <td align="middle">{formatMoney(account.interest)}</td>
+              <td align="middle">{formatMoney(account.expectedRepayments)}</td>
+              <td align="middle">{formatMoney(account.actualRepayments)}</td>
+              <td align="middle">{formatMoney(account.balance)}</td>
             </tr>
           );
         })}

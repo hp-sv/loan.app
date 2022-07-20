@@ -16,6 +16,7 @@ namespace Loan.Data.Configuration
             builder.HasData(GetSeedConstants());
             builder.HasData(GetChangeOperations());
             builder.HasData(GetAccountStatuses());
+            builder.HasData(GetJournalEntryTypes());
         }
 
         public IEnumerable<Lookup> GetSeedConstants()
@@ -247,9 +248,9 @@ namespace Loan.Data.Configuration
             return new List<Lookup> {
                  new Lookup
                  {
-                     Id = LookupIds.TransactionType.Credit,
-                     Name = "Credit",
-                     Description = "Credit transaction",
+                     Id = LookupIds.TransactionType.Projection,
+                     Name = "Projection",
+                     Description = "Projected transaction",
                      LookupSetId = LookupIds.LookupSetId.TransactionTypeSetId,
                      CreateBy = Seed.SEED_USER,
                      CreatedAt = Seed.SeedDate(),
@@ -260,9 +261,9 @@ namespace Loan.Data.Configuration
                  },
                  new Lookup
                  {
-                     Id = LookupIds.TransactionType.Debit,
-                     Name = "Debit",
-                     Description = "Debit transaction",
+                     Id = LookupIds.TransactionType.Actual,
+                     Name = "Actual",
+                     Description = "Actual transaction",
                      LookupSetId = LookupIds.LookupSetId.TransactionTypeSetId,
                      CreateBy = Seed.SEED_USER,
                      CreatedAt = Seed.SeedDate(),
@@ -422,6 +423,38 @@ namespace Loan.Data.Configuration
                  RecordStatusId = LookupIds.RecordStatus.Active,
                  SeedTypeId = LookupIds.SeedTypes.Constant
              }};
+        }
+
+        public IEnumerable<Lookup> GetJournalEntryTypes()
+        {
+            return new List<Lookup> {
+             new Lookup
+             {
+                 Id = LookupIds.JournalEntryType.Debit,
+                 Name = "Debit",
+                 Description = "Debit Entry",
+                 LookupSetId = LookupIds.LookupSetId.JournalEntryTypeId,
+                 CreateBy = Seed.SEED_USER,
+                 CreatedAt = Seed.SeedDate(),
+                 TransactionId = Seed.SeedTransactionId(),
+                 VersionNo = 0,
+                 RecordStatusId = LookupIds.RecordStatus.Active,
+                 SeedTypeId = LookupIds.SeedTypes.Constant
+             },
+             new Lookup
+             {
+                 Id = LookupIds.JournalEntryType.Credit,
+                 Name = "Credit",
+                 Description = "Credit Entry",
+                 LookupSetId = LookupIds.LookupSetId.JournalEntryTypeId,
+                 CreateBy = Seed.SEED_USER,
+                 CreatedAt = Seed.SeedDate(),
+                 TransactionId = Seed.SeedTransactionId(),
+                 VersionNo = 0,
+                 RecordStatusId = LookupIds.RecordStatus.Active,
+                 SeedTypeId = LookupIds.SeedTypes.Constant
+             }
+            };
         }
     }
 }

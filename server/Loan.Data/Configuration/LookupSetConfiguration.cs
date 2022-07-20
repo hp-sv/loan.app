@@ -97,6 +97,18 @@ namespace Loan.Data.Configuration
                     VersionNo = 0,
                     RecordStatusId = LookupIds.RecordStatus.Active,
                     SeedTypeId = LookupIds.SeedTypes.Constant
+                },
+                new LookupSet
+                {
+                    Id = LookupIds.LookupSetId.JournalEntryTypeId,
+                    Name = "Journal Entry Type",
+                    Description = "Journal Entry Type (Debit/Credit)",
+                    CreateBy = Seed.SEED_USER,
+                    CreatedAt = Seed.SeedDate(),
+                    TransactionId = Seed.SeedTransactionId(),
+                    VersionNo = 0,
+                    RecordStatusId = LookupIds.RecordStatus.Active,
+                    SeedTypeId = LookupIds.SeedTypes.Constant
                 }
             };
         

@@ -4,11 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Loan.Entity
 {
     public class AccountTransaction :EntityBase
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
+    {        
         [ForeignKey("AccountId")]
         public Account Account { get; set; } = null!;
         public int AccountId { get; set; }
@@ -18,14 +14,14 @@ namespace Loan.Entity
 
         [Required(ErrorMessage = "Specify the expected amount for the transaction.")]
         [Column(TypeName = "decimal(18,4)")]
-        public decimal ExpectedAmount { get; set; } = 0;
-
-        [Required(ErrorMessage = "Specifiy the actual amount for the transaction.")]
-        [Column(TypeName = "decimal(18,4)")]
-        public decimal ActualAmount { get; set; } = 0;
-        
+        public decimal Amount { get; set; } = 0;
+                
         [ForeignKey("TransactionTypeId")]
         public Lookup TransactionType { get; set; } = null!;
         public int TransactionTypeId { get; set; }
+
+        [ForeignKey("JournalEntryTypeId")]
+        public Lookup JournalEntryType { get; set; } = null!;
+        public int JournalEntryTypeId { get; set; }
     }
 }

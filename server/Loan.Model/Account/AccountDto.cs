@@ -11,8 +11,8 @@ namespace Loan.Model.Account
         public ICollection<AccountTransactionDto> AccountTransactions { get; set; } = new List<AccountTransactionDto>();
         public ICollection<AccountCommentDto> AccountComments { get; set; } = new List<AccountCommentDto>();
 
-        public decimal ActualRepayments => AccountTransactions.Where(at=>at.TransactionTypeId == LookupIds.TransactionType.Credit).Sum(at => at.ActualAmount);
-        public decimal ExpectedRepayments => AccountTransactions.Where(at => at.TransactionTypeId == LookupIds.TransactionType.Credit).Sum(at => at.ExpectedAmount);
+        public decimal ActualRepayments => AccountTransactions.Where(at=>at.TransactionTypeId == LookupIds.TransactionType.Actual).Sum(at => at.Amount);
+        public decimal ExpectedRepayments => AccountTransactions.Where(at => at.TransactionTypeId == LookupIds.TransactionType.Projection).Sum(at => at.Amount);
         public decimal Balance => (Principal + Interest.Value) - ActualRepayments;
         
     }

@@ -34,9 +34,9 @@ namespace Loan.Domain.Services
 
             var validationErrors = new BusinessValidationError
             { 
-                    Type = "Domain",
-                    Title = "One or more business validation error(s) occured.",
-                   ValidationErrors = _Erorrs
+                Type = "Domain",
+                Title = "One or more business validation error(s) occured.",
+                ValidationErrors = _Erorrs
             };
 
             return new HttpResponseException((int)HttpStatusCode.BadRequest, validationErrors);

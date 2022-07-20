@@ -6,9 +6,7 @@ namespace Loan.Entity
 {
     public class Client : EntityBase
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        
 
         [Required(ErrorMessage = "First name is required.", AllowEmptyStrings = false)]
         [MinLength(2, ErrorMessage = "First name must be at least two characters.")]

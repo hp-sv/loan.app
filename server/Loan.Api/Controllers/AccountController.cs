@@ -94,25 +94,16 @@ namespace Loan.Api.Controllers
         }
 
         [HttpPut(AccountRoutes.APPROVE)]
-        public async Task<ActionResult> ApproveAsync(int id, UpdateAccountDto account)
-        {
-            var approveAccount = await _domain.GetByIdAsync(id);
-
-            if(approveAccount != null)
-            {                
-                var updatedAccount = _mapper.Map(account, approveAccount);
-                var result = await _domain.ApproveAsync(updatedAccount);
-                if (result) {
-                    approveAccount = await _domain.GetByIdAsync(id);
-                    return Ok(_mapper.Map<AccountDto>(approveAccount));
-                }                
-                else 
-                    return BadRequest(_mapper.Map<AccountDto>(account));
-            }
-            else
-            {
+        public async Task<ActionResult> ApproveAsync(UpdateAccountDto account)
+        {            
+            var approveAccount = _mapper.Map(account, new Account());
+            var result = await _domain.ApproveAsync(approveAccount);
+            if (result) {
+                var approvedAccount = await _domain.GetByIdAsync(approveAccount.Id);
+                return Ok(_mapper.Map<AccountDto>(approvedAccount));
+            }                
+            else 
                 return BadRequest(_mapper.Map<AccountDto>(account));
-            }            
         }
 
         [HttpPut(AccountRoutes.CANCEL)]

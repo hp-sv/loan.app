@@ -8,7 +8,7 @@ namespace Loan.Interface.Repositories
         public Task<Account?> GetByIdAsync(int id, bool includeTransactions);
         public Task<bool> IsAccountExistsAsync(int id);
 
-        public Task CreateCommentAsync(AccountComment comment);
+        public Task CreateCommentAsync(AccountComment comment);        
 
     }
 }

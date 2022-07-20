@@ -14,12 +14,13 @@
             public const int SeedTypeSetId = 10018;
             public const int ChangeOperationSetId = 10022;
             public const int AccountStatusId = 10026;
+            public const int JournalEntryTypeId = 10033;
         }
 
         public static class TransactionType
         {
-            public const int Credit = 10001;
-            public const int Debit = 10002;
+            public const int Projection = 10001;
+            public const int Actual = 10002;
             public const int Interest = 10003;
             public const int Adjustment = 10004;
         }
@@ -71,6 +72,11 @@
             public const int Cancelled = 10030;
             public const int Declined = 10031;
             public const int Completed = 10032;
+        }
+        public static class JournalEntryType
+        {
+            public const int Debit = 10034; // Flowing In
+            public const int Credit = 10035; // Flowing Out
         }
     }
 }

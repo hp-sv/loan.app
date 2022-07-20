@@ -41,7 +41,7 @@ export function searchAccounts(filter, page, pageSize) {
 }
 
 export function approveAccount(account) {
-  return fetch(`${baseUrl}${account.id}/approve`, {
+  return fetch(`${baseUrl}approve`, {
     method: "PUT",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(account),

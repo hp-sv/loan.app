@@ -68,12 +68,10 @@ function AccountForm({
   function handleClientSelected(client) {
     setAccountState((prevState) => ({
       ...prevState,
-      ...{
-        selectedAccount: {
-          ...prevState.selectedAccount,
-          clientId: client.id,
-          client: client,
-        },
+      account: {
+        ...prevState.account,
+        clientId: client.id,
+        client: client,
       },
     }));
   }
@@ -116,7 +114,6 @@ function AccountForm({
         accountComment,
       ],
     };
-    debugger;
 
     submitFunc(account)
       .then(() => {
@@ -319,11 +316,14 @@ AccountForm.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   const { accountState } = state;
-  const { selectedAccount } = ownProps;
+  const { selectedAccount, mode } = ownProps;
 
-  const account = accountState.results.find(
-    (stateAccount) => stateAccount.id === selectedAccount.id
-  );
+  const account =
+    mode === constants.RECORD_ADD
+      ? selectedAccount
+      : accountState.results.find(
+          (stateAccount) => stateAccount.id === selectedAccount.id
+        );
 
   return {
     selectedAccount: account,
