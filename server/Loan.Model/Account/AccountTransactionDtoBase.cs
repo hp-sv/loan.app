@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Loan.Model.Account
 {
-    public class AccountTransactionDtoBase
+    public class AccountTransactionDtoBase : DtoBase
     {
         public int AccountId { get; set; }
 
@@ -18,5 +18,6 @@ namespace Loan.Model.Account
         public int TransactionTypeId { get; set; }
 
         public LookupDto TransactionType { get; set; } = null!;
+        
     }
 }

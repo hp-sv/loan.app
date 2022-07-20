@@ -1,9 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Loan.Model.Account
+﻿namespace Loan.Model.Account
 {
     public class CreateAccountCommentDto: AccountCommentDtoBase
-    {               
+    {
+        public int? Id { get; set; }
 
     }
 }

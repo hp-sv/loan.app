@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import SelectInput from "../../components/common/SelectInput";
@@ -10,6 +10,8 @@ import MoneyInput from "../../components/common/MoneyInput";
 import NumberInput from "../../components/common/NumberInput";
 import TextInput from "../../components/common/TextInput";
 import CommentInput from "../../components/common/CommentInput";
+import catchActionError from "../../module/catchActionError";
+
 import {
   saveAccount,
   deleteAccount,
@@ -21,7 +23,6 @@ import {
 function AccountForm({
   selectedAccount,
   onSubmitSuccess,
-  onCancel,
   saveAccount,
   deleteAccount,
   approveAccount,
@@ -38,6 +39,15 @@ function AccountForm({
     submitting: false,
     errors: {},
   });
+
+  useEffect(() => {
+    setAccountState({
+      account: selectedAccount,
+      comment: "",
+      submitting: false,
+      errors: {},
+    });
+  }, [selectedAccount]);
 
   const handleCommentChange = (event) => {
     const { value } = event.target;
@@ -78,7 +88,7 @@ function AccountForm({
           onSubmitSuccess();
         })
         .catch((ex) => {
-          catchError(ex);
+          catchActionError(ex, setAccountState);
         });
     } else {
       //RECORD_ADD, RECORD_EDIT
@@ -87,84 +97,46 @@ function AccountForm({
           onSubmitSuccess();
         })
         .catch((ex) => {
-          catchError(ex);
+          catchActionError(ex, setAccountState);
         });
     }
   };
 
-  const handleApprove = () => {
+  const handleApproveCancelDeny = (submitFunc, opt) => {
     const accountComment = {
       accountId: accountState.account.id,
-      statusId: constants.ACCOUNT_STATUS_APPROVE,
+      statusId: opt,
       comment: accountState.comment,
     };
 
     const account = {
       ...accountState.account,
-      accountComments: [accountComment],
+      accountComments: [
+        ...accountState.account.accountComments,
+        accountComment,
+      ],
     };
+    debugger;
 
-    approveAccount(account)
+    submitFunc(account)
       .then(() => {
         onSubmitSuccess();
       })
       .catch((ex) => {
-        catchError(ex);
+        catchActionError(ex, setAccountState);
       });
   };
 
-  function catchError(ex) {
-    const validationErrors = {
-      onSave: ex.message,
-      ...ex.error.errors,
-      validationErrors: ex.error.validationErrors,
-    };
-    setAccountState((prevState) => ({
-      ...prevState,
-      errors: validationErrors,
-    }));
-  }
+  const handleApprove = () => {
+    handleApproveCancelDeny(approveAccount, constants.ACCOUNT_STATUS_APPROVE);
+  };
 
   const handleCancel = () => {
-    const accountComment = {
-      accountId: accountState.account.id,
-      statusId: constants.ACCOUNT_STATUS_CANCEL,
-      comment: accountState.comment,
-    };
-
-    const account = {
-      ...accountState.account,
-      accountComments: [accountComment],
-    };
-
-    cancelAccount(account)
-      .then(() => {
-        onSubmitSuccess();
-      })
-      .catch((ex) => {
-        catchError(ex);
-      });
+    handleApproveCancelDeny(cancelAccount, constants.ACCOUNT_STATUS_CANCEL);
   };
 
   const handleDecline = () => {
-    const accountComment = {
-      accountId: accountState.account.id,
-      statusId: constants.ACCOUNT_STATUS_DECLINE,
-      comment: accountState.comment,
-    };
-
-    const account = {
-      ...accountState.account,
-      accountComments: [accountComment],
-    };
-
-    declineAccount(account)
-      .then(() => {
-        onSubmitSuccess();
-      })
-      .catch((ex) => {
-        catchError(ex);
-      });
+    handleApproveCancelDeny(declineAccount, constants.ACCOUNT_STATUS_CANCEL);
   };
 
   const showSaveUpdateDelete =
@@ -334,7 +306,6 @@ function AccountForm({
 AccountForm.propTypes = {
   selectedAccount: PropTypes.object.isRequired,
   onSubmitSuccess: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
   saveAccount: PropTypes.func.isRequired,
   deleteAccount: PropTypes.func.isRequired,
   approveAccount: PropTypes.func.isRequired,
@@ -346,6 +317,19 @@ AccountForm.propTypes = {
   accountStatus: PropTypes.array.isRequired,
 };
 
+const mapStateToProps = (state, ownProps) => {
+  const { accountState } = state;
+  const { selectedAccount } = ownProps;
+
+  const account = accountState.results.find(
+    (stateAccount) => stateAccount.id === selectedAccount.id
+  );
+
+  return {
+    selectedAccount: account,
+  };
+};
+
 const mapDispatchToProps = {
   saveAccount,
   deleteAccount,
@@ -354,6 +338,4 @@ const mapDispatchToProps = {
   declineAccount,
 };
 
-export default connect(() => {
-  return {};
-}, mapDispatchToProps)(AccountForm);
+export default connect(mapStateToProps, mapDispatchToProps)(AccountForm);

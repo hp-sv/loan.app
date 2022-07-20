@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace Loan.Model.Client
 {
-    public class ClientDtoBase
+    public class ClientDtoBase: DtoBase
     {
         [Required(ErrorMessage = "First name is required.")]
         [MinLength(2, ErrorMessage = "First name must be at least two characters.")]
@@ -49,6 +49,7 @@ namespace Loan.Model.Client
 
         public string FullName { get; set; } = String.Empty;
         public string FullAddress { get; set; } = String.Empty;
+               
 
     }
 

@@ -1,4 +1,4 @@
-const PaginateArray = (array, pageSize, pageNumber) => {
+const paginateArray = (array, pageSize, pageNumber) => {
   return array.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
 };
-export default PaginateArray;
+export default paginateArray;

@@ -23,6 +23,6 @@ namespace Loan.Entity
         public int RecordStatusId { get; set; } = 0;
 
         [NotMapped]
-        public int OriginalPrimaryKeyValue { get; set; }        
+        public int OriginalPrimaryKeyValue { get; set; }
     }
 }

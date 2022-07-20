@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Loan.Model.Account
 {
-    public class AccountCommentDtoBase
+    public class AccountCommentDtoBase: DtoBase
     {        
         [Required]
         public int AccountId { get; set; }
@@ -18,7 +18,7 @@ namespace Loan.Model.Account
 
         [Required(ErrorMessage = "Specify your comment.")]
         [MaxLength(500, ErrorMessage = "Five hundred characters is the maximum length allowed for a comment.")]
-        public string Comment { get; set; }
-        
+        public string Comment { get; set; }        
+
     }
 }

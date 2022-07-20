@@ -19,7 +19,7 @@ const CommentInput = ({ name, label, onChange, placeholder, value, error }) => {
           placeholder={placeholder}
           value={value}
           onChange={onChange}
-          rows={6}
+          rows={4}
           maxLength={500}
         />
         {error && (

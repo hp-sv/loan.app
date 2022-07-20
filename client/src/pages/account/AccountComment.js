@@ -1,30 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import DateDisplay from "../../components/common/DateDisplay";
-import PaginateArray from "../../module/PaginateArray";
+import paginateArray from "../../module/paginateArray";
 import SmallPagination from "../../components/common/SmallPagination";
+import AccountCommentForm from "./AccountCommentForm";
 
 function AccountComment({ account }) {
   const [selectedAccount, setSelectedAccount] = useState({
-    ...account,
-    paginatedAccountComments: PaginateArray(account.accountComments, 5, 1),
+    account: account,
+    paginatedAccountComments: [],
     pageSize: 5,
-    displayComments:
-      account.accountComments && account.accountComments.length > 0,
-    displayPagination:
-      account.accountComments && account.accountComments.length > 5,
+    totalComments: 0,
+    displayComments: false,
+    displayPagination: false,
   });
+
+  useEffect(() => {
+    setSelectedAccount({
+      account: account,
+      paginatedAccountComments: paginateArray(account.accountComments, 5, 1),
+      pageSize: 5,
+      totalComments: account.accountComments.length,
+      displayComments:
+        account.accountComments && account.accountComments.length > 0,
+      displayPagination:
+        account.accountComments && account.accountComments.length > 5,
+    });
+  }, [account]);
 
   const handlePageChange = (page) => {
     setSelectedAccount((prevState) => ({
       ...prevState,
-      paginatedAccountComments: PaginateArray(
-        prevState.accountComments,
+      paginatedAccountComments: paginateArray(
+        prevState.account.accountComments,
         prevState.pageSize,
         page
       ),
     }));
   };
+
+  const handleCommentSaveSuccess = (savedAccount) => {
+    debugger;
+    setSelectedAccount((prevState) => ({
+      ...prevState,
+      account: savedAccount,
+    }));
+  };
+
   return (
     <table className="table">
       <thead>
@@ -40,11 +63,14 @@ function AccountComment({ account }) {
                 key={`a_${accountComment.accountId}_cmnt_id_${accountComment.id}`}
               >
                 <td>
-                  <p>{accountComment.comment}</p>
-                  <p>
-                    Date: {DateDisplay(accountComment.createdAt)} Status:{" "}
-                    {accountComment.status.name}
-                  </p>
+                  <small className="text-muted">
+                    <p>
+                      {accountComment.comment}
+                      <br />
+                      Date:<b>{DateDisplay(accountComment.createdAt)} </b>{" "}
+                      Status:<b> {accountComment.status.name}</b>
+                    </p>
+                  </small>
                 </td>
               </tr>
             );
@@ -53,13 +79,21 @@ function AccountComment({ account }) {
           <tr>
             <td>
               <SmallPagination
-                total={selectedAccount.totalTransactions}
+                total={selectedAccount.totalComments}
                 pageSize={selectedAccount.pageSize}
                 onChange={handlePageChange}
               />
             </td>
           </tr>
         )}
+        <tr>
+          <td>
+            <AccountCommentForm
+              account={selectedAccount.account}
+              onSubmitSuccess={handleCommentSaveSuccess}
+            />
+          </td>
+        </tr>
       </tbody>
     </table>
   );
@@ -69,4 +103,15 @@ AccountComment.propTypes = {
   account: PropTypes.object.isRequired,
 };
 
-export default AccountComment;
+const mapStateToProps = (state, ownProps) => {
+  const { account } = ownProps;
+  const { accountState } = state;
+  const selectedAccount = accountState.results.find(
+    (stateAccount) => stateAccount.id === account.id
+  );
+  return {
+    account: selectedAccount,
+  };
+};
+
+export default connect(mapStateToProps)(AccountComment);

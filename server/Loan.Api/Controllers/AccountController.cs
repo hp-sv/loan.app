@@ -31,7 +31,6 @@ namespace Loan.Api.Controllers
             return Ok(pagedDto);
         }
 
-
         [HttpGet(AccountRoutes.ID, Name = AccountRoutes.GET_ACCOUNT_ROUTE_NAME)]
         public async Task<ActionResult<AccountDto>> GetAccount(int id, bool includeTransactions = false)
         {
@@ -39,7 +38,6 @@ namespace Loan.Api.Controllers
 
             return Ok(_mapper.Map<AccountDto>(account));
         }
-
 
         [HttpPost]
         public async Task<ActionResult<AccountDto>> Create(CreateAccountDto account)
@@ -96,14 +94,14 @@ namespace Loan.Api.Controllers
         }
 
         [HttpPut(AccountRoutes.APPROVE)]
-        public async Task<ActionResult> Approve(int id, UpdateAccountDto account)
+        public async Task<ActionResult> ApproveAsync(int id, UpdateAccountDto account)
         {
             var approveAccount = await _domain.GetByIdAsync(id);
 
             if(approveAccount != null)
             {                
                 var updatedAccount = _mapper.Map(account, approveAccount);
-                var result = await _domain.Approve(updatedAccount);
+                var result = await _domain.ApproveAsync(updatedAccount);
                 if (result) {
                     approveAccount = await _domain.GetByIdAsync(id);
                     return Ok(_mapper.Map<AccountDto>(approveAccount));
@@ -118,14 +116,14 @@ namespace Loan.Api.Controllers
         }
 
         [HttpPut(AccountRoutes.CANCEL)]
-        public async Task<ActionResult> Cancel(int id, UpdateAccountDto account)
+        public async Task<ActionResult> CancelAsync(int id, UpdateAccountDto account)
         {
             var cancelAccount = await _domain.GetByIdAsync(id);
 
             if (cancelAccount != null)
             {
                 var cancelledAccount = _mapper.Map(account, cancelAccount);
-                var result = await _domain.Cancel(cancelledAccount);
+                var result = await _domain.CancelAsync(cancelledAccount);
 
                 if (result)
                 {
@@ -142,14 +140,14 @@ namespace Loan.Api.Controllers
         }
 
         [HttpPut(AccountRoutes.DECLINE)]
-        public async Task<ActionResult> Decline(int id, UpdateAccountDto account)
+        public async Task<ActionResult> DeclineAsync(int id, UpdateAccountDto account)
         {
             var declineAccount = await _domain.GetByIdAsync(id);
 
             if (declineAccount != null)
             {
                 var declinedAccount = _mapper.Map(account, declineAccount);
-                var result = await _domain.Decline(declinedAccount);
+                var result = await _domain.DeclineAsync(declinedAccount);
                 if (result)
                 {
                     declineAccount = await _domain.GetByIdAsync(id);
@@ -163,6 +161,19 @@ namespace Loan.Api.Controllers
                 return BadRequest(_mapper.Map<AccountDto>(account));
             }
         }
+
+        [HttpPost(AccountRoutes.COMMENT)]
+        public async Task<ActionResult> AddComment(int id, CreateAccountCommentDto comment)
+        {            
+            var newComment = _mapper.Map<AccountComment>(comment);
+            await _domain.CreateCommentAsync(newComment);
+
+            var account = await _domain.GetByIdAsync(id);
+
+            var udatedAccount = _mapper.Map<AccountDto>(account);
+
+            return CreatedAtRoute(AccountRoutes.GET_ACCOUNT_ROUTE_NAME, new { id = udatedAccount.Id }, udatedAccount);
+        }       
 
     }
 }

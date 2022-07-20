@@ -3,7 +3,7 @@
 
 namespace Loan.Model.Lookup
 {
-	public class LookupSetDtoBase
+	public class LookupSetDtoBase: DtoBase
 	{
         [Required(ErrorMessage = "Specify the name of the lookup set.")]
         [MaxLength(255)]
@@ -11,7 +11,7 @@ namespace Loan.Model.Lookup
 
         [Required(ErrorMessage = "Describe the lookup set.")]
         [MaxLength(500)]
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;        
 
     }
 }

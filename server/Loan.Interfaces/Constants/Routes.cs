@@ -17,6 +17,9 @@
         public const string APPROVE = "{id}/approve";
         public const string DECLINE = "{id}/decline";
         public const string CANCEL = "{id}/cancel";
+        public const string COMMENT = "{id}/comment";
+        public const string GET_ACCOUNT_COMMENT = "GetAccountCommentRoute";
+        public const string ACCOUNT_COMMENT = "{aId}/comment/{id}";
     }
 
     public static class LookupSetRoutes

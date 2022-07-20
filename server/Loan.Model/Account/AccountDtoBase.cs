@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Loan.Model.Account
 {
-    public class AccountDtoBase
+    public class AccountDtoBase: DtoBase
     {
         [Required(ErrorMessage = "Specify the client for this account.")]
         public int ClientId { get; set; }
@@ -29,7 +29,7 @@ namespace Loan.Model.Account
         public int StatusId { get; set; }
 
         public DateTime? StartDate { get; set; }
-        public decimal? Interest  { get; set; }
+        public decimal? Interest  { get; set; }               
 
     }
 }

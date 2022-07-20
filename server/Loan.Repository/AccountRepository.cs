@@ -21,6 +21,12 @@ namespace Loan.Repository
             return Task.CompletedTask;
         }
 
+        public Task CreateCommentAsync(AccountComment comment)
+        {
+            context.AccountComments.Add(comment);
+            return Task.CompletedTask;
+        }
+
         public async Task DeleteAsync(int id)
         {
             var account = await context.Accounts.FirstAsync(a => a.Id == id);
@@ -33,7 +39,7 @@ namespace Loan.Repository
             return await context.Accounts
                 .Include(a => a.AccountTransactions)
                 .ThenInclude(at => at.TransactionType)
-                .Include(a => a.AccountComments)
+                .Include(a => a.AccountComments.OrderByDescending(ac=>ac.Id))
                 .ThenInclude(ac => ac.Status)
                 .Include(a => a.Client)
                 .Where(a => a.ClientId == clientId).ToListAsync();
@@ -42,7 +48,7 @@ namespace Loan.Repository
         public async Task<PagedResult<Account>> GetAllAsync(int page, int pageSize)
         {
             var query = context.Accounts
-                     .Include(a => a.AccountComments)
+                     .Include(a => a.AccountComments.OrderByDescending(ac => ac.Id))
                     .ThenInclude(ac => ac.Status)
                     .Include(a => a.AccountTransactions)
                     .ThenInclude(at => at.TransactionType)
@@ -54,7 +60,7 @@ namespace Loan.Repository
         public async Task<Account?> GetByIdAsync(int id)
         {
             return await context.Accounts
-                .Include(a=>a.AccountComments)
+                .Include(a => a.AccountComments.OrderByDescending(ac => ac.Id))
                 .ThenInclude(ac=>ac.Status)
                 .Include(a=>a.AccountTransactions)
                 .ThenInclude(at=>at.TransactionType)
@@ -68,7 +74,7 @@ namespace Loan.Repository
                 return await GetByIdAsync(id);
 
             return await context.Accounts
-                .Include(a => a.AccountComments)
+                .Include(a => a.AccountComments.OrderByDescending(ac => ac.Id))
                 .ThenInclude(ac => ac.Status)
                 .Include(a => a.AccountTransactions)
                 .ThenInclude(at => at.TransactionType)
@@ -86,7 +92,7 @@ namespace Loan.Repository
         {
             filter = filter.ToLower();
             var query = context.Accounts
-                    .Include(a => a.AccountComments)
+                    .Include(a => a.AccountComments.OrderByDescending(ac => ac.Id))
                     .ThenInclude(ac => ac.Status)
                     .Include(a => a.AccountTransactions)
                     .ThenInclude(at => at.TransactionType)

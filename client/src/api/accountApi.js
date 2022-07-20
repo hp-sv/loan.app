@@ -69,3 +69,13 @@ export function declineAccount(account) {
     .then(handleResponse)
     .catch(handleError);
 }
+
+export function saveAccountComment(comment) {
+  return fetch(`${baseUrl}${comment.accountId}/comment`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(comment),
+  })
+    .then(handleResponse)
+    .catch(handleError);
+}

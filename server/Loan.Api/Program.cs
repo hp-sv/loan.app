@@ -1,4 +1,6 @@
 
+using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using Loan.Api.Filters;
 using Loan.Api.Service;
 using Loan.Data.Context;
@@ -75,7 +77,10 @@ builder.Services.AddScoped<IAccountDomain, AccountDomain>();
 builder.Services.AddScoped<IAccountTransactionRepository, AccountTransactionRepository>();
 builder.Services.AddScoped<IAccountCommentRepository, AccountCommentRepository>();
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper((serviceProvider, cfg) =>
+{    
+   cfg.AddCollectionMappers();   
+}, AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>

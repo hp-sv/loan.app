@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import DateDisplay from "../../components/common/DateDisplay";
-import PaginateArray from "../../module/PaginateArray";
+import paginateArray from "../../module/paginateArray";
 import SmallPagination from "../../components/common/SmallPagination";
 
 function AccountTransaction({ account }) {
   const [selectedAccount, setSelectedAccount] = useState({
     ...account,
-    pagedTransactions: PaginateArray(account.accountTransactions, 10, 1),
+    pagedTransactions: paginateArray(account.accountTransactions, 10, 1),
     totalTransactions: account.accountTransactions.length,
     pageSize: 10,
     displayPagination: account.accountTransactions.length > 10,
@@ -17,7 +17,7 @@ function AccountTransaction({ account }) {
   const handlePageChange = (page) => {
     setSelectedAccount((prevState) => ({
       ...prevState,
-      pagedTransactions: PaginateArray(
+      pagedTransactions: paginateArray(
         prevState.accountTransactions,
         prevState.pageSize,
         page

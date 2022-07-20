@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Loan.Model.Lookup
 {
-	public class LookupDtoBase
+	public class LookupDtoBase: DtoBase
 	{
         
         [Required(ErrorMessage = "Specify the name of this reference value.")]
@@ -13,6 +13,7 @@ namespace Loan.Model.Lookup
         [Required(ErrorMessage = "Describe this reference value.")]
         [MaxLength(500)]
         public string Description { get; set; } = string.Empty;
-        
+               
+
     }
 }

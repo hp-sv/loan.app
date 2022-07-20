@@ -7,7 +7,6 @@ const showTotal: PaginationProps["showTotal"] = (total) =>
   `Total ${total} items`;
 
 const SmallPagination = ({ total, pageSize, onChange }) => {
-  debugger;
   return (
     <Pagination
       size="small"

@@ -123,7 +123,7 @@ namespace Loan.Domain
             return await _repository.SearchAsync(filter, pg, pgSize);
         }
 
-        public async Task<bool> Approve(Account account)
+        public async Task<bool> ApproveAsync(Account account)
         {
             await _validationService.ValidateForApprove(account);
 
@@ -145,7 +145,7 @@ namespace Loan.Domain
 
         }
 
-        public async Task<bool> Cancel(Account account)
+        public async Task<bool> CancelAsync(Account account)
         {            
             account.StatusId = LookupIds.AccountStatuses.Cancelled;                      
             var comments = account.AccountComments;
@@ -156,7 +156,7 @@ namespace Loan.Domain
             return (await _transactionService.SaveChangesAsync() >= 0);
         }
 
-        public async Task<bool> Decline(Account account)
+        public async Task<bool> DeclineAsync(Account account)
         {
             account.StatusId = LookupIds.AccountStatuses.Declined;            
             var comments = account.AccountComments;
@@ -164,6 +164,12 @@ namespace Loan.Domain
             await _accountCommentRepository.CreateCommentsAsync(comments.ToList());
             await _repository.UpdateAsync(account);
 
+            return (await _transactionService.SaveChangesAsync() >= 0);
+        }
+
+        public async Task<bool> CreateCommentAsync(AccountComment accountComment)
+        {
+            await _repository.CreateCommentAsync(accountComment);
             return (await _transactionService.SaveChangesAsync() >= 0);
         }
     }

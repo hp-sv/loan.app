@@ -34,6 +34,10 @@ export function declineAccountSuccess(account) {
   return { type: types.DECLINE_ACCOUNT_SUCCESS, account };
 }
 
+export function saveAccountCommentSuccess(account) {
+  return { type: types.SAVE_ACCOUNT_COMMENT_SUCCESS, account };
+}
+
 export function setAccountFilter(filterBy) {
   return function (dispatch) {
     dispatch(setAccountFilterCompleted(filterBy));
@@ -252,6 +256,41 @@ export function declineAccount(account) {
           key: msgKey,
           duration: 1,
         });
+      })
+      .catch((error) => {
+        message.destroy(msgKey);
+        message.error({
+          content: "Ooops something went wrong. ",
+          key: msgKey,
+          duration: 1,
+        });
+        throw error;
+      });
+  };
+}
+
+export function saveAccountComment(accountComment) {
+  //eslint-disable-next-line no-unused-vars
+  return function (dispatch, getState) {
+    dispatch(beginApiCall());
+
+    const msgKey = `__saveAccountComment__${accountComment.accountId}`;
+    var declineMessage = "Saving account comment, please wait...";
+
+    var completedMessage = "Save account comment completed.";
+
+    message.loading({ content: declineMessage, key: msgKey, duration: 10 });
+    return accountApi
+      .saveAccountComment(accountComment)
+      .then((savedAccount) => {
+        dispatch(saveAccountCommentSuccess(savedAccount));
+        message.destroy(msgKey);
+        message.success({
+          content: completedMessage,
+          key: msgKey,
+          duration: 1,
+        });
+        return savedAccount;
       })
       .catch((error) => {
         message.destroy(msgKey);

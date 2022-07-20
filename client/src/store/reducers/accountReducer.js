@@ -26,6 +26,7 @@ export default function accountReducer(
       }
 
     case types.APPROVE_ACCOUNT_SUCCESS:
+    case types.SAVE_ACCOUNT_COMMENT_SUCCESS:
     case types.SAVE_ACCOUNT_SUCCESS:
       var existingAccount = state.results.find(
         (account) => account.id === action.account.id
