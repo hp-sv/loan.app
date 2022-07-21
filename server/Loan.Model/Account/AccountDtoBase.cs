@@ -1,4 +1,5 @@
 ﻿using Loan.Model.Client;
+using Loan.Model.Lookup;
 using System.ComponentModel.DataAnnotations;
 
 namespace Loan.Model.Account
@@ -8,7 +9,7 @@ namespace Loan.Model.Account
         [Required(ErrorMessage = "Specify the client for this account.")]
         public int ClientId { get; set; }
 
-        public ClientDto Client { get; set; }             
+        public ClientDto Client { get; set; }
 
         [Required(ErrorMessage = "Specify the rate for this account.")]
         public decimal Rate { get; set; }
@@ -27,9 +28,10 @@ namespace Loan.Model.Account
 
         [Required(ErrorMessage = "Specify the status of this account.")]
         public int StatusId { get; set; }
-
         public DateTime? StartDate { get; set; }
-        public decimal? Interest  { get; set; }               
+        public decimal? Interest  { get; set; }
+
+        public int InterestCycleTypeId { get; set; }
 
     }
 }

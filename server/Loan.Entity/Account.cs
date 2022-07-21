@@ -38,7 +38,6 @@ namespace Loan.Entity
         [Required] 
         public int RepaymentTypeId { get; set; }
 
-
         [ForeignKey("StatusId")]        
         public Lookup Status { get; set; }
 
@@ -46,9 +45,16 @@ namespace Loan.Entity
         public int StatusId { get; set; }
 
         public DateTime? StartDate { get; set; }
+        public DateTime? ApproveDate { get; set; }
 
         public decimal? Interest { get; set; }
         public decimal? TotalAmount { get; set; }
+
+        [ForeignKey("InterestCycleTypeId")]
+        public Lookup InterestCycleType { get; set; }
+
+        [Required]
+        public int InterestCycleTypeId { get; set; }
 
         public ICollection<AccountTransaction> AccountTransactions { set; get; } = new List<AccountTransaction>();
         public ICollection<AccountComment> AccountComments { get; set; } = new List<AccountComment>();

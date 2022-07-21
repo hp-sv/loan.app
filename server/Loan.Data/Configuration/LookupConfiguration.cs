@@ -17,6 +17,7 @@ namespace Loan.Data.Configuration
             builder.HasData(GetChangeOperations());
             builder.HasData(GetAccountStatuses());
             builder.HasData(GetJournalEntryTypes());
+            builder.HasData(GetInterestTypes());
         }
 
         public IEnumerable<Lookup> GetSeedConstants()
@@ -447,6 +448,37 @@ namespace Loan.Data.Configuration
                  Name = "Credit",
                  Description = "Credit Entry",
                  LookupSetId = LookupIds.LookupSetId.JournalEntryTypeId,
+                 CreateBy = Seed.SEED_USER,
+                 CreatedAt = Seed.SeedDate(),
+                 TransactionId = Seed.SeedTransactionId(),
+                 VersionNo = 0,
+                 RecordStatusId = LookupIds.RecordStatus.Active,
+                 SeedTypeId = LookupIds.SeedTypes.Constant
+             }
+            };
+        }
+
+        public IEnumerable<Lookup> GetInterestTypes() {
+            return new List<Lookup> {
+             new Lookup
+             {
+                 Id = LookupIds.InterestCycleType.Monthly,
+                 Name = "Monthly",
+                 Description = "Monthly Cycle",
+                 LookupSetId = LookupIds.LookupSetId.InterestCycleTypeId,
+                 CreateBy = Seed.SEED_USER,
+                 CreatedAt = Seed.SeedDate(),
+                 TransactionId = Seed.SeedTransactionId(),
+                 VersionNo = 0,
+                 RecordStatusId = LookupIds.RecordStatus.Active,
+                 SeedTypeId = LookupIds.SeedTypes.Constant
+             },
+             new Lookup
+             {
+                 Id = LookupIds.InterestCycleType.Yearly,
+                 Name = "Yearly",
+                 Description = "Yearly Cycle",
+                 LookupSetId = LookupIds.LookupSetId.InterestCycleTypeId,
                  CreateBy = Seed.SEED_USER,
                  CreatedAt = Seed.SeedDate(),
                  TransactionId = Seed.SeedTransactionId(),

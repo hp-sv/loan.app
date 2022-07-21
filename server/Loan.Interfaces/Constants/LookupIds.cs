@@ -15,6 +15,7 @@
             public const int ChangeOperationSetId = 10022;
             public const int AccountStatusId = 10026;
             public const int JournalEntryTypeId = 10033;
+            public const int InterestCycleTypeId = 10036;
         }
 
         public static class TransactionType
@@ -47,7 +48,7 @@
             public const int Active = 10015;
             public const int Deleted = 10016;
             public const int Archive = 10017;
-            public const int Pending = 10018;            
+            public const int Pending = 10018;
         }
 
         public static class SeedTypes
@@ -78,5 +79,11 @@
             public const int Debit = 10034; // Flowing In
             public const int Credit = 10035; // Flowing Out
         }
+        public static class InterestCycleType
+        {
+            public const int Monthly = 10037;
+            public const int Yearly = 10038;
+        }
+
     }
 }

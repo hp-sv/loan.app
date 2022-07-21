@@ -27,11 +27,19 @@ function AccountTransaction({ account }) {
   };
 
   return (
+    <div>    
+      <table className="table">          
+          <tr>
+          <td align="left" width={"25%"}>Credit(s) :</td>        
+          <td align="left" width={"25%"}>{formatMoney(selectedAccount.actualRepayments)}</td>
+          <td align="left" width={"25%"}>Balance :</td>
+          <td align="left" width={"25%"}>{formatMoney(selectedAccount.balance)}</td>
+        </tr>
+      </table>
     <table className="table">
       <thead>
         <tr>
-          <td>Date</td>
-          <td>Transaction</td>
+          <td>Date</td>          
           <td>Type</td>
           <td>Amount</td>
         </tr>
@@ -43,19 +51,13 @@ function AccountTransaction({ account }) {
               <tr
                 key={`a_${accountTransaction.accountId}_trn_id_${accountTransaction.id}`}
               >
-                <td>{DateDisplay(accountTransaction.transactionDate)}</td>
-                <td>{accountTransaction.transactionType.name}</td>
+                <td>{DateDisplay(accountTransaction.transactionDate)}</td>                
                 <td>{accountTransaction.journalEntryType.name}</td>
                 <td>{formatMoney(accountTransaction.amount)}</td>
               </tr>
             );
           })}
-        <tr>
-          <td colSpan={2}>
-            Total Credit(s) : {formatMoney(selectedAccount.actualRepayments)}
-          </td>
-          <td colSpan={2}>Balance : {formatMoney(selectedAccount.balance)}</td>
-        </tr>
+        
         {selectedAccount.displayPagination && (
           <tr>
             <td colSpan={4}>
@@ -69,6 +71,7 @@ function AccountTransaction({ account }) {
         )}
       </tbody>
     </table>
+    </div>
   );
 }
 

@@ -14,7 +14,7 @@ const newClient = {
 const newAccount = {
   id: null,
   clientId: null,
-  rate: 1.0,
+  rate: 5.0,
   principal: 0.0,
   duration: 6,
   durationTypeId: 10005,

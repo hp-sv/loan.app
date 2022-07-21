@@ -10,9 +10,6 @@ namespace Loan.Model.Account
         [Required]
         public int AccountId { get; set; }
 
-        [ForeignKey("StatusId")]
-        public LookupDto? Status { get; set; }
-
         [Required]
         public int StatusId { get; set; }
 

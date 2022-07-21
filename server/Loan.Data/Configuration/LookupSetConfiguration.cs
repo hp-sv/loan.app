@@ -109,6 +109,18 @@ namespace Loan.Data.Configuration
                     VersionNo = 0,
                     RecordStatusId = LookupIds.RecordStatus.Active,
                     SeedTypeId = LookupIds.SeedTypes.Constant
+                },
+                new LookupSet
+                {
+                    Id = LookupIds.LookupSetId.InterestCycleTypeId,
+                    Name = "Interest Cycle Type",
+                    Description = "Interest Cycle Type",
+                    CreateBy = Seed.SEED_USER,
+                    CreatedAt = Seed.SeedDate(),
+                    TransactionId = Seed.SeedTransactionId(),
+                    VersionNo = 0,
+                    RecordStatusId = LookupIds.RecordStatus.Active,
+                    SeedTypeId = LookupIds.SeedTypes.Constant
                 }
             };
         
