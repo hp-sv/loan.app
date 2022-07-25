@@ -67,7 +67,6 @@ namespace Loan.Domain.Services
             decimal repaymentAmount = Math.Round((totalAmount / totalNumberOfTransactions)/100, 0 ) * 100;
 
             var transactionDate = account.StartDate.Value.AddDays(daysInterval);
-
             decimal totalRepayment = 0;
 
             for (int numberTransaction = 1; numberTransaction <= totalNumberOfTransactions; numberTransaction++)
@@ -76,13 +75,25 @@ namespace Loan.Domain.Services
                     repaymentAmount = (totalAmount - totalRepayment);
 
                 account.AccountTransactions.Add(createAccountTransaction(account, transactionDate, repaymentAmount, LookupIds.TransactionType.Projection, LookupIds.JournalEntryType.Credit));
+
                 transactionDate = transactionDate.AddDays(daysInterval);
                 totalRepayment = totalRepayment + repaymentAmount;
             }
-
-            return account.AccountTransactions.ToList();
-            
+            return account.AccountTransactions.ToList();            
         }
+                
+        private List<AccountTransaction> GenerateWithInterestPerAnum(Account account)
+        {
+            return null;
+        }
+
+
+
+        private List<AccountTransaction> GenerateWithInterestPerMonth(Account account)
+        {
+            return null;
+        }
+
         private AccountTransaction createAccountTransaction(Account account, DateTime transactionDate, decimal amount, int transactionTypeId, int journalEntryTypeId)
         {            
             return new AccountTransaction() {        

@@ -17,7 +17,7 @@ namespace Loan.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.6")
+                .HasAnnotation("ProductVersion", "6.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -48,7 +48,9 @@ namespace Loan.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("DurationTypeId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(10005);
 
                     b.Property<decimal?>("Interest")
                         .ValueGeneratedOnAddOrUpdate()
@@ -56,7 +58,9 @@ namespace Loan.Data.Migrations
                         .HasComputedColumnSql("(Principal * (Rate/100)) PERSISTED");
 
                     b.Property<int>("InterestCycleTypeId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(10037);
 
                     b.Property<decimal>("Principal")
                         .HasColumnType("decimal(18,4)");
@@ -68,13 +72,17 @@ namespace Loan.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("RepaymentTypeId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(10011);
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("StatusId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(10027);
 
                     b.Property<decimal?>("TotalAmount")
                         .ValueGeneratedOnAddOrUpdate()
@@ -190,7 +198,9 @@ namespace Loan.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("JournalEntryTypeId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(10034);
 
                     b.Property<int>("RecordStatusId")
                         .HasColumnType("int");
@@ -202,7 +212,9 @@ namespace Loan.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("TransactionTypeId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(10001);
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");

@@ -1,24 +1,22 @@
+using AutoMapper;
+using Loan.Api.Controllers;
+using Loan.Data.Context;
+using Loan.Domain;
+using Loan.Domain.Services;
+using Loan.Entity;
+using Loan.Interface.Constants;
 using Loan.Interface.Domain;
+using Loan.Interface.Exceptions;
 using Loan.Interface.Repositories;
 using Loan.Interface.Services;
-using Loan.Repository;
-using Loan.Domain;
-using Loan.Api.Controllers;
-using Loan.Domain.Services;
-using Loan.Model.Client;
-using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
-using Loan.Interface.Constants;
-using Microsoft.AspNetCore.JsonPatch;
-using Newtonsoft.Json;
-using Loan.Data.Context;
-using Loan.Interface.Exceptions;
-using Loan.Entity;
-using Microsoft.EntityFrameworkCore;
 using Loan.Model;
+using Loan.Model.Client;
+using Loan.Repository;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Loan.Test
-{    
+{
     public class ClientControllerTests : IClassFixture<LoanSeedDataFixture>
     {
         private readonly IClientRepository _repository;

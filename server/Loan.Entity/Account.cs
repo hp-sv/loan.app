@@ -1,6 +1,4 @@
-﻿
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Loan.Entity
@@ -27,21 +25,21 @@ namespace Loan.Entity
         
         
         [ForeignKey("DurationTypeId")]
-        public Lookup DurationType { get; set; } =null!;
+        public Lookup DurationType { get; set; } = null!;
 
-        [Required]
+        [Required]        
         public int DurationTypeId { get; set; }
 
         [ForeignKey("RepaymentTypeId")]
         public Lookup RepaymentType { get; set; } = null!;
 
-        [Required] 
+        [Required]
         public int RepaymentTypeId { get; set; }
 
         [ForeignKey("StatusId")]        
         public Lookup Status { get; set; }
 
-        [Required]
+        [Required]        
         public int StatusId { get; set; }
 
         public DateTime? StartDate { get; set; }
@@ -53,7 +51,7 @@ namespace Loan.Entity
         [ForeignKey("InterestCycleTypeId")]
         public Lookup InterestCycleType { get; set; }
 
-        [Required]
+        [Required]        
         public int InterestCycleTypeId { get; set; }
 
         public ICollection<AccountTransaction> AccountTransactions { set; get; } = new List<AccountTransaction>();

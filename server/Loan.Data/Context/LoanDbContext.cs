@@ -50,22 +50,8 @@ namespace Loan.Data.Context
                 if (typeof(ILoanEntity).IsAssignableFrom(entityType.ClrType))                
                     entityType.AddActiveRecordOnlyQueryFilter();
 
-            // Computed Columns
-            modelBuilder.Entity<Client>()
-                .Property(p => p.FullName)
-                .HasComputedColumnSql("replace(replace([FirstName] + ' ' + [MiddleName] + ' ' + [LastName], '  ',' '), '  ', ' ') PERSISTED");
-
-            modelBuilder.Entity<Client>()
-                .Property(p => p.FullAddress)
-                .HasComputedColumnSql("replace(replace([AddressLine1] + ' ' + [AddressLine2] + ' ' + [AddressLine3], '  ',' '), '  ', ' ')  PERSISTED");
-
-            modelBuilder.Entity<Account>()
-                .Property(p => p.Interest)
-                .HasComputedColumnSql("(Principal * (Rate/100)) PERSISTED");
-
-            modelBuilder.Entity<Account>()
-                .Property(p => p.TotalAmount)
-                .HasComputedColumnSql("(Principal * (1+(Rate/100))) PERSISTED");
+            ClientConfiguration.ApplyConfiguration(modelBuilder);
+            AccountConfiguration.ApplyConfiguration(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
 
